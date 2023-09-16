@@ -6,4 +6,6 @@ void setup() {
 
 void loop() {
   Serial.println("This is a working test! :)!!"); 
+
+  Serial.print("I am making some changes"); 
 }
