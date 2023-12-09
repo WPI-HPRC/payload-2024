@@ -18,7 +18,7 @@ with open("time_stamps.txt", "wb") as f:
         f.write("%d\n" % pyb.elapsed_millis(start))
         m.add_frame(sensor.snapshot())
         print(clock.fps())
-        if pyb.elapsed_millis(start) > 1000000:
+        if pyb.elapsed_millis(start) > 600000:
             print('over')
             #print(time)
             m.close(clock.fps())
