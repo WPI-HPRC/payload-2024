@@ -8,7 +8,7 @@ sensor.set_pixformat(sensor.GRAYSCALE) #RGB565
 sensor.set_framesize(sensor.QVGA)
 sensor.skip_frames(time = 2000)
 
-m = mjpeg.Mjpeg('openmv_video2.mjpeg')
+m = mjpeg.Mjpeg('drop_test1.mjpeg')
 
 clock = time.clock()
 start = pyb.millis()
@@ -18,7 +18,7 @@ with open("time_stamps.txt", "wb") as f:
         f.write("%d\n" % pyb.elapsed_millis(start))
         m.add_frame(sensor.snapshot())
         print(clock.fps())
-        if pyb.elapsed_millis(start) > 600000:
+        if pyb.elapsed_millis(start) > 18000:
             print('over')
             #print(time)
             m.close(clock.fps())
