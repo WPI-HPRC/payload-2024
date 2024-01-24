@@ -28,7 +28,7 @@ public:
 
     //add functions for GPS point Calcs 
     GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt); 
-    // Trajectory getReferenceTrajectory(GPSPoint point); 
+    // Trajectory getReferenceTrajectory(GPSPoint targetPoint, GPSPoint payloadPos); 
 };
 
 #endif

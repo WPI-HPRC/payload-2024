@@ -23,7 +23,7 @@ bool OpenMV::readData(CameraData& data)
 
     uint8_t buffer[sizeof(CameraData)];
     //use some explicit casts to suppress warnings
-    if (Wire.requestFrom(CAMERA_I2C_ADDRESS, sizeof(CameraData), true) == sizeof(CameraData))
+    if (Wire.requestFrom(CAMERA_I2C_ADDRESS, (int)sizeof(CameraData), true) == sizeof(CameraData))
     {
       for(uint8_t i = 0; i < sizeof(CameraData); i++) buffer[i] = Wire.read();
       memcpy(&data, buffer, sizeof(CameraData));
@@ -94,10 +94,12 @@ GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong,
     float distLong = 0; 
 
     float angleroll = data.angleroll; 
-    float anglepitch = data.anglepitch; 
+    float anglepitch = data.anglepitch;  
     int16_t cx = data.cx; 
-    int16_t cy = data.cy; 
+    int16_t cy = data.cy;  
 
     //Distance Calculations 
     
 }
+
+
