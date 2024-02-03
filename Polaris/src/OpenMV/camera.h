@@ -7,6 +7,13 @@
 #include <Wire.h>
 
 #define CAMERA_I2C_ADDRESS 0x12 
+//Properties of the Image
+#define CAMERA_FOV_VERTICAL 55.6
+#define CAMERA_FOV_HORIZONTAL 70.8
+#define CAMERA_RESOLUTION_X 160
+#define CAMERA_RESOLUTION_Y 120
+//Meters to Longitude and Latitude
+#define METERS_TO_LATITUDE 1.0 / 111111.0
 
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>

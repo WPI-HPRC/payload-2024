@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include "./OpenMV/camera.h"
 #include <states/State.h>
 
 Simulation::Simulation(QuatStateEstimator * ekf) {
@@ -33,6 +34,10 @@ void Simulation::loop_impl() {
     telemPacket.j = currentState(2);
     telemPacket.k = currentState(3);
 
+    Camera camera;
+    camera.getData();
+    camera.readData(cameraData);
+    
     // Serial.println(this->deltaTime);
     
 };

@@ -1,5 +1,5 @@
 //Code Adapted from RBE 2002 D23 Repository 
-#include <OpenMV/camera.h>
+#include "OpenMV/camera.h"
 
 uint8_t OpenMV::getData(void)
 {
@@ -88,18 +88,49 @@ bool OpenMV::handleUART(uint8_t b)
 
 GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong, float alt){
 
-    GPSPoint point; 
+    GPSPoint point;
     
-    float distLat = 0; 
-    float distLong = 0; 
+    float distLat = 0;
+    float distLong = 0;
 
-    float angleroll = data.angleroll; 
-    float anglepitch = data.anglepitch;  
-    int16_t cx = data.cx; 
-    int16_t cy = data.cy;  
+    float angleroll = data.angleroll;
+    float anglepitch = data.anglepitch;
+    int16_t cx = data.cx;
+    int16_t cy = data.cy;
 
-    //Distance Calculations 
+   //Distance Calculations 
+    float degreePerPixelVertical =  CAMERA_FOV_VERTICAL / CAMERA_RESOLUTION_Y;
+    float degreePerPixelHorizontal =  CAMERA_FOV_HORIZONTAL / CAMERA_RESOLUTION_X;
+
+    float pixelVertical = (cy * degreePerPixelVertical) - (CAMERA_FOV_VERTICAL/2);
+    float pixelHorizontal = (cx * degreePerPixelHorizontal) - (CAMERA_FOV_HORIZONTAL/2);
     
+    cout << "Pixel Vertical: " << pixelVertical << "º\nPixel Horizontal: " << pixelHorizontal << "º\nAltitude: " << alt << "\nHeading: " << heading << endl;
+
+    //This is the relative distance from the camera in meters
+    float forwardY = tan(anglepitch + pixelVertical) * alt; //Pitch is a factor in this calculation because it would be rotational around the camera's y axis
+    float deflectionX = tan(pixelHorizontal) * alt; //Roll shouldn't be a factor in this calculation, yaw would but we factor it in later
+
+    cout << "deflectionX: " << deflectionX << " forwardY: " << forwardY << endl;
+    //This is for the conversion of the relative distance to the absolute distance
+
+    //The conversion angle is the angle from true north to point the camera has targeted
+    float conversionAngle = pixelHorizontal + heading;
+    //The magnitude is solving for the hypotenuse of the triangle that is the distance from the camera to the target
+    float magnitude = sqrt(pow(deflectionX,2.0)+pow(forwardY,2.0));
+    //Then we scale this down by the easy conversion to Long/Lat based on the fact that 1 degree of latitude is 111,111 meters
+    float Ycomponent = cos(conversionAngle) * magnitude;
+    float Xcomponent = sin(conversionAngle) * magnitude;
+    //Now we can scale by long and latitude
+    float targetLatitude = Ycomponent * METERS_TO_LATITUDE;
+    float targetLongitude = Xcomponent * METERS_TO_LATITUDE / cos(targetLatitude);
+
+    cout << "Target Latitude: " << targetLatitude << " Target Longitude: " << targetLongitude << endl;
+
+    point.latitude = targetLatitude + currLat;
+    point.longitude = targetLongitude + currLong;
+
+    return point;   
 }
 
 
