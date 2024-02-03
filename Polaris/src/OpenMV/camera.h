@@ -14,6 +14,8 @@
 #define CAMERA_RESOLUTION_Y 120
 //Meters to Longitude and Latitude
 #define METERS_TO_LATITUDE 1.0 / 111111.0
+//Degrees to Radians
+#define DEGREES_TO_RADIANS 3.14159265358979323846/180.0
 
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
