@@ -86,7 +86,7 @@ bool OpenMV::handleUART(uint8_t b)
   return retVal;
 }
 
-GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong, float alt){
+GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong, float alt, float heading){
 
     GPSPoint point;
     
@@ -130,5 +130,3 @@ GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong,
 
     return point;   
 }
-
-
