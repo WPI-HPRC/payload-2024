@@ -122,9 +122,10 @@ GPSPoint OpenMV::getTargetPoint(CameraData &data, float currLat, float currLong,
     float Xcomponent = sin(conversionAngle) * magnitude;
     //Now we can scale by long and latitude
     float targetLatitude = Ycomponent * METERS_TO_LATITUDE;
-    float targetLongitude = Xcomponent * METERS_TO_LATITUDE / cos(targetLatitude);
-
+    //This should be the target latitude based on the target latitude and the current latitude
     point.latitude = targetLatitude + currLat;
+    //This should be the target longitude based on the updated target latitude
+    float targetLongitude = Xcomponent * METERS_TO_LATITUDE / cos(point.latitude * DEGREES_TO_RADIANS);
     point.longitude = targetLongitude + currLong;
 
     return point;   
