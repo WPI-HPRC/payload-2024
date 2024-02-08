@@ -8,70 +8,117 @@
  * @copyright Copyright (c) 2023
  */
 #include <Arduino.h>
-#include <Wire.h>
-#include <SparkFun_u-blox_GNSS_v3.h>
 #include <GNSS.h>
 
-SFE_UBLOX_GNSS GNSS::getGNSS()
-{
-    return GNSS;
-}
-/**
- * @brief initializes the GNSS to print to Serial Monitor
- */
-void GNSS::initialize()
-{
-    while (!Serial)
-        ;
-    Wire.begin();
-    if (GNSS.begin() == false)
-    {
-        Serial.println(F("u-blox GNSS module not detected at default I2C address. Please check wiring. Freezing."));
-        while (1)
-            ;
+GNSS::GNSS() {}
+
+bool GNSS::init() {
+    if (!this->gnss.begin()) {
+        return false;
     }
-    Serial.println(F("GNSS Initiallized"));
+
+    this->gnss.setI2COutput(COM_TYPE_UBX);
+    this->gnss.setNavigationFrequency(10);
+    this->gnss.setAutoPVT(true);
+
+    // Enable the jamming / interference monitor
+    UBX_CFG_ITFM_data_t jammingConfig; // Create storage for the jamming configuration
+    if (gnss.getJammingConfiguration(&jammingConfig)) // Read the jamming configuration
+    {
+        Serial.print(F("[GNSS] The jamming / interference monitor is "));
+        if (jammingConfig.config.bits.enable == 0) // Check if the monitor is already enabled
+        Serial.print(F("not "));
+        Serial.println(F("enabled"));
+
+        if (jammingConfig.config.bits.enable == 0) // Check if the monitor is already enabled
+        {
+        Serial.print(F("[GNSS] Enabling the jamming / interference monitor: "));
+        (jammingConfig.config.bits.enable = 1); // Enable the monitor
+        if (gnss.setJammingConfiguration(&jammingConfig)) // Set the jamming configuration
+            Serial.println(F(" -> success"));
+        else
+            Serial.println(F(" -> failed!"));
+        }
+    }
+
+
+    // this->gnss.saveConfiguration();
+
+    return true;
 }
-/**
- * @brief returns true if the latitude or longitude have changed since the last reading
- *
- * @param lat the current latitude
- * @param lon the current longitude
- * @return true if the latitude or longitude have changed since last reading
- */
-boolean GNSS::hasChanged(double lat, double lon)
-{
-    return lat == prevLat || lon == prevLon;
-}
-/**
- * @brief prints the following to the Serial Monitor: the latitude, longitude, and if either value has changed since the last reading
- *
- * @param delayTime the amount of delay between readings in milliseconds (OPTIONAL, DEFAULT 250)
- */
-void GNSS::outputData(int delayTime = 250)
-{
+
+void GNSS::outputData() {
     double lat = getLatitude();
     double lon = getLongitude();
-    Serial.println("Latitude: " + String(lat) + ". Longitude: " + String(lon) + ". Changed: " + hasChanged(lat, lon));
-    prevLat = lat;
-    prevLon = lon;
-    delay(delayTime); // Don't pound too hard on the I2C bus
+    Serial.println("Latitude: " + String(lat) + ". Longitude: " + String(lon));
 }
-/**
- * @brief Get the latitude value
- *
- * @return the latitude value
- */
-double GNSS::getLatitude()
-{
-    return GNSS.getLatitude();
+
+float GNSS::getLatitude() {
+    return gnss.getLatitude();
 }
-/**
- * @brief Get the longitude value
- *
- * @return the longitude value
- */
-double GNSS::getLongitude()
-{
-    return GNSS.getLongitude();
+
+float GNSS::getLongitude() {   
+    return gnss.getLongitude();
+}
+
+uint8_t GNSS::getSatellites() {
+    return gnss.getSIV();
+}
+
+bool GNSS::getLockStatus() {
+    return gnss.getGnssFixOk();
+}
+
+float GNSS::getAltMSL() {
+    return gnss.getAltitudeMSL();
+};
+
+float GNSS::getAltAGL() {
+    return gnss.getAltitude();
+};
+
+String GNSS::getTime() {
+    String timeString;
+    
+    String hour = String(gnss.getHour());
+    String minute = String(gnss.getMinute());
+    String second = String(gnss.getSecond());
+
+    timeString += (hour + ":" + minute + ":" + second);
+
+    return timeString;
+}
+
+bool GNSS::dataReady() {
+    return (gnss.getPVT() && (gnss.getInvalidLlh() == false));
+};
+
+void GNSS::printHwStatus() {
+    UBX_MON_HW_data_t hwStatus;
+
+    if(gnss.getHWstatus(&hwStatus)) {
+        Serial.println(F("Hardware status (UBX_MON_HW):"));
+
+        Serial.print(F("Jamming state: "));
+        Serial.print(hwStatus.flags.bits.jammingState);
+        if (hwStatus.flags.bits.jammingState == 0)
+        Serial.println(F(" = unknown / disabled"));
+        else if (hwStatus.flags.bits.jammingState == 1)
+        Serial.println(F(" = ok"));
+        else if (hwStatus.flags.bits.jammingState == 2)
+        Serial.println(F(" = warning"));
+        else // if (hwStatus.flags.bits.jammingState == 3)
+        Serial.println(F(" = critical!"));
+
+        Serial.print(F("Noise level: "));
+        Serial.println(hwStatus.noisePerMS);
+        
+        Serial.print(F("AGC monitor: "));
+        Serial.println(hwStatus.agcCnt);
+        
+        Serial.print(F("CW jamming indicator: "));
+        Serial.println(hwStatus.jamInd);
+
+        Serial.println();
+    };
 }
