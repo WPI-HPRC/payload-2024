@@ -1,8 +1,9 @@
 #pragma once
 #include "State.h"
 
-class DrogueDescent : public State {
+
+class Recovery : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		DrogueDescent();
+		Recovery();
 };
