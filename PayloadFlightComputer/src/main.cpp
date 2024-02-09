@@ -1,18 +1,47 @@
 #include <Arduino.h>
+#include <Metro.h>
+#include <Wire.h>
+#include <SPI.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include <SparkFun_u-blox_GNSS_v3.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
+#include <Adafruit_LPS2X.h>
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-}
+#include <states/State.h>
+#include <states/PreLaunch.h>
 
-void loop() {
-  // put your main code here, to run repeatedly:
-}
+#define LOOP_RATE 100
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
+Metro timer = Metro(1000 / LOOP_RATE);
+
+State *state = new PreLaunch();
+
+void setup()
+{
+    Serial.begin(115200);
+
+    Wire.begin();
+    Wire.setClock(400000);
+
+    timer.reset();
+
+    state->initialize();
+};
+
+void loop()
+{
+
+    if (timer.check() == 1)
+    {
+        state->loop();
+        State *nextState = state->nextState();
+        if (nextState != nullptr)
+        {
+            delete state;
+            state = nextState;
+            state->initialize();
+        }
+    }
+};
