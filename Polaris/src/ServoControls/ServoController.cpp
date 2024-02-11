@@ -18,17 +18,26 @@ ServoController::ServoController(int pin, bool clockwise, float p,
 }
 
 void ServoController::adjustString(float newStringLength) {
-    float circ = 2.*PI*(this->pulleyDiameter);
-    // *(this->clockwise ? -1. : 1.)
+    const angleOffset = 0.0;
+    float currAngle = servo.read();
+    float currStringLength = shortestAngle(currAngle - angleOffset) *
+                             PI/180.*(0.5*this->pulleyDiameter);
+    float newAngle = newStringLength/(0.5*this->pulleyDiameter)*(180./PI) +
+                     angleOffset;
+    
+    setToAngle(newAngle, currAngle);
 }
 
-void ServoController::setToAngle(float newAngle) {
-    float angleDiff = newAngle - servo.read();
-          angleDiff = mod(angleDiff + 180.,360.) - 180.;
-    float degreesPerSec = (this->p)*angleDiff;
+void ServoController::setToAngle(float newAngle, float currAngle) {
+    float angleDiff = shortestAngle((newAngle - currAngle));
+    float degreesPerSec = (this->clockwise ? -1. : 1.)*(this->p)*angleDiff;
     const reduction = 1. / 1.;
     this->servo.write(constrain(90. + (0.085*90./60.)/reduction*degreesPerSec,
                                 0., 180.));
+}
+
+float shortestAngle(float angleDiff) {
+    return mod(angleDiff + 180.,360.) - 180.;
 }
 
 /*

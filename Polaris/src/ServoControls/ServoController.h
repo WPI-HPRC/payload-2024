@@ -13,5 +13,5 @@ class ServoController {
     public:
         ServoController(int, bool);
         void adjustString(float);
-        void setToAngle(float);
+        void setToAngle(float, float);
 };
