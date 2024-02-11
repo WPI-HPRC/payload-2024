@@ -2,22 +2,33 @@
 #include <stdlib.h>
 #include "ServoController.h"
 
-const float pulleyDiameter = 4.374;
-const float stringLength = 100.;
-const float pGain = 5.;
+// const float pulleyDiameter = 4.374;
+// const float stringLength = 100.;
+// const float pGain = 5.;
 
-ServoController::ServoController(int pin, bool clockwise) {
+ServoController::ServoController(int pin, bool clockwise, float p,
+        float pulleyDiameter, float stringLength) {
     this->clockwise = clockwise;
-    this->myServo.attach(pin);
+    this->servo.attach(pin);
+    this->p = p;
+    this->pulleyDiameter = pulleyDiameter;
+    this->stringLength = stringLength;
     // Set servo to be still
-    this->myServo.write(90);
+    this->servo.write(90.);
 }
 
-void ServoController::updateServo(float newStringLength) {
+void ServoController::adjustString(float newStringLength) {
+    float circ = 2.*PI*(this->pulleyDiameter);
+    // *(this->clockwise ? -1. : 1.)
 }
 
 void ServoController::setToAngle(float newAngle) {
-    int a = 10; // amount the servo angle can change at max speed, in one 'call';
+    float angleDiff = newAngle - servo.read();
+          angleDiff = mod(angleDiff + 180.,360.) - 180.;
+    float degreesPerSec = (this->p)*angleDiff;
+    const reduction = 1. / 1.;
+    this->servo.write(constrain(90. + (0.085*90./60.)/reduction*degreesPerSec,
+                                0., 180.));
 }
 
 /*

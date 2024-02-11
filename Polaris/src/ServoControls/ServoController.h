@@ -4,12 +4,14 @@
 
 class ServoController {
     private:    
-        Servo myServo;
+        Servo servo;
         bool clockwise;
         // servo angle is in degrees
-        float angle;
+        float p; // s^-1
+        float pulleyDiameter; // cm
+        float stringLength;   // cm
     public:
         ServoController(int, bool);
-        void updateServo(float);
+        void adjustString(float);
         void setToAngle(float);
 };
