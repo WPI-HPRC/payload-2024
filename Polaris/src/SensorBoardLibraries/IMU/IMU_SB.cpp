@@ -7,7 +7,7 @@
 #include <Wire.h>
 #include "IMU_SB.h"
 #include "ICM42688-P_Registers.h"
-#include <SensorBoardLibraries/Config.h>
+#include "SensorBoardLibraries/Config.h"
 
 /*
     @brief Constructor for the ICM42688P class

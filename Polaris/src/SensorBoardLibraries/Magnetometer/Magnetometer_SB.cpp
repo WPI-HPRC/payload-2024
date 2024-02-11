@@ -1,5 +1,5 @@
 #include "Magnetometer_SB.h"
-#include <SensorBoardLibraries/Config.h>
+#include "SensorBoardLibraries/Config.h"
 
 
 /*

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <SensorBoardLibraries/Config.h>
-#include <SensorBoardLibraries/Sensor.h>
+#include "SensorBoardLibraries/Config.h"
+#include "SensorBoardLibraries/Sensor.h"
 
 /*
     @author Samay Govani

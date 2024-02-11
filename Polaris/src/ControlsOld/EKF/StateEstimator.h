@@ -2,7 +2,7 @@
 
 #include "Arduino.h"
 #include <BasicLinearAlgebra.h>
-#include <SensorBoardLibraries/SensorBoard.hpp>
+#include "SensorBoardLibraries/SensorBoard.hpp"
 
 /**
  * @author @frostydev99 - Daniel Pearson

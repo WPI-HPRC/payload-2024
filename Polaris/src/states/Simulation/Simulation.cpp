@@ -33,13 +33,16 @@ void Simulation::loop_impl() {
     telemPacket.i = currentState(1);
     telemPacket.j = currentState(2);
     telemPacket.k = currentState(3);
-
-    Camera camera;
-    camera.getData();
-    camera.readData(cameraData);
     
-    // Serial.println(this->deltaTime);
-    
+    // This is for testing the camera, not working currently as I2C not setup.
+    OpenMV camera;
+    struct CameraData camdata;
+    camera.readData(camdata);
+    Serial.print("camdata.cx: ");
+    Serial.println(camdata.cx);
+    Serial.print("camdata.cy: ");
+    Serial.println(camdata.cy);
+    //Serial.println(this->deltaTime);
 };
 
 State *Simulation::nextState_impl() {

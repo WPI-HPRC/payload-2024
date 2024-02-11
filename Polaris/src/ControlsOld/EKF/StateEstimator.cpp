@@ -127,11 +127,11 @@ BLA::Matrix<4> QuatStateEstimator::onLoop(SensorFrame sensorPacket) {
     // Serial.print(x(3)); Serial.print(",");
     // Serial.println(millis());
 
-    Serial.print("QUAT|");
-    Serial.print(x(0)); Serial.print(",");
-    Serial.print(x(1)); Serial.print(",");
-    Serial.print(x(2)); Serial.print(",");
-    Serial.println(x(3));
+    // Serial.print("QUAT|");
+    // Serial.print(x(0)); Serial.print(",");
+    // Serial.print(x(1)); Serial.print(",");
+    // Serial.print(x(2)); Serial.print(",");
+    // Serial.println(x(3));
     // Serial.print("MAGV|");
     // Serial.print(magVector(0)); Serial.print(",");
     // Serial.print(magVector(1)); Serial.print(",");
@@ -155,6 +155,7 @@ BLA::Matrix<4> QuatStateEstimator::measurementFunction(SensorFrame sensorPacket)
         x(3) - (dt/2)*p*x(2) + (dt/2)*q*x(1) + (dt/2)*r*x(0)
     };
 
+    //For state testing
     // Serial.println("<----- State ----->");
     // for (int i = 0; i < f_q.Rows; i++) {
     //     for (int j = 0; j < f_q.Cols; j++) {
@@ -176,14 +177,16 @@ BLA::Matrix<4> QuatStateEstimator::measurementFunction(SensorFrame sensorPacket)
     BLA::Matrix<3> g_a = BLA::MatrixTranspose<BLA::Matrix<3,3>>(rot) * grav_T;
 
     BLA::Matrix<3> accel_a = accel_R - g_a;
-
-    Serial.println("<----- Accel in Body ----->");
+    
+    //For quaternion testing
+    /*Serial.println("<----- Accel in Body ----->");
     for (int i = 0; i < accel_a.Rows; i++) {
         for (int j = 0; j < accel_a.Cols; j++) {
             Serial.print(String(accel_a(i,j)) + "\t");
         }
         Serial.println("");
     }
+    */
 
     // Normalize Quaternion Function
     f_q = f_q / BLA::Norm(f_q);

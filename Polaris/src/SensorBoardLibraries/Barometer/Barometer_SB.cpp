@@ -1,7 +1,7 @@
 #include "Barometer_SB.h"
 #include "Wire.h"
 #include "MS5611_Registers.h"
-#include <SensorBoardLibraries/Config.h>
+#include "SensorBoardLibraries/Config.h"
 
 /*
     @brief Constructor for the MS5611 class
