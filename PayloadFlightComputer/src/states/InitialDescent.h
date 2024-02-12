@@ -5,5 +5,5 @@
 class InitialDescent : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		InitialDescent();
+		InitialDescent(struct Sensors *sensors);
 };

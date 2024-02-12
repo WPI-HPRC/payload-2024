@@ -1,5 +1,5 @@
 #pragma once
-#include <ICM42688.h>
+#pragma <ICM42688.h> 
 
 typedef struct {
   float accX;
@@ -13,7 +13,7 @@ typedef struct {
 class Accelerometer {
   public:
     Accelerometer(int addr);
-    void init();
+    bool init();
     ICM_data read();
   private:
     ICM42688 icm2688;

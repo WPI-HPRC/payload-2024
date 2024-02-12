@@ -1,28 +1,19 @@
 #include "State.h"
 #include <Arduino.h>
 
+State::State(struct Sensors *sensors) : sensors(sensors) {}
+
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
-
-	// for z acceleration
-	float transitionBufAcc[10];
-    uint8_t transitionBufIndAcc = 0;
-
-	// for vertical velocity
-	int16_t transitionBufVelVert[10];
-    uint8_t transitionBufIndVelVert = 0;
-
-	// Altitude buffer
-	int16_t transitionBufAlt[10];
-	uint8_t transitionBufIndAlt = 0;
-	int16_t altitudePreviousAvg;
 }
 
 void State::loop() {
 	long long now = millis();
 	this->currentTime = now - this->startTime;
 	this->deltaTime = now - this->lastLoopTime;
+	this->loopCount++;
+	this->sensorPacket = this->sensors->readSensors();
 	loop_impl();
 	this->lastLoopTime = millis();
 }
@@ -30,6 +21,3 @@ void State::loop() {
 State *State::nextState() {
 	return nextState_impl();
 }
-
-
-// put sensor code here

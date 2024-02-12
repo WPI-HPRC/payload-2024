@@ -3,15 +3,47 @@
 #include <Barometer.h>
 #include <Wire.h>
 
-Barometer::Barometer()
-{
+Barometer::Barometer() {}
+
+bool Barometer::init(int addr) {
+    if (!this->sensor.begin_I2C(addr)) {
+        return false;
+    }
+    this->sensor.setDataRate(LPS25_RATE_12_5_HZ);
+    return true;
 }
-void Barometer::init(int sda, int scl)
-{
-    TwoWire W(sda, scl);
-    this->sensor.begin_I2C(LPS2X_I2CADDR_DEFAULT, &W);
+
+LPS25_data Barometer::read() {
+    sensors_event_t pressure, temp;
+    this->sensor.getEvent(&pressure, &temp);
+
+    LPS25_data data = {
+        .pressure = pressure.pressure,
+        .temp = temp.temperature,
+    };
+
+    return data;
 }
-void Barometer::readSensor(LPS25_data *data)
-{
-    this->sensor.getEvent(&data->pressure, &data->temp);
-}
+
+
+
+
+
+
+// /* Rayhan Semy and Amber Cronin
+// 10/7/2023*/
+// #include <Barometer.h>
+// #include <Wire.h>
+
+// Barometer::Barometer()
+// {
+// }
+// void Barometer::init(int sda, int scl)
+// {
+//     TwoWire W(sda, scl);
+//     this->sensor.begin_I2C(LPS2X_I2CADDR_DEFAULT, &W);
+// }
+// void Barometer::readSensor(LPS25_data *data)
+// {
+//     this->sensor.getEvent(&data->pressure, &data->temp);
+// }
