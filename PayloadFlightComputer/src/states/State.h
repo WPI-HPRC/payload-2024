@@ -10,7 +10,7 @@ private:                             \
 #include "Arduino.h"
 #include "../utility.hpp"
 #include <ArduinoEigen.h>
-#include <controls/ekf/EKF.h>
+#include <controls\ekf\EKF\EKF.h>
 #include <BasicLinearAlgebra.h>
 /**
  * @brief Abstract class representing a rocket state.
