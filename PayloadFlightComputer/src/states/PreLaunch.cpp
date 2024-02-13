@@ -86,9 +86,9 @@
 
 #include "PreLaunch.h"
 #include "State.h"
-#include "Launch.h"
 #include "Debug.h"
 #include "Sensors.h"
+#include "Stowed.h"
 
 #define IN_FOISE true
 
@@ -143,7 +143,7 @@ State *PreLaunch::nextState_impl()
 
 	if (this->currentTime > MAX_PRELAUNCH_TIME && sensorPacket.gpsLock)
 	{
-		return new Launch(sensors);
+		return new Stowed(sensors);
 	}
 	return nullptr;
 }

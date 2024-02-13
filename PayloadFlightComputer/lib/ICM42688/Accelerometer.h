@@ -1,5 +1,5 @@
 #pragma once
-#pragma <ICM42688.h> 
+#include <ICM42688.h>
 
 typedef struct {
   float accX;
