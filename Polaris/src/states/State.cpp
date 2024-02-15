@@ -1,36 +1,69 @@
 #include "State.h"
+#include <Arduino.h>
+State::State(StateEstimator *stateEstimator) : stateEstimator(stateEstimator) {}
+void State::initialize() {
+	this->startTime = millis();
+	initialize_impl();
 
-void State::initialize()
-{
-    this->startTime = millis();
-    initialize_impl();
+	 xbee->begin();
+
+	// for z acceleration //I need to clarify why these are here 
+	float transitionBufAcc[10]; 
+    uint8_t transitionBufIndAcc = 0;
+
+	// for vertical velocity
+	int16_t transitionBufVelVert[10];
+    uint8_t transitionBufIndVelVert = 0;
+
+	// Altitude buffer
+	int16_t transitionBufAlt[10];
+	uint8_t transitionBufIndAlt = 0;
+	int16_t altitudePreviousAvg;
 }
-void State::loop()
-{
-    long long now = millis();
-    this->currentTime = now - this->startTime;
-    this->deltaTime = now - this->lastLoopTime;
-    loop_impl();
-    this->lastLoopTime = millis();
+
+void State::loop() {
+	long long now = millis();
+	this->currentTime = now - this->startTime;
+	this->deltaTime = now - this->lastLoopTime;
+	this->loopCount++;
+	loop_impl();
+	this->lastLoopTime = millis();
+
+	//Sensor stuff here 
+	this->currentState = ekf->onLoop(sensorData);
+	this->telemPacket.state = this->getId();
+    telemPacket.accelX = sensorData.ac_x;
+    telemPacket.accelY = sensorData.ac_y;
+    telemPacket.accelZ = sensorData.ac_z;
+
+    telemPacket.gyroX = sensorData.gy_x;
+    telemPacket.gyroY = sensorData.gy_y;
+    telemPacket.gyroZ = sensorData.gy_z;
+
+    telemPacket.magX = sensorData.mag_x;
+    telemPacket.magY = sensorData.mag_y;
+    telemPacket.magZ = sensorData.mag_z;
+
+    telemPacket.pressure = sensorData.Pressure;
+    telemPacket.altitude = pressureToAltitude(sensorData.Pressure);
+    telemPacket.timestamp = this->currentTime;
+    telemPacket.q = currentState(0);
+    telemPacket.i = currentState(1);
+    telemPacket.j = currentState(2);
+    telemPacket.k = currentState(3);
+
+	//Need to add in additional Payload values for sensor/telem packet 
+
+	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+
+    Serial.print("Packet Success: ");
+    Serial.println(millis());
+
 }
-State *State::nextState()
-{
-    return nextState_impl();
+
+State *State::nextState() {
+	return nextState_impl();
 }
 
-float State::pressureToAltitude(float pressure) {
-    // physical parameters for model
-    const float pb = 101325;   // [Pa] pressure at sea level
-    const float Tb = 288.15;   // [K] temperature at seal level
-    const float Lb = -0.0065;  // [K/m] standard temperature lapse rate
-    const float hb = 0;        // [m] height at bottom of atmospheric layer (sea level)
-    const float R = 8.31432;   // [N*m/mol*K] universal gas constant
-    const float g0 = 9.80665;  // [m/s^2] Earth standard gravity
-    const float M = 0.0289644; // [kg/mol] molar mass of Earth's air
 
-    // convert pressure from [mBar] to [Pa]
-    float pressure_Pa = pressure * 100;
-
-    // compute altitude from formula
-    return hb + (Tb / Lb) * (pow((pressure_Pa / pb), (-R * Lb / (g0 * M))) - 1);
-};
+// put sensor code here

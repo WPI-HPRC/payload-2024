@@ -1,10 +1,10 @@
 #include "PreLaunch.h"
 #include "State.h"
-#include "Launch.h"
+#include "Stowed.h"
 #include "Debug.h"
 #include "Sensors.h"
 
-#define IN_FOISE false
+#define IN_FOISE false //Need to edit to be Payload Specific, stole from PolarisLTS :)
 
 PreLaunch::PreLaunch(struct Sensors *sensors) : State(sensors) {}
 
@@ -60,4 +60,9 @@ State *PreLaunch::nextState_impl()
 		return new Launch(sensors);
 	}
 	return nullptr;
+}
+
+enum StateId PreLaunch::getId()
+{
+    return StateId::ID_PreLaunch;
 }

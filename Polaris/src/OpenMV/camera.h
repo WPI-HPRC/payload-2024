@@ -7,6 +7,15 @@
 #include <Wire.h>
 
 #define CAMERA_I2C_ADDRESS 0x12 
+//Properties of the Image
+#define CAMERA_FOV_VERTICAL 55.6
+#define CAMERA_FOV_HORIZONTAL 70.8
+#define CAMERA_RESOLUTION_X 160
+#define CAMERA_RESOLUTION_Y 120
+//Meters to Longitude and Latitude
+#define METERS_TO_LATITUDE 1.0 / 111111.0
+//Degrees to Radians
+#define DEGREES_TO_RADIANS 3.14159265358979323846/180.0
 
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
@@ -27,8 +36,8 @@ public:
     bool handleUART(uint8_t b);
 
     //add functions for GPS point Calcs 
-    GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt); 
-    // Trajectory getReferenceTrajectory(GPSPoint point); 
+    GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt, float anglePitch, float heading); 
+    // Trajectory getReferenceTrajectory(GPSPoint targetPoint, GPSPoint payloadPos); 
 };
 
 #endif
