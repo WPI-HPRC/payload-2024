@@ -6,6 +6,12 @@
 class Utility
 {
 public:
+    /**
+     * @brief Calculate barometric altitude MSL from pressure
+     * 
+     * @param pressure Barometric Pressure [hPa]
+     * @return float Altitude [m]
+     */
     static float pressureToAltitude(float pressure)
     {
         // physical parameters for model
@@ -22,6 +28,30 @@ public:
 
         // compute altitude from formula
         return hb + (Tb / Lb) * (pow((pressure_Pa / pb), (-R * Lb / (g0 * M))) - 1);
+    };
+
+    /**
+     * @brief Get temp at altitude using standard atmospheric model
+     * @todo Complete for altitudes above 11,000m
+     * @param altitude [m]
+     * @return float [K]
+     */
+    static float getTempAtAlt(float altitude) {
+        return T_sl + a_1*altitude;
+    };
+
+    /**
+     * @brief Get density at altitude using standard atmospheric model
+     * 
+     * @param altitude [m]
+     * @return float [kg/m^3]
+     */
+    static float getDensityAtAlt(float altitude) {
+        if(altitude <= 11000) {
+            return rho_sl * pow((getTempAtAlt(altitude) / T_sl), (-1 - (g / (a_1*R_air))));
+        } else {
+            return rho_sl * pow((1 - (0.0065*altitude) / T_sl), (g * 0.029 / (R_air * 0.0065)));
+        };
     };
 
     struct SensorPacket
@@ -141,4 +171,12 @@ public:
     constexpr static float b_earth = 6356752.3142;    // [m] Semi-Minor axis of Earth
     constexpr static float e_earth = 0.0818191908426; // Eccentricity of Earth
     constexpr static float r_earth = 6378137; // [m] Radius of Earth
+
+    // Earth Constants
+    constexpr static float g = 9.80665; // [m/s^2] Gravitational Acceleration
+    constexpr static float R_air = 287; // [J/kg*k] Universal Gas Constant
+    constexpr static float T_sl = 288.16; // [K] Mean Temperature at sea level
+    constexpr static float P_sl = 101325; // [Pa] Mean Pressure at sea level
+    constexpr static float a_1 = -6.5*pow(10,3); // [K/m] Temperature gradient
+    constexpr static float rho_sl = 1.225; // [kg/m^3] Air Density at sea level
 };

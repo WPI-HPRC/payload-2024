@@ -13,17 +13,17 @@
  */
 
 
-#include "TrajectoryGeneration.h"
+#include "TargetTrajectory.h"
 
 /**
  * @brief Construct a new Trajectory Generation:: Trajectory Generation object
  * 
  */
-TrajectoryGeneration::TrajectoryGeneration() {
+TargetTrajectory::TargetTrajectory() {
     
 };
 
-Eigen::Vector4 TrajectoryGeneration::calculateTargetTrajectoryConstants(Utility::SensorPacket sensorPacket, Eigen::Vector2 targetPoint) {
+Eigen::Vector<float,4> TargetTrajectory::calculateTargetTrajectoryConstants(Utility::SensorPacket sensorPacket, const Eigen::Vector<float,2> &targetPoint) {
     
     //Calculate Earth Centered Earth Fixed Location for LONG/LAT Point 2
     float N_earth_0 = Utility::a_earth / sqrt(1 - pow(Utility::e_earth, 2) * pow(sin(sensorPacket.gpsLat), 2));
@@ -44,7 +44,7 @@ Eigen::Vector4 TrajectoryGeneration::calculateTargetTrajectoryConstants(Utility:
 
     // Utilize the least squares estimation method to fit a curve to the target trajectory
 
-    Eigen::Vector2 y_pts {Y_0, Y_1};
+    Eigen::Vector<float,2> y_pts {Y_0, Y_1};
 
     /**f(x) = Ax^3 + Bx^2 + Cx + D
      * 
@@ -57,7 +57,7 @@ Eigen::Vector4 TrajectoryGeneration::calculateTargetTrajectoryConstants(Utility:
     };
 
     // C = X \ y_pts => {A,B,C,D}
-    Eigen::Vector4 C = X_matrix.colPivHouseholderQr().solve(y_pts);
+    Eigen::Vector<float,4> C = X_matrix.colPivHouseholderQr().solve(y_pts);
 
     return C;
 };

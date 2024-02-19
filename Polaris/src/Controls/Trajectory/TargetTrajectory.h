@@ -9,7 +9,8 @@
  * @brief Trajectory generation class - Used to calculate the constants for a third degree spline of an estimated target trajectory for the model predictive controller
  * 
  */
-class TrajectoryGeneration {
+class TargetTrajectory {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     public:
 
     /**
@@ -17,7 +18,7 @@ class TrajectoryGeneration {
      * 
      * @return TrajectoryGeneration 
      */
-    TrajectoryGeneration TrajectoryGeneration();
+    TargetTrajectory();
 
     /**
      * @brief Calculate a target trajectory for the Model Predcitive Controller
@@ -26,8 +27,8 @@ class TrajectoryGeneration {
      * TODO: Potentially include target altitude in formula
      * @param sensorPacket Current sensor packet to feed current GPS location
      * @param targetPoint Target GPS point in lat/long
-     * @return BLA::Matrix<4> 
+     * @return Eigen::Vector4 
      */
-    Eigen::Vector4 calculateTargetTrajectoryConstants(Utility::SensorPacket sensorPacket, Eigen::Vector2 targetPoint);
+    Eigen::Vector<float,4> calculateTargetTrajectoryConstants(Utility::SensorPacket sensorPacket, const Eigen::Vector<float,2> &targetPoint);
 
 };
