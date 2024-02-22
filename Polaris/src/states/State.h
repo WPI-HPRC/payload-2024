@@ -1,6 +1,7 @@
 #pragma once
 #pragma once
 #include "utility.hpp"
+#include <SensorBoardLibraries/SensorBoard.hpp>
 
 #define _STATE_CLASS_IMPLS_          \
 private:                             \
@@ -49,7 +50,7 @@ class State {
 		virtual enum StateId getId() = 0;
 		virtual ~State() {}
 
-		Utility::SensorPacket sensorPacket; //Protected? 
+		SensorFrame sensorData; //Protected? 
 		Utility::TelemPacket telemPacket;
 
 	protected:

@@ -1,22 +1,21 @@
 #include "WindLeft.h"
 #include "State.h"
-#include "ControlledDescent.h"
+#include "HoldLeft.h"
+#include "FlightParams.hpp"
 
-WindLeft::WindLeft() {
-	
-}
+WindLeft::WindLeft() {}
 
-void WindLeft::initialize_impl() {
-
-}
+void WindLeft::initialize_impl() {}
 
 void WindLeft::loop_impl() {
-
+	//wind left servos 
 }
 
 State *WindLeft::nextState_impl() {
-	if (/* check IPP */this->currentTime > MAX_INITIALDESCENT_TIME)
+	if (this->currentTime > MAX_SERVO_WIND_TIME /*||servo values = MAX_SERVO_POS*/)
 	{
+		//stop servos 
+		Serial.println("Entering HoldLeft!")
 		return new HoldLeft();
 	}
 	return nullptr;

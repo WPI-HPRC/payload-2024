@@ -1,15 +1,12 @@
 #include "State.h"
 #include "HoldLeft.h"
 #include "WindRight.h"
+#include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft() {
+HoldLeft::HoldLeft() {}
 
-}
-
-void HoldLeft::initialize_impl() {
-
-}
+void HoldLeft::initialize_impl() {}
 
 void HoldLeft::loop_impl() {
 // read 10 altitude samples and take average 
@@ -17,8 +14,9 @@ void HoldLeft::loop_impl() {
 }
 
 State *HoldLeft::nextState_impl() {
-	if (/*this->sensorPacket.altitude <*/ ALT_THRESHOLD_CONTROLLED ||this->currentTime > MAX_CONTROLLED_DESCENT_TIME)
+	if (this->currentTime > MAX_HOLD_TIME)
 	{
+		Serial.println("Entering WindRight!")
 		return new WindRight();
 	}
 	return nullptr;

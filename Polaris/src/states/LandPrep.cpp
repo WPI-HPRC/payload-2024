@@ -1,19 +1,22 @@
 #include "LandPrep.h"
 #include "State.h"
 #include "Recovery.h"
+#include "FlightParams.hpp"
 
 LandPrep::LandPrep() {}
 
 void LandPrep::initialize_impl() {}
 
 void LandPrep::loop_impl() {
-	// read 10 velocity samples and take average 
+	// read 10 velocity samples and take average, integrate acceleration 
 		// ~ when samples average to greater than threshold then enter next state 
+	//fold in camera servo 
 }
 
 State *LandPrep::nextState_impl() {
-	if (/*this->sensorPacket.velocity == 0 ||*/ this->currentTime > MAX_LAND_TIME)
-	{
+	if (/*Velocity readings are < LANDING_VELOCITY*/ )
+	{	
+		Serial.println("Entering Recovery!")
 		return new Recovery();
 	}
 	return nullptr;

@@ -24,34 +24,6 @@ public:
         return hb + (Tb / Lb) * (pow((pressure_Pa / pb), (-R * Lb / (g0 * M))) - 1);
     };
 
-    struct SensorPacket
-    {
-        // Raw Sensor Readings
-        float accelX; //These need to be updated according to Polaris EKF variables
-        float accelY;
-        float accelZ;
-        float gyroX;
-        float gyroY;
-        float gyroZ;
-        float magX;
-        float magY;
-        float magZ;
-        float pressure;
-
-        // Calculated Values
-        float altitude;
-
-        // GPS Inputs
-        float gpsLat;
-        float gpsLong;
-        float gpsAltMSL;
-        float gpsAltAGL;
-        uint32_t epochTime;
-        uint8_t satellites;
-        boolean gpsLock = false;
-
-        uint32_t timestamp;
-    };
 
     #pragma pack(push,1)
     struct TelemPacket {
@@ -117,8 +89,14 @@ public:
         float targetGpsLong = 0.0f;
 
         //Controls 
-        uint32_t desiredServoPos = 0; //Servo Controls Values 
-        uint32_t actualServoPos = 0;
+        uint32_t desiredServoPos1 = 0; //Servo Controls Values 
+        uint32_t actualServoPos1 = 0;
+        uint32_t desiredServoPos2 = 0; //Servo Controls Values 
+        uint32_t actualServoPos2 = 0;
+        uint32_t desiredServoPos3 = 0; //Servo Controls Values 
+        uint32_t actualServoPos3 = 0;
+        uint32_t desiredServoPos4 = 0; //Servo Controls Values 
+        uint32_t actualServoPos4 = 0;
 
         float trajA = 0.0f; //Calculated Trajectory Constants 
         float trajB = 0.0f;
@@ -128,42 +106,42 @@ public:
     #pragma pack(pop)
 
 
-    static void logData(FlashChip *flash, SensorPacket sensorPacket) //Need to fix to be Polaris Variables 
+    static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
     {
-        String structString = String(sensorPacket.accelX) + "," +
-                              String(sensorPacket.accelY) + "," +
-                              String(sensorPacket.accelZ) + "," +
-                              String(sensorPacket.gyroX) + "," +
-                              String(sensorPacket.gyroY) + "," +
-                              String(sensorPacket.gyroZ) + "," +
-                              String(sensorPacket.magX) + "," +
-                              String(sensorPacket.magY) + "," +
-                              String(sensorPacket.magZ) + "," +
-                              String(sensorPacket.pressure) + "," +
-                              String(sensorPacket.altitude) + "," +
-                              String(sensorPacket.w) + "," +
-                              String(sensorPacket.i) + "," +
-                              String(sensorPacket.j) + "," +
-                              String(sensorPacket.k) + "," +
-                              String(sensorPacket.X) + "," +
-                              String(sensorPacket.Y) + "," +
-                              String(sensorPacket.Z) + "," + //No Position??
-                              String(sensorPacket.gpsLat) + "," +
-                              String(sensorPacket.gpsLong) + "," +
-                              String(sensorPacket.gpsAltMSL) + "," +
-                              String(sensorPacket.gpsAltAGL) + "," +
-                              String(sensorPacket.gpsLock) + "," +
-                              String(sensorPacket.satellites) + "," +
-                              String(sensorPacket.timestamp) + "," +
-                              String(sensorPacket.cx) + "," +
-                              String(sensorPacket.cy) + "," +
-                              String(sensorPacket.targetGpsLat) + "," +
-                              String(sensorPacket.targetGpsLong) + "," +
-                              String(sensorPacket.desiredServoPos) + "," +
-                              String(sensorPacket.trajA) + "," +
-                              String(sensorPacket.trajB) + "," +
-                              String(sensorPacket.trajC) + "," +
-                              String(sensorPacket.trajD); 
+        String structString = String(telemPacket.accelX) + "," +
+                              String(telemPacket.accelY) + "," +
+                              String(telemPacket.accelZ) + "," +
+                              String(telemPacket.gyroX) + "," +
+                              String(telemPacket.gyroY) + "," +
+                              String(telemPacket.gyroZ) + "," +
+                              String(telemPacket.magX) + "," +
+                              String(telemPacket.magY) + "," +
+                              String(telemPacket.magZ) + "," +
+                              String(telemPacket.pressure) + "," +
+                              String(telemPacket.altitude) + "," +
+                              String(telemPacket.q) + "," +
+                              String(telemPacket.i) + "," +
+                              String(telemPacket.j) + "," +
+                              String(telemPacket.k) + "," +
+                              String(telemPacket.X) + "," +
+                              String(telemPacket.Y) + "," +
+                              String(telemPacket.Z) + "," + //No Position??
+                              String(telemPacket.gpsLat) + "," +
+                              String(telemPacket.gpsLong) + "," +
+                              String(telemPacket.gpsAltMSL) + "," +
+                              String(telemPacket.gpsAltAGL) + "," +
+                              String(telemPacket.gpsLock) + "," +
+                              String(telemPacket.satellites) + "," +
+                              String(telemPacket.timestamp) + "," +
+                              String(telemPacket.cx) + "," +
+                              String(telemPacket.cy) + "," +
+                              String(telemPacket.targetGpsLat) + "," +
+                              String(telemPacket.targetGpsLong) + "," +
+                              String(telemPacket.desiredServoPos) + "," +
+                              String(telemPacket.trajA) + "," +
+                              String(telemPacket.trajB) + "," +
+                              String(telemPacket.trajC) + "," +
+                              String(telemPacket.trajD); 
                               
 
         flash->writeStruct(structString);
