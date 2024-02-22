@@ -4,7 +4,7 @@
 #include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft() {}
+HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
 
 void HoldLeft::initialize_impl() {}
 

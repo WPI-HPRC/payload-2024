@@ -15,6 +15,8 @@ private:                             \
 #include <BasicLinearAlgebra.h>
 #include <TelemetryBoard/XBeeProSX.h>
 #include <EKF.h>
+#include <libs/Flash/Flash.h>
+#include <Controls/EKF/EKF.h>
 
 enum StateId {
   ID_PreLaunch = 0,
@@ -54,12 +56,13 @@ class State {
 		Utility::TelemPacket telemPacket;
 
 	protected:
+		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
 		long long deltaTime = 0;
 		long long loopCount = 0;
-		XbeeProSX * xbee = new XbeeProSX(17); // CS GPIO17
+		
 
 	private:
 		//! @brief number of milliseconds from boot to the initialize call

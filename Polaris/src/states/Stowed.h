@@ -7,9 +7,7 @@
 class Stowed : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Stowed(StateEstimator * ekf);
+		Stowed(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
 
 	private:
-
-    StateEstimator * ekf; //Why? 
 };

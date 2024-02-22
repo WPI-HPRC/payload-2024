@@ -3,7 +3,7 @@
 #include "Recovery.h"
 #include "FlightParams.hpp"
 
-LandPrep::LandPrep() {}
+LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
 
 void LandPrep::initialize_impl() {}
 

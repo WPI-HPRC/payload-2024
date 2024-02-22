@@ -11,7 +11,7 @@ ServoController::ServoController(int pin, bool clockwise, float p,
     this->clockwise = clockwise;
     this->servo.attach(pin);
     this->p = p;
-    this->pulleyDiameter = pulleyDiameter;
+    this->pulleyDiameter = pulleyDiameter; //p is P-gain 
     this->stringLength = stringLength;
     // Set servo to be still
     this->servo.write(90.);

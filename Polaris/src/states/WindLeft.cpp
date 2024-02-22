@@ -3,7 +3,7 @@
 #include "HoldLeft.h"
 #include "FlightParams.hpp"
 
-WindLeft::WindLeft() {}
+WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
 
 void WindLeft::initialize_impl() {}
 

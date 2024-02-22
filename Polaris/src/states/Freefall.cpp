@@ -3,7 +3,7 @@
 #include "WindLeft.h"
 #include "FlightParams.hpp"
 
-Freefall::Freefall() {}
+Freefall::Freefall(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos) {}
 void Freefall::initialize_impl() {
 
 }

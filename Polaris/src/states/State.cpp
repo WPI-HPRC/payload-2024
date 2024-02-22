@@ -1,6 +1,6 @@
 #include "State.h"
 #include <Arduino.h>
-State::State(StateEstimator *stateEstimator) : stateEstimator(stateEstimator) {}
+State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();

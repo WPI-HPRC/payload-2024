@@ -6,5 +6,5 @@
 class Freefall : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Freefall(); 
+		Freefall(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos);  
 };

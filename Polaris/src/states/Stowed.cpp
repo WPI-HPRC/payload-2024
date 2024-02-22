@@ -4,7 +4,7 @@
 #include "FlightParams.hpp"
 
 
-Stowed::Stowed() {
+Stowed::Stowed(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){} {
 }
 
 void Stowed::initialize_impl() {

@@ -5,5 +5,5 @@
 class LandPrep : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		LandPrep();
+		LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
 };

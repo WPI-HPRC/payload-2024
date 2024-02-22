@@ -6,5 +6,5 @@
 class HoldLeft : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		HoldLeft();
+		HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
 };

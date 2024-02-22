@@ -7,7 +7,7 @@
 
 #define IN_FOISE false //Need to edit to be Payload Specific, stole from PolarisLTS :)
 
-PreLaunch::PreLaunch(struct Sensors *sensors) : State(sensors) {}
+PreLaunch::PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
 
 void PreLaunch::initialize_impl() {
 }

@@ -8,6 +8,8 @@
 #include <states/State.h>
 #include <states/PreLaunch/PreLaunch.h>
 #include "libs/Flash/Flash.h"
+#include "utility.hpp"
+#include <Controls/EKF/EKF.h>
 
 // #include <TeensyDebug.h>
 // #pragma GCC optimize ("O0")
@@ -16,7 +18,10 @@
 
 SensorFrame sensorFrame;
 
-FlashChip flash = FlashChip();
+FlashChip *flash = new FlashChip();
+StateEstimator *stateEstimator = nullptr; 
+XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
+Utility::Servos *servos; 
 
 constexpr static int LOOP_RATE = 100;
 
@@ -45,7 +50,7 @@ void setup() {
 		while(1) {};
 	}
 
-	state = new PreLaunch();
+	state = new PreLaunch(flash, stateEstimator, xbee, servos);
 
 	state->initialize();
 

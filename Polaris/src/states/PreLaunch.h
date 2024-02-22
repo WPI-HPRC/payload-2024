@@ -7,8 +7,7 @@
 class PreLaunch : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		PreLaunch(struct Sensors *sensors);
+		PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos);
 	private:
-		StateEstimator * ekf;
 	
 };
