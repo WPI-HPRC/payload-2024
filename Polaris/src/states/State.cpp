@@ -5,20 +5,7 @@ void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
 
-	 xbee->begin();
-
-	// for z acceleration //I need to clarify why these are here 
-	float transitionBufAcc[10]; 
-    uint8_t transitionBufIndAcc = 0;
-	
-	// for vertical velocity
-	int16_t transitionBufVelVert[10];
-    uint8_t transitionBufIndVelVert = 0;
-
-	// Altitude buffer
-	int16_t transitionBufAlt[10];
-	uint8_t transitionBufIndAlt = 0;
-	int16_t altitudePreviousAvg;
+	xbee->begin();
 }
 
 void State::loop() {
@@ -87,10 +74,6 @@ void State::loop() {
         float trajB = 0.0f;
         float trajC = 0.0f;
         float trajD = 0.0f; */
-
-
-
-	//Need to add in additional Payload values for sensor/telem packet 
 
 	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
 	flash->logData() //log data here or in States, is this also where xbee should be going and where falsh is initialized
