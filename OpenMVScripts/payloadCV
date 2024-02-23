@@ -1,14 +1,16 @@
 # CV Filter - By: paigerust - Sat Dec 9 2023
 
-import sensor, image, time, machine, pyb
+import sensor, image, time, utime, rpc, machine, pyb, struct
 
 sensor.reset()
 sensor.set_pixformat(sensor.GRAYSCALE)
 sensor.set_framesize(sensor.QQVGA) #QQVGA frame size: 160x120
 sensor.skip_frames(time = 2000)
 
+interface = rpc.rpc_i2c_slave(slave_addr=0x12)
 
 clock = time.clock()
+utime.sleep_ms(1000)
 start = pyb.millis()
 
 m = mjpeg.Mjpeg('test_launch1.mjpeg')
@@ -40,8 +42,16 @@ with open("time_stamps.txt", "wb") as f:
             img.draw_ellipse(optimal_blob.enclosed_ellipse(), color = (255, 255, 255))
             img.draw_cross(optimal_blob.cx(), optimal_blob.cy(), color = (0, 0, 0))
 
+            dat_buf = struct.pack("<ii",optimal_blob.cx,optimal_blob.cy)
+
             # Print optimal_blob centroid to terminal
             # print("Blob centroid: " + str(optimal_blob.cx()) + ", " + str(optimal_blob.cy()))
+        try:
+            print("Trying Send")
+            interface.put_bytes(dat_buf, timeout_ms=10)
+        except OSError as e:
+            pass
+
         time.sleep(0.1)
 
         if pyb.elapsed_millis(start) > 18000:
