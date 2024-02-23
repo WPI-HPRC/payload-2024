@@ -1,7 +1,12 @@
+#pragma once 
+#include <Arduino.h>
+#include <Servo.h>
+#include <stdlib.h>
+#include <math.h>
 
 class ServoController {
     private:    
-        Servo servo;
+        Servo servo; 
         bool clockwise;
         // servo angle is in degrees
         float p; // s^-1
@@ -28,7 +33,7 @@ class ServoController {
         /**
          * @brief Reads current Servo value 
         */
-        u_int32_t readServo(); 
+        uint32_t readServo(); 
 };
 
 /**

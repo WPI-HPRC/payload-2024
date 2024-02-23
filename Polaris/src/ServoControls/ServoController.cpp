@@ -1,5 +1,3 @@
-#include <Servo.h>
-#include <stdlib.h>
 #include "ServoController.h"
 
 // const float pulleyDiameter = 4.374;
@@ -7,6 +5,7 @@
 // const float pGain = 5.;
 
 ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength) {
+    this->servo = servo; 
     this->clockwise = clockwise;
     this->servo.attach(pin);
     this->p = p;
@@ -21,8 +20,8 @@ ServoController::ServoController(int pin){
     this->servo.write(90.);
 }
 
-void setServo(float value){
-    servo.write(value); //cause cam servo is easy...
+void ServoController::setServo(float value){
+    this->servo.write(value); //cause cam servo is easy...
 }
 
 float shortestAngle(float angle) {
@@ -49,5 +48,5 @@ void ServoController::adjustString(float newStringLength) {
 }
 
 uint32_t ServoController::readServo(){ //Need to check if this works...
-    return servo.read()
+    return this->servo.read(); 
 }

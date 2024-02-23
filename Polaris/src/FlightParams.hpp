@@ -52,7 +52,7 @@
 
 #define G 9.81
 #define MASS 5.5; // [kg] Total system mass
-#define static D_P 1.8288; // [m] Diameter of Parachute
+#define D_P 1.8288; // [m] Diameter of Parachute
 #define S_P (PI/4) * (D_P*D_P); // [m^2] Surface Area of Parachute 
 #define C_D 0.7; // Coefficient of drag
 #define W_P G * MASS;

@@ -14,7 +14,6 @@ private:                             \
 #include "../utility.hpp" //why this again? 
 #include <BasicLinearAlgebra.h>
 #include <TelemetryBoard/XBeeProSX.h>
-#include <EKF.h>
 #include <libs/Flash/Flash.h>
 #include <Controls/EKF/EKF.h>
 #include <OpenMV/camera.h>
