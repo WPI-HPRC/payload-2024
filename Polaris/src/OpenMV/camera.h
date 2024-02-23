@@ -29,14 +29,12 @@ protected:
     uint8_t mvIndex = 0; //for counting bytes
 
 public:
-    uint8_t getData(void);
-    bool readData(CameraData& data);
 
-    bool checkUART(CameraData& data);
-    bool handleUART(uint8_t b);
+    bool readData(CameraData& data);
 
     //add functions for GPS point Calcs 
     GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt, float anglePitch, float heading); 
+    GPSPoint onLoop(SensorFrame sensorPacket, CameraData& data); 
     // Trajectory getReferenceTrajectory(GPSPoint targetPoint, GPSPoint payloadPos); 
 };
 

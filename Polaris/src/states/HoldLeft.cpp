@@ -4,20 +4,22 @@
 #include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
+HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
 
-void HoldLeft::initialize_impl() {}
+void HoldLeft::initialize_impl() {
+	this->stateStartTime = this->currentTime;
+}
 
 void HoldLeft::loop_impl() {
-// read 10 altitude samples and take average 
-		// ~ when samples average to greater than threshold then enter next state 
+	this->stateTime = this->currentTime - this->stateStartTime; 
+	//Do we need to continue running servos throughout all states? 
 }
 
 State *HoldLeft::nextState_impl() {
-	if (this->currentTime > MAX_HOLD_TIME)
+	if (this->stateTime > MAX_HOLD_TIME)
 	{
 		Serial.println("Entering WindRight!")
-		return new WindRight();
+		return new WindRight(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;
 }

@@ -9,6 +9,10 @@ class ServoController {
         float stringLength;   // cm
     public: 
         ServoController(int, bool, float, float, float);
+
+        ServoController(int); 
+
+        void setServo(float); 
         /**
          * @brief Sets servo speed to aim for target string length.
          * @param newStringLength The target length. 
@@ -20,6 +24,11 @@ class ServoController {
          * @param currAngle The current angle. 
         */
         void setToAngle(float, float);
+
+        /**
+         * @brief Reads current Servo value 
+        */
+        u_int32_t readServo(); 
 };
 
 /**

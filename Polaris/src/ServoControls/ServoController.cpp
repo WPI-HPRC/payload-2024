@@ -6,8 +6,7 @@
 // const float stringLength = 100.;
 // const float pGain = 5.;
 
-ServoController::ServoController(int pin, bool clockwise, float p,
-        float pulleyDiameter, float stringLength) {
+ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength) {
     this->clockwise = clockwise;
     this->servo.attach(pin);
     this->p = p;
@@ -15,6 +14,15 @@ ServoController::ServoController(int pin, bool clockwise, float p,
     this->stringLength = stringLength;
     // Set servo to be still
     this->servo.write(90.);
+}
+
+ServoController::ServoController(int pin){
+    this->servo.attach(pin); //check if this is the correct syntax 
+    this->servo.write(90.);
+}
+
+void setServo(float value){
+    servo.write(value); //cause cam servo is easy...
 }
 
 float shortestAngle(float angle) {
@@ -38,4 +46,8 @@ void ServoController::adjustString(float newStringLength) {
                      angleOffset;
     
     setToAngle(newAngle, currAngle);
+}
+
+uint32_t ServoController::readServo(){ //Need to check if this works...
+    return servo.read()
 }

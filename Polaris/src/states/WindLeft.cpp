@@ -3,20 +3,24 @@
 #include "HoldLeft.h"
 #include "FlightParams.hpp"
 
-WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
+WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
 
-void WindLeft::initialize_impl() {}
+void WindLeft::initialize_impl() {
+	this->stateStartTime = this->currentTime;
+}
 
 void WindLeft::loop_impl() {
-	//wind left servos 
+	this->stateTime = this->currentTime - this->stateStartTime; 
+	this->servos->paraServo_1.adjustString(DESIRED_STRING_LENGTH); 
+	this->servos->paraServo_3.adjustString(DESIRED_STRING_LENGTH); //Check Servo values 
 }
 
 State *WindLeft::nextState_impl() {
-	if (this->currentTime > MAX_SERVO_WIND_TIME /*||servo values = MAX_SERVO_POS*/)
+	if (this->stateTime > MAX_SERVO_WIND_TIME /*||servo values = MAX_SERVO_POS*/)
 	{
 		//stop servos 
 		Serial.println("Entering HoldLeft!")
-		return new HoldLeft();
+		return new HoldLeft(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;
 }

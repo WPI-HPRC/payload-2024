@@ -93,11 +93,11 @@ public:
         //Controls 
         uint32_t desiredServoPos1 = 0; //Servo Controls Values 
         uint32_t actualServoPos1 = 0;
-        uint32_t desiredServoPos2 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos2 = 0; 
         uint32_t actualServoPos2 = 0;
-        uint32_t desiredServoPos3 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos3 = 0; 
         uint32_t actualServoPos3 = 0;
-        uint32_t desiredServoPos4 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos4 = 0; 
         uint32_t actualServoPos4 = 0;
 
         float trajA = 0.0f; //Calculated Trajectory Constants 
@@ -112,6 +112,8 @@ public:
         ServoController paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
         ServoController paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
         ServoController paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
+
+        ServoController cameraServo = new ServoController(CAMERA_SERVO); 
     }
 
 

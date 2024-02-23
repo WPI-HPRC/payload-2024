@@ -1,6 +1,7 @@
 //Code Adapted from RBE 2002 D23 Repository 
 #include "OpenMV/camera.h"
 #include "OpenMV/cameraData.h"
+#include "SensorBoardLibraries/Sensor_Frames.hpp"
 
 //cx then cy
 bool OpenMV::readData(CameraData& data)
@@ -23,7 +24,7 @@ bool OpenMV::readData(CameraData& data)
     return retVal;
 }
 
-GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float currLong, float alt, float anglePitch, float heading){
+GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float currLong, float alt, float anglePitch, float heading){ //add in quaternion stuff here 
 
     GPSPoint point;
     //CHANGE ALL OF THIS SO THAT 0º IS DIRECTLY UPWARDS OPPOSED TO GRAVITY
@@ -65,4 +66,13 @@ GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float cu
     point.lon = targetLongitude + currLong;
 
     return point;   
+}
+
+GPSPoint OpenMV::onLoop(SensorFrame sensorPacket, CameraData& data){
+
+    if (readData()){
+         //return getTargetPoint(&data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, float anglePitch, float heading); //THis will be wrong, need quaternion stuff
+    }
+    
+ 
 }

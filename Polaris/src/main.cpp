@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Metro.h>
 
-
 #include <SPI.h>
 #include <Wire.h>
 
@@ -10,6 +9,7 @@
 #include "libs/Flash/Flash.h"
 #include "utility.hpp"
 #include <Controls/EKF/EKF.h>
+#include <OpenMV/camera.h>
 
 // #include <TeensyDebug.h>
 // #pragma GCC optimize ("O0")
@@ -22,6 +22,7 @@ FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
 XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
 Utility::Servos *servos; 
+OpenMV openMV = new OpenMV(); 
 
 constexpr static int LOOP_RATE = 100;
 
@@ -50,7 +51,7 @@ void setup() {
 		while(1) {};
 	}
 
-	state = new PreLaunch(flash, stateEstimator, xbee, servos);
+	state = new PreLaunch(flash, stateEstimator, xbee, servos, openMV);
 
 	state->initialize();
 
@@ -77,12 +78,6 @@ void loop() {
 		state->loop();
 
 		String timestamp = (String) millis();
-
-		//String structString = String(state->telemPacket.accelX) + "," + String(state->telemPacket.accelY) + "," + String(state->telemPacket.accelZ) + "," + String(state->telemPacket.gyroX) + "," + String(state->telemPacket.gyroY) + "," + String(state->telemPacket.gyroZ) + "," + String(state->telemPacket.magX) + "," + String(state->telemPacket.magY) + "," + String(state->telemPacket.magZ) + "," + String(state->telemPacket.pressure) + "," + String(state->telemPacket.altitude) + "," + String(state->telemPacket.q) + "," + String(state->telemPacket.i) + "," + String(state->telemPacket.j) + "," + String(state->telemPacket.k) + "," + timestamp;
-
-		// Serial.println(structString);
-
-		//flash.writeStruct(structString);
 
 		// Check for state transition each loop
 		State *nextState = state->nextState();

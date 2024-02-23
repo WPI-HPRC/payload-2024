@@ -17,6 +17,9 @@ private:                             \
 #include <EKF.h>
 #include <libs/Flash/Flash.h>
 #include <Controls/EKF/EKF.h>
+#include <OpenMV/camera.h>
+#include <OpenMV/cameraData.h>
+#include <OpenMV/gps.h>
 
 enum StateId {
   ID_PreLaunch = 0,
@@ -54,14 +57,19 @@ class State {
 
 		SensorFrame sensorData; //Protected? 
 		Utility::TelemPacket telemPacket;
+		CameraData camData; 
+		GPSPoint camGPS; 
+
 
 	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
+		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
 		long long deltaTime = 0;
 		long long loopCount = 0;
+		long long stateTime = 0; 
+		long long stateStartTime = 0; 
 		
 
 	private:
