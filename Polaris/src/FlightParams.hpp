@@ -25,9 +25,9 @@
 #define PARACHUTE_SERVO_3_IN 21
 #define PARACHUTE_SERVO_4_IN 20
 
-#define PARACHUTE_SERVO_1_DIR true
+#define PARACHUTE_SERVO_1_DIR false
 #define PARACHUTE_SERVO_2_DIR true
-#define PARACHUTE_SERVO_3_DIR true
+#define PARACHUTE_SERVO_3_DIR false
 #define PARACHUTE_SERVO_4_DIR true
 
 #define SERVO_GAIN 0.5
@@ -51,7 +51,7 @@
 
 #define MAX_HOLD_TIME 0
 
-#define DESIRED_STRING_LENGTH 70
+#define DESIRED_STRING_LENGTH 89
 
 //Trajectory Constants 
 

@@ -19,6 +19,7 @@ private:                             \
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
 #include <servos.h>
+#include <Servo.h>
 
 
 enum StateId {

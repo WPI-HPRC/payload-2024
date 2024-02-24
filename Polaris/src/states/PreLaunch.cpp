@@ -21,7 +21,7 @@ void PreLaunch::loop_impl() {
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
 State *PreLaunch::nextState_impl()
 {
-	if (this->telemPacket.accelZ > LAUNCH_ACCEL_THRESHOLD ) //Do we want to buffer/average this? 
+	if (this->stateTime > 5000) //Do we want to buffer/average this? 
 	{
 		Serial.println("Entering Stowed!"); 
 		return new Stowed(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); 

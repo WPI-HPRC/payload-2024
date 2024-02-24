@@ -1,6 +1,5 @@
 #pragma once
 #include "State.h"
-#include "Freefall.h"
 //! @brief max number of milliseconds we can remain in the prelaunch (initialization) state
 // #define MAX_STOWED_TIME 10000
 // #define ALT_THRESHOLD_STOWED 1300  // currently feet
@@ -23,4 +22,6 @@ class Stowed : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+
+		Servo servo; 
 };
