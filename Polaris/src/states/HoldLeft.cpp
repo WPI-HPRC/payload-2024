@@ -4,7 +4,7 @@
 #include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void HoldLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;
@@ -18,7 +18,7 @@ void HoldLeft::loop_impl() {
 State *HoldLeft::nextState_impl() {
 	if (this->stateTime > MAX_HOLD_TIME)
 	{
-		Serial.println("Entering WindRight!")
+		Serial.println("Entering WindRight!");
 		return new WindRight(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;

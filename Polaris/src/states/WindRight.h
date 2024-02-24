@@ -2,10 +2,10 @@
 #include "State.h"
 //#define MAX_INITIALDESCENT_TIME 10  // need to be changed is placeholder
 
-class WindLeft : public State {
+class WindRight : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		WindRight(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		WindRight(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 

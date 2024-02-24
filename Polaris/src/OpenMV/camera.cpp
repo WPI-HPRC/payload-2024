@@ -3,6 +3,7 @@
 #include "OpenMV/cameraData.h"
 #include "SensorBoardLibraries/Sensor_Frames.hpp"
 
+OpenMV::OpenMV(){}
 //cx then cy
 bool OpenMV::readData(CameraData& data)
 {
@@ -69,10 +70,10 @@ GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float cu
 }
 
 GPSPoint OpenMV::onLoop(SensorFrame sensorPacket, CameraData& data){
-
-    if (readData()){
-         //return getTargetPoint(&data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, float anglePitch, float heading); //THis will be wrong, need quaternion stuff
+    GPSPoint gps; 
+    if (readData(data)){
+        //return getTargetPoint(&data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, float anglePitch, float heading); //THis will be wrong, need quaternion stuff
+        return gps; 
     }
     
- 
 }

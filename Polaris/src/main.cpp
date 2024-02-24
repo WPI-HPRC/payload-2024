@@ -22,7 +22,7 @@ FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
 XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
 Utility::Servos *servos; 
-OpenMV openMV = new OpenMV(); 
+OpenMV *openMV = new OpenMV(); 
 
 constexpr static int LOOP_RATE = 100;
 

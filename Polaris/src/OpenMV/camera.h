@@ -19,6 +19,7 @@
 
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
+#include <SensorBoardLibraries/Sensor_Frames.hpp>
 
 class Camera {};
 
@@ -29,8 +30,8 @@ protected:
     uint8_t mvIndex = 0; //for counting bytes
 
 public:
-
-    bool readData(CameraData& data);
+    OpenMV(); 
+    bool readData(CameraData& data); 
 
     //add functions for GPS point Calcs 
     GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt, float anglePitch, float heading); 

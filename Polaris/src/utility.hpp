@@ -1,6 +1,7 @@
 #pragma once
 #include "FlightParams.hpp"
 #include <ServoControls/ServoController.h>
+#include <libs/Flash/Flash.h>
 
 // #define DEBUG_MODE 
 #define LOOP_RATE 40
@@ -114,7 +115,7 @@ public:
         ServoController paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
 
         ServoController cameraServo = new ServoController(CAMERA_SERVO); 
-    }
+    }; 
 
 
     static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
@@ -130,13 +131,16 @@ public:
                               String(telemPacket.magZ) + "," +
                               String(telemPacket.pressure) + "," +
                               String(telemPacket.altitude) + "," +
-                              String(telemPacket.q) + "," +
+                              String(telemPacket.w) + "," +
                               String(telemPacket.i) + "," +
                               String(telemPacket.j) + "," +
                               String(telemPacket.k) + "," +
-                              String(telemPacket.X) + "," +
-                              String(telemPacket.Y) + "," +
-                              String(telemPacket.Z) + "," + //No Position??
+                              String(telemPacket.posX) + "," +
+                              String(telemPacket.posY) + "," +
+                              String(telemPacket.posZ) + "," + //No Position??
+                              String(telemPacket.velX) + "," +
+                              String(telemPacket.velY) + "," +
+                              String(telemPacket.velZ) + "," + //No Position??
                               String(telemPacket.gpsLat) + "," +
                               String(telemPacket.gpsLong) + "," +
                               String(telemPacket.gpsAltMSL) + "," +
@@ -148,7 +152,14 @@ public:
                               String(telemPacket.cy) + "," +
                               String(telemPacket.targetGpsLat) + "," +
                               String(telemPacket.targetGpsLong) + "," +
-                              String(telemPacket.desiredServoPos) + "," +
+                              String(telemPacket.desiredServoPos1) + "," +
+                              String(telemPacket.actualServoPos1) + "," +
+                              String(telemPacket.desiredServoPos2) + "," +
+                              String(telemPacket.actualServoPos2) + "," +
+                              String(telemPacket.desiredServoPos3) + "," +
+                              String(telemPacket.actualServoPos3) + "," +
+                              String(telemPacket.desiredServoPos4) + "," +
+                              String(telemPacket.actualServoPos4) + "," +
                               String(telemPacket.trajA) + "," +
                               String(telemPacket.trajB) + "," +
                               String(telemPacket.trajC) + "," +

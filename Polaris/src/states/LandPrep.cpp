@@ -3,7 +3,7 @@
 #include "Recovery.h"
 #include "FlightParams.hpp"
 
-LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
 
 void LandPrep::initialize_impl() {}
 
@@ -14,9 +14,9 @@ void LandPrep::loop_impl() {
 }
 
 State *LandPrep::nextState_impl() {
-	if (/*Velocity readings are < LANDING_VELOCITY*/ )
+	if (0) //FIX TO BE VELOCITIES 
 	{	
-		Serial.println("Entering Recovery!")
+		Serial.println("Entering Recovery!");
 		return new Recovery(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;

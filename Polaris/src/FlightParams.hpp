@@ -50,12 +50,12 @@
 
 //Trajectory Constants 
 
-#define G 9.81
+#define GRAV 9.81
 #define MASS 5.5; // [kg] Total system mass
 #define D_P 1.8288; // [m] Diameter of Parachute
 #define S_P (PI/4) * (D_P*D_P); // [m^2] Surface Area of Parachute 
 #define C_D 0.7; // Coefficient of drag
-#define W_P G * MASS;
+#define W_P GRAV * MASS;
 #define H_CP 2; // [m] Distance from center of mass to center of pressure
 
 

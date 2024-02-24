@@ -7,7 +7,7 @@
 
 #define IN_FOISE false //Need to edit to be Payload Specific, stole from PolarisLTS :)
 
-PreLaunch::PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+PreLaunch::PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
 	this->stateStartTime = this->currentTime; 
