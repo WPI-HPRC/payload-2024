@@ -63,14 +63,13 @@ GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float cu
     //This should be the target latitude based on the target latitude and the current latitude
     point.lat = targetLatitude + currLat;
     //This should be the target longitude based on the updated target latitude
-    float targetLongitude = Xcomponent * METERS_TO_LATITUDE / cos(point.lon * DEGREES_TO_RADIANS);
+    float targetLongitude = Xcomponent * METERS_TO_LATITUDE / cos(point.lat * DEGREES_TO_RADIANS);
     point.lon = targetLongitude + currLong;
 
     return point;   
 }
 
 GPSPoint OpenMV::onLoop(Utility::TelemPacket sensorPacket, CameraData& data){
-    GPSPoint gps; 
     float anglePitch = -PI/2 + 2*atan2(sqrt(1+2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k)),sqrt(1-2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k))); 
     float heading = atan2(2*(sensorPacket.w*sensorPacket.k + sensorPacket.i*sensorPacket.j),1-2*(sensorPacket.j*sensorPacket.j + sensorPacket.k*sensorPacket.k)); 
     if (readData(data)){
