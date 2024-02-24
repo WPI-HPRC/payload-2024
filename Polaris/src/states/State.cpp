@@ -86,8 +86,8 @@ void State::loop() {
 	// xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
 	Utility::logData(flash, telemPacket); 
 
-    Serial.print("Packet Success: ");
-    Serial.println(millis());
+    // Serial.print("Packet Success: ");
+    // Serial.println(millis());
 
 }
 

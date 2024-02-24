@@ -68,6 +68,12 @@ void setup() {
 	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 	state->initialize();
 
+	pinMode(16, INPUT); 
+	pinMode(17, INPUT); 
+	pinMode(20, INPUT); 
+	pinMode(21, INPUT); 
+
+
 	currentTime = millis();
 	previousTime = millis();
 };
