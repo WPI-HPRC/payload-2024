@@ -1,6 +1,5 @@
 #pragma once
 #include "State.h"
-#include "Sensors.h"
 
 //! @brief max number of milliseconds we can remain in the prelaunch (initialization) state
 #define MAX_PRELAUNCH_TIME 3000

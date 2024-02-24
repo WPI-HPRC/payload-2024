@@ -1,7 +1,7 @@
 #include "Stowed.h"
 #include "State.h"
-#include "Stabalize.h"
 #include "FlightParams.hpp"
+
 
 
 Stowed::Stowed(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}

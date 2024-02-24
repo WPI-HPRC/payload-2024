@@ -5,7 +5,7 @@
 #include <Wire.h>
 
 #include <states/State.h>
-#include <states/PreLaunch/PreLaunch.h>
+#include <states/PreLaunch.h>
 #include "libs/Flash/Flash.h"
 #include "utility.hpp"
 #include <Controls/EKF/EKF.h>
@@ -24,7 +24,6 @@ XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
 Utility::Servos *servos; 
 OpenMV *openMV = new OpenMV(); 
 
-constexpr static int LOOP_RATE = 100;
 
 unsigned long previousTime = 0;
 unsigned long currentTime = 0;
@@ -55,7 +54,7 @@ void setup() {
 
 	state->initialize();
 
-	flash.init();
+	flash->init();
 	// int startAddress = 0;
 	// startAddress = flash.rememberAddress();
 	// Serial.println("Starting Flash Chip At Address: " + String(startAddress));
@@ -84,10 +83,7 @@ void loop() {
 
 		if(nextState != nullptr) {
 			Serial.print("State Change Detected: ");
-			Serial.print(state->name);
-			Serial.print(" -> ");
 			state = nextState;
-			Serial.println(state->name);
 
 			state->initialize();
 		};

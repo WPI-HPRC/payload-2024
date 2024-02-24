@@ -1,8 +1,6 @@
 #include "PreLaunch.h"
 #include "State.h"
 #include "Stowed.h"
-#include "Debug.h"
-#include "Sensors.h" //Check this 
 #include "FlightParams.hpp"
 
 #define IN_FOISE false //Need to edit to be Payload Specific, stole from PolarisLTS :)
