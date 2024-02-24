@@ -19,4 +19,10 @@ class LandPrep : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+
+		float verticalVelocityBuffer[10] = {0};
+		int bufferIndex = 0;
+		float lastAltitude = 0;
+		bool landed = false;
+		int count = 0; 
 };
