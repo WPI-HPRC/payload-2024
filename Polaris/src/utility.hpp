@@ -1,6 +1,7 @@
 #pragma once
 #include "FlightParams.hpp"
 #include <ServoControls/ServoController.h>
+#include <libs/Flash/Flash.h>
 
 // #define DEBUG_MODE 
 #define LOOP_RATE 40
@@ -93,11 +94,11 @@ public:
         //Controls 
         uint32_t desiredServoPos1 = 0; //Servo Controls Values 
         uint32_t actualServoPos1 = 0;
-        uint32_t desiredServoPos2 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos2 = 0; 
         uint32_t actualServoPos2 = 0;
-        uint32_t desiredServoPos3 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos3 = 0; 
         uint32_t actualServoPos3 = 0;
-        uint32_t desiredServoPos4 = 0; //Servo Controls Values 
+        uint32_t desiredServoPos4 = 0; 
         uint32_t actualServoPos4 = 0;
 
         float trajA = 0.0f; //Calculated Trajectory Constants 
@@ -105,14 +106,7 @@ public:
         float trajC = 0.0f;
         float trajD = 0.0f; 
     }; 
-    #pragma pack(pop)
-
-    struct Servos{
-        ServoController paraServo_1 = new ServoController(PARACHUTE_SERVO_1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-    }
+    #pragma pack(pop); 
 
 
     static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
@@ -128,13 +122,16 @@ public:
                               String(telemPacket.magZ) + "," +
                               String(telemPacket.pressure) + "," +
                               String(telemPacket.altitude) + "," +
-                              String(telemPacket.q) + "," +
+                              String(telemPacket.w) + "," +
                               String(telemPacket.i) + "," +
                               String(telemPacket.j) + "," +
                               String(telemPacket.k) + "," +
-                              String(telemPacket.X) + "," +
-                              String(telemPacket.Y) + "," +
-                              String(telemPacket.Z) + "," + //No Position??
+                              String(telemPacket.posX) + "," +
+                              String(telemPacket.posY) + "," +
+                              String(telemPacket.posZ) + "," + //No Position??
+                              String(telemPacket.velX) + "," +
+                              String(telemPacket.velY) + "," +
+                              String(telemPacket.velZ) + "," + //No Position??
                               String(telemPacket.gpsLat) + "," +
                               String(telemPacket.gpsLong) + "," +
                               String(telemPacket.gpsAltMSL) + "," +
@@ -146,16 +143,21 @@ public:
                               String(telemPacket.cy) + "," +
                               String(telemPacket.targetGpsLat) + "," +
                               String(telemPacket.targetGpsLong) + "," +
-                              String(telemPacket.desiredServoPos) + "," +
+                              String(telemPacket.desiredServoPos1) + "," +
+                              String(telemPacket.actualServoPos1) + "," +
+                              String(telemPacket.desiredServoPos2) + "," +
+                              String(telemPacket.actualServoPos2) + "," +
+                              String(telemPacket.desiredServoPos3) + "," +
+                              String(telemPacket.actualServoPos3) + "," +
+                              String(telemPacket.desiredServoPos4) + "," +
+                              String(telemPacket.actualServoPos4) + "," +
                               String(telemPacket.trajA) + "," +
                               String(telemPacket.trajB) + "," +
                               String(telemPacket.trajC) + "," +
                               String(telemPacket.trajD); 
                               
-
         flash->writeStruct(structString);
     }
-
 
     // WGS84 Ellipsoid Model
     constexpr static float a_earth = 6378137.0;       // [m] Semi-major axis of Earth

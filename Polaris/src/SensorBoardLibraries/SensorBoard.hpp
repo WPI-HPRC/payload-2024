@@ -1,9 +1,10 @@
-#include "IMU/IMU_SB.h"
-#include "Barometer/Barometer_SB.h"
-#include "Magnetometer/Magnetometer_SB.h"
+#pragma once
+#include <SensorBoardLibraries\IMU\IMU_SB.h>
+#include <SensorBoardLibraries\Barometer\Barometer_SB.h>
+#include <SensorBoardLibraries\Magnetometer\Magnetometer_SB.h>
 #include "Config.h"
 #include "Sensor_Frames.hpp"
-#include <SparkFun_u-blox_GNSS_Arduino_Library.h>
+#include <SparkFun_Ublox_Arduino_Library.h>
 // #include <libs/MMC5983/SparkFun_MMC5983MA_Arduino_Library.h>
 
 /*
@@ -19,7 +20,7 @@ class Sensorboard{
     MMC5983MA mag = MMC5983MA(Wire, MAG_I2C_ADDRESS); // Magnetometer
     // MMC5983MA mag = MMC5983MA(Wire, MAG_I2C_ADDRESS); // Magnetometer
     // SFE_UBLOX_GNSS gps; // GPS
-    SFE_UBLOX_GNSS gps;
+    SFE_UBLOX_GPS gps;
     uint8_t Buffer[29] = {0};
     uint32_t MagData[3] = {0}; // x,y,z
 
@@ -104,7 +105,7 @@ class Sensorboard{
         Inertial_Baro_frame.gpsAltAGL = gps.getAltitude();
         Inertial_Baro_frame.gpsAltMSL = gps.getAltitudeMSL();
         Inertial_Baro_frame.satellites = gps.getSIV();
-        Inertial_Baro_frame.epochTime = gps.getUnixEpoch();
+        //Inertial_Baro_frame.epochTime = gps.getUnixEpoch();
 
         // Inertial_Baro_frame.mag_x = mag.getMeasurementX();
         // Inertial_Baro_frame.mag_y = mag.getMeasurementY();

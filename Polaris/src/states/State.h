@@ -1,22 +1,25 @@
 #pragma once
 #pragma once
 #include "utility.hpp"
-#include <SensorBoardLibraries/SensorBoard.hpp>
 
 #define _STATE_CLASS_IMPLS_          \
 private:                             \
 	void initialize_impl() override; \
 	void loop_impl() override;       \
-	State *nextState_impl() override;
+	State *nextState_impl() override; \
 	StateId getId() override;
 
 #include "Arduino.h"
 #include "../utility.hpp" //why this again? 
 #include <BasicLinearAlgebra.h>
 #include <TelemetryBoard/XBeeProSX.h>
-#include <EKF.h>
 #include <libs/Flash/Flash.h>
 #include <Controls/EKF/EKF.h>
+#include <OpenMV/camera.h>
+#include <OpenMV/cameraData.h>
+#include <OpenMV/gps.h>
+#include <servos.h>
+
 
 enum StateId {
   ID_PreLaunch = 0,
@@ -54,14 +57,26 @@ class State {
 
 		SensorFrame sensorData; //Protected? 
 		Utility::TelemPacket telemPacket;
+		CameraData camData; 
+		GPSPoint camGPS; 
+
 
 	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
+		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
 		long long deltaTime = 0;
 		long long loopCount = 0;
+		long long stateTime = 0; 
+		long long stateStartTime = 0; 
+		FlashChip *flash; 
+		StateEstimator *stateEstimator; 
+		XbeeProSX *xbee; 
+		struct Servos *servos; 
+		OpenMV *openMV; 
+		CameraData data; 
+		BLA::Matrix<10> currentState; 
 		
 
 	private:

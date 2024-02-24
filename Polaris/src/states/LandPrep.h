@@ -5,7 +5,7 @@
 class LandPrep : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos); 
+		LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee,struct Servos *servos, OpenMV *openMV); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 
@@ -19,4 +19,10 @@ class LandPrep : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+
+		float verticalVelocityBuffer[10] = {0};
+		int bufferIndex = 0;
+		float lastAltitude = 0;
+		bool landed = false;
+		int count = 0; 
 };

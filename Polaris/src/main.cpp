@@ -1,15 +1,17 @@
 #include <Arduino.h>
 #include <Metro.h>
 
-
 #include <SPI.h>
 #include <Wire.h>
 
 #include <states/State.h>
-#include <states/PreLaunch/PreLaunch.h>
+#include <states/PreLaunch.h>
 #include "libs/Flash/Flash.h"
 #include "utility.hpp"
 #include <Controls/EKF/EKF.h>
+#include <OpenMV/camera.h>
+#include <ServoControls/ServoController.h>
+#include <servos.h>
 
 // #include <TeensyDebug.h>
 // #pragma GCC optimize ("O0")
@@ -21,9 +23,8 @@ SensorFrame sensorFrame;
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
 XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
-Utility::Servos *servos; 
-
-constexpr static int LOOP_RATE = 100;
+struct Servos servos; 
+OpenMV *openMV = new OpenMV(); 
 
 unsigned long previousTime = 0;
 unsigned long currentTime = 0;
@@ -50,14 +51,24 @@ void setup() {
 		while(1) {};
 	}
 
-	state = new PreLaunch(flash, stateEstimator, xbee, servos);
+	
+	servos = {
+		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_1_IN), //double check direction 
+		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_2_IN), //double check direction; 
+		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_3_IN), //double check direction
+		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_4_IN), //double check direction;
+		.cameraServo = new ServoController(CAMERA_SERVO),
+	}; 
 
+	flash->init();
+	int startAddress = 0;
+	startAddress = flash->rememberAddress();
+	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
+
+	pinMode(IR_PIN, INPUT);
+
+	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 	state->initialize();
-
-	flash.init();
-	// int startAddress = 0;
-	// startAddress = flash.rememberAddress();
-	// Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
 	currentTime = millis();
 	previousTime = millis();
@@ -73,27 +84,17 @@ void loop() {
 		readSensors();
 
 		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
-
+	
 		state->loop();
 
 		String timestamp = (String) millis();
-
-		//String structString = String(state->telemPacket.accelX) + "," + String(state->telemPacket.accelY) + "," + String(state->telemPacket.accelZ) + "," + String(state->telemPacket.gyroX) + "," + String(state->telemPacket.gyroY) + "," + String(state->telemPacket.gyroZ) + "," + String(state->telemPacket.magX) + "," + String(state->telemPacket.magY) + "," + String(state->telemPacket.magZ) + "," + String(state->telemPacket.pressure) + "," + String(state->telemPacket.altitude) + "," + String(state->telemPacket.q) + "," + String(state->telemPacket.i) + "," + String(state->telemPacket.j) + "," + String(state->telemPacket.k) + "," + timestamp;
-
-		// Serial.println(structString);
-
-		//flash.writeStruct(structString);
 
 		// Check for state transition each loop
 		State *nextState = state->nextState();
 
 		if(nextState != nullptr) {
 			Serial.print("State Change Detected: ");
-			Serial.print(state->name);
-			Serial.print(" -> ");
 			state = nextState;
-			Serial.println(state->name);
-
 			state->initialize();
 		};
 	};

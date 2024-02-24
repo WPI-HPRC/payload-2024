@@ -1,11 +1,12 @@
 #include "State.h"
 #include <Arduino.h>
-State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos){}
+State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
-
 	xbee->begin();
+    BLA::Matrix<10> x_0 = {1,0,0,0,0,0,0,0,0,0};
+    stateEstimator = new StateEstimator(x_0, 0.025); 
 }
 
 void State::loop() {
@@ -15,13 +16,16 @@ void State::loop() {
 	this->loopCount++;
 	loop_impl();
 	this->lastLoopTime = millis();
-
 	//Sensor stuff here 
-	this->currentState = ekf->onLoop(sensorData);
+	this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
+ 
+    
 	this->telemPacket.state = this->getId();
-    telemPacket.accelX = sensorData.ac_x; //Does this need to be sensorPacket? 
+    telemPacket.accelX = sensorData.ac_x; 
     telemPacket.accelY = sensorData.ac_y;
     telemPacket.accelZ = sensorData.ac_z;
+
+ 
 
     telemPacket.gyroX = sensorData.gy_x;
     telemPacket.gyroY = sensorData.gy_y;
@@ -32,9 +36,9 @@ void State::loop() {
     telemPacket.magZ = sensorData.mag_z;
 
     telemPacket.pressure = sensorData.Pressure;
-    telemPacket.altitude = pressureToAltitude(sensorData.Pressure);
+    telemPacket.altitude = Utility::pressureToAltitude(sensorData.Pressure);
     telemPacket.timestamp = this->currentTime;
-    telemPacket.q = currentState(0);
+    telemPacket.w = currentState(0);
     telemPacket.i = currentState(1);
     telemPacket.j = currentState(2);
     telemPacket.k = currentState(3);
@@ -44,39 +48,44 @@ void State::loop() {
 	telemPacket.velX = 0.0; 
 	telemPacket.velY = 0.0;
 	telemPacket.velZ = 0.0;
+   
 
-	telemPacket.gpsLat = sensorData.gpsLat //Make sure consistent, look at Pre-launch 
-    telemPacket.gpsLong = sensorData.gpsLong
-    telemPacket.gpsAltMSL = sensorData.gpsAltMSL
-	telemPacket.gpsAltAGL = sensorData.gpsAltAGL
-	telemPacket.epochTime = sensorData.epochTime
-	telemPacket.satellites = sensorData.satellites
-	telemPacket.gpsLock sensorData.gpsLock
+	telemPacket.gpsLat = sensorData.gpsLat; //Make sure consistent, look at Pre-launch 
+    telemPacket.gpsLong = sensorData.gpsLong;
+    telemPacket.gpsAltMSL = sensorData.gpsAltMSL;
+	telemPacket.gpsAltAGL = sensorData.gpsAltAGL;
+	//telemPacket.epochTime = sensorData.epochTime;
+	telemPacket.satellites = sensorData.satellites;
+	telemPacket.gpsLock = sensorData.gpsLock;
+    
+    this->camGPS = openMV->onLoop(telemPacket, data); 
 
 	//Deal with these once objects are defined 
-	/*uint32_t cx = 0; //Camera Centroids  
-        uint32_t cy = 0;
+	telemPacket.cx = data.cx; //Camera Centroids  
+    telemPacket.cy = data.cy;
+     
 
-        float targetGpsLat = 0.0f; //Target Point GPS Estimations
-        float targetGpsLong = 0.0f;
+    telemPacket.targetGpsLat = this->camGPS.lat; //Target Point GPS Estimations
+    telemPacket.targetGpsLong = this->camGPS.lon;
+    
+    //Controls 
+    telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
+    telemPacket.actualServoPos1 = this->servos->paraServo_1->readServo(); //IDK if this works...
+    telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
+    telemPacket.actualServoPos2 = this->servos->paraServo_2->readServo();
+    telemPacket.desiredServoPos3 = MAX_SERVO_POS; 
+    telemPacket.actualServoPos3 = this->servos->paraServo_3->readServo();
+    telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
+    telemPacket.actualServoPos4 = this->servos->paraServo_4->readServo(); 
 
-        //Controls 
-        uint32_t desiredServoPos1 = 0; //Servo Controls Values 
-        uint32_t actualServoPos1 = 0;
-        uint32_t desiredServoPos2 = 0; //Servo Controls Values 
-        uint32_t actualServoPos2 = 0;
-        uint32_t desiredServoPos3 = 0; //Servo Controls Values 
-        uint32_t actualServoPos3 = 0;
-        uint32_t desiredServoPos4 = 0; //Servo Controls Values 
-        uint32_t actualServoPos4 = 0;
 
-        float trajA = 0.0f; //Calculated Trajectory Constants 
-        float trajB = 0.0f;
-        float trajC = 0.0f;
-        float trajD = 0.0f; */
+    // float trajA = 0.0f; //Calculated Trajectory Constants 
+    // float trajB = 0.0f;
+    // float trajC = 0.0f;
+    // float trajD = 0.0f; 
 
-	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
-	flash->logData() //log data here or in States, is this also where xbee should be going and where falsh is initialized
+	// xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+	Utility::logData(flash, telemPacket); 
 
     Serial.print("Packet Success: ");
     Serial.println(millis());

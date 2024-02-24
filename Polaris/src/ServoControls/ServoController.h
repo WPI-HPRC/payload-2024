@@ -1,14 +1,24 @@
+#pragma once 
+#include <Arduino.h>
+#include <Servo.h>
+#include <stdlib.h>
+#include <math.h>
 
 class ServoController {
     private:    
-        Servo servo;
+        Servo servo; 
         bool clockwise;
         // servo angle is in degrees
         float p; // s^-1
         float pulleyDiameter; // cm
         float stringLength;   // cm
+        int inputPin; 
     public: 
-        ServoController(int, bool, float, float, float);
+        ServoController(int, bool, float, float, float, int);
+
+        ServoController(int); 
+
+        void setServo(float); 
         /**
          * @brief Sets servo speed to aim for target string length.
          * @param newStringLength The target length. 
@@ -20,6 +30,11 @@ class ServoController {
          * @param currAngle The current angle. 
         */
         void setToAngle(float, float);
+
+        /**
+         * @brief Reads current Servo value 
+        */
+        uint32_t readServo(); 
 };
 
 /**

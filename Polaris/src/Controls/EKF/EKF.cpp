@@ -135,11 +135,11 @@ BLA::Matrix<10> StateEstimator::onLoop(SensorFrame sensorPacket) {
     // Serial.print(x(3)); Serial.print(",");
     // Serial.println(millis());
 
-    Serial.print("QUAT|");
-    Serial.print(x(0)); Serial.print(",");
-    Serial.print(x(1)); Serial.print(",");
-    Serial.print(x(2)); Serial.print(",");
-    Serial.println(x(3));
+    // Serial.print("QUAT|");
+    // Serial.print(x(0)); Serial.print(",");
+    // Serial.print(x(1)); Serial.print(",");
+    // Serial.print(x(2)); Serial.print(",");
+    // Serial.println(x(3));
     // Serial.print("ACC|");
     // Serial.print(sensorPacket.ac_x); Serial.print(",");
     // Serial.print(sensorPacket.ac_y); Serial.print(",");

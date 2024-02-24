@@ -77,4 +77,3 @@ with open("time_stamps.txt", "wb") as f:
 
             m.close(clock.fps())
             break
-
