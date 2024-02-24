@@ -69,11 +69,12 @@ GPSPoint OpenMV::getTargetPoint(struct CameraData &data, float currLat, float cu
     return point;   
 }
 
-GPSPoint OpenMV::onLoop(SensorFrame sensorPacket, CameraData& data){
+GPSPoint OpenMV::onLoop(Utility::TelemPacket sensorPacket, CameraData& data){
     GPSPoint gps; 
+    float anglePitch = -PI/2 + 2*atan2(sqrt(1+2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k)),sqrt(1-2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k))); 
+    float heading = atan2(2*(sensorPacket.w*sensorPacket.k + sensorPacket.i*sensorPacket.j),1-2*(sensorPacket.j*sensorPacket.j + sensorPacket.k*sensorPacket.k)); 
     if (readData(data)){
-        //return getTargetPoint(&data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, float anglePitch, float heading); //THis will be wrong, need quaternion stuff
-        return gps; 
+        return getTargetPoint(data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, anglePitch, heading); //THis will be wrong, need quaternion stuff
     }
     
 }

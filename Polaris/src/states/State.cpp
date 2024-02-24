@@ -19,7 +19,7 @@ void State::loop() {
 	//Sensor stuff here 
 	this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
  
-    this->camGPS = openMV->onLoop(sensorData, data); 
+    
 	this->telemPacket.state = this->getId();
     telemPacket.accelX = sensorData.ac_x; 
     telemPacket.accelY = sensorData.ac_y;
@@ -58,6 +58,7 @@ void State::loop() {
 	telemPacket.satellites = sensorData.satellites;
 	telemPacket.gpsLock = sensorData.gpsLock;
     
+    this->camGPS = openMV->onLoop(telemPacket, data); 
 
 	//Deal with these once objects are defined 
 	telemPacket.cx = data.cx; //Camera Centroids  
