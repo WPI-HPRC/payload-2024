@@ -4,13 +4,14 @@
 // const float stringLength = 100.;
 // const float pGain = 5.;
 
-ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength) {
+ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength, int inputPin) {
     this->servo = servo; 
     this->clockwise = clockwise;
     this->servo.attach(pin);
     this->p = p;
     this->pulleyDiameter = pulleyDiameter; //p is P-gain 
     this->stringLength = stringLength;
+    this->inputPin = inputPin; 
     // Set servo to be still
     this->servo.write(90.);
 }
@@ -38,7 +39,7 @@ void ServoController::setToAngle(float newAngle, float currAngle) {
 
 void ServoController::adjustString(float newStringLength) {
     const float  angleOffset = 0.0;
-    float currAngle = servo.read();
+    float currAngle = analogRead(inputPin);
     float currStringLength = shortestAngle(currAngle - angleOffset) *
                              PI/180.*(0.5*this->pulleyDiameter);
     float newAngle = newStringLength/(0.5*this->pulleyDiameter)*(180./PI) +
@@ -48,5 +49,5 @@ void ServoController::adjustString(float newStringLength) {
 }
 
 uint32_t ServoController::readServo(){ //Need to check if this works...
-    return this->servo.read(); 
+    return analogRead(inputPin);
 }

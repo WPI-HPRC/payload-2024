@@ -15,38 +15,43 @@
 
 //Payload Specific- will organize tonight 
 
-#define PARACHUTE_SERVO_1 0
-#define PARACHUTE_SERVO_2 0
-#define PARACHUTE_SERVO_3 0
-#define PARACHUTE_SERVO_4 0
+#define PARACHUTE_SERVO_1 10 //Check these
+#define PARACHUTE_SERVO_2 13
+#define PARACHUTE_SERVO_3 11
+#define PARACHUTE_SERVO_4 12
+
+#define PARACHUTE_SERVO_1_IN 16 //Check these
+#define PARACHUTE_SERVO_2_IN 17
+#define PARACHUTE_SERVO_3_IN 21
+#define PARACHUTE_SERVO_4_IN 20
 
 #define PARACHUTE_SERVO_1_DIR true
 #define PARACHUTE_SERVO_2_DIR true
 #define PARACHUTE_SERVO_3_DIR true
 #define PARACHUTE_SERVO_4_DIR true
 
-#define SERVO_GAIN 0
+#define SERVO_GAIN 0.5
 
 #define PULLEY_D 4.374
 #define STRING_BASE_LENGTH 100
 
-#define CAMERA_SERVO 0
+#define CAMERA_SERVO 9 //Also check this 
 #define CAM_OUT 0
 #define CAM_RETRACT 0
 
 #define IR_PIN 0
 
-#define ALT_THRESHOLD_STOWED 1300 //feet
+#define ALT_THRESHOLD_STOWED 396 //meters
 
-#define MAX_STABALIZE_TIME 5
-#define MAX_FREEFALL_TIME 10
+#define MAX_STABALIZE_TIME 5000
+#define MAX_FREEFALL_TIME 10000
 
 #define MAX_SERVO_POS 0
 #define MAX_SERVO_WIND_TIME 0 
 
 #define MAX_HOLD_TIME 0
 
-#define DESIRED_STRING_LENGTH 0 
+#define DESIRED_STRING_LENGTH 70
 
 //Trajectory Constants 
 

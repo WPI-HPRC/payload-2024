@@ -12,8 +12,9 @@ class ServoController {
         float p; // s^-1
         float pulleyDiameter; // cm
         float stringLength;   // cm
+        int inputPin; 
     public: 
-        ServoController(int, bool, float, float, float);
+        ServoController(int, bool, float, float, float, int);
 
         ServoController(int); 
 
