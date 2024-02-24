@@ -65,6 +65,8 @@ void setup() {
 	startAddress = flash->rememberAddress();
 	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
+	pinMode(IR_PIN, INPUT);
+
 	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 	state->initialize();
 

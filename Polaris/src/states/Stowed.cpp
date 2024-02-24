@@ -18,7 +18,7 @@ void Stowed::loop_impl() { //Shouldn't need anything in here
 State *Stowed::nextState_impl()
 {
 	//this->sensorPacket.accelX or this->sensorPacket.altitude //make specific to payload 
-	if (this->telemPacket.altitude < ALT_THRESHOLD_STOWED){ //Add in IR Stuff 
+	if (digitalRead(IR_PIN)==HIGH){ 
 		Serial.println("Entering Freefall!"); 
 		return new Freefall(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); //make sure passing in the correct things 
 	}

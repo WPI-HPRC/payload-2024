@@ -25,10 +25,10 @@
 #define PARACHUTE_SERVO_3_IN 21
 #define PARACHUTE_SERVO_4_IN 20
 
-#define PARACHUTE_SERVO_1_DIR true
-#define PARACHUTE_SERVO_2_DIR true
+#define PARACHUTE_SERVO_1_DIR true //Check these 
+#define PARACHUTE_SERVO_2_DIR false
 #define PARACHUTE_SERVO_3_DIR true
-#define PARACHUTE_SERVO_4_DIR true
+#define PARACHUTE_SERVO_4_DIR false
 
 #define SERVO_GAIN 0.5
 
@@ -39,7 +39,7 @@
 #define CAM_OUT 0
 #define CAM_RETRACT 0
 
-#define IR_PIN 0
+#define IR_PIN 45
 
 #define ALT_THRESHOLD_STOWED 396 //meters
 
