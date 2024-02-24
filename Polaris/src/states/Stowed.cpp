@@ -9,7 +9,7 @@ Stowed::Stowed(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee
 
 void Stowed::initialize_impl() {
 	this->stateStartTime = this->currentTime; 
-	this->servo.attach(PARACHUTE_SERVO_1); 
+	this->servo.attach(CAMERA_SERVO); 
 	servo.writeMicroseconds(1500); 
 }
 
