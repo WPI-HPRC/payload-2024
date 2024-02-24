@@ -17,10 +17,10 @@ void Stowed::loop_impl() { //Shouldn't need anything in here
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
 State *Stowed::nextState_impl()
 {
-	//this->sensorPacket.accelX or this->sensorPacket.altitude //make specific to payload 
-	if (digitalRead(IR_PIN)==HIGH){ 
+	this->stateTime = this->currentTime - this->stateStartTime; 
+	if (digitalRead(IR_PIN)==HIGH || stateTime > MAX_STOW_TIME){ 
 		Serial.println("Entering Freefall!"); 
-		return new Freefall(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); //make sure passing in the correct things 
+		return new Freefall(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); 
 	}
 	return nullptr;
 }

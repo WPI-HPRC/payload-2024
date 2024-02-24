@@ -51,3 +51,7 @@ void ServoController::adjustString(float newStringLength) {
 uint32_t ServoController::readServo(){ //Need to check if this works...
     return analogRead(inputPin);
 }
+
+void ServoController::writeServo(int value){
+    this->servo.writeMicroseconds(value); 
+}

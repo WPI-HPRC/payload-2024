@@ -35,6 +35,7 @@ class ServoController {
          * @brief Reads current Servo value 
         */
         uint32_t readServo(); 
+        void writeServo(); 
 };
 
 /**

@@ -20,15 +20,15 @@
 #define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100
 #define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000
 
-#define PARACHUTE_SERVO_1_IN 16 //Check these
-#define PARACHUTE_SERVO_2_IN 17
-#define PARACHUTE_SERVO_3_IN 21
-#define PARACHUTE_SERVO_4_IN 20
+#define PARACHUTE_SERVO_1_IN 20 
+#define PARACHUTE_SERVO_2_IN 21
+#define PARACHUTE_SERVO_3_IN 16
+#define PARACHUTE_SERVO_4_IN 17
 
-#define PARACHUTE_SERVO_1_DIR true //Check these 
-#define PARACHUTE_SERVO_2_DIR false
-#define PARACHUTE_SERVO_3_DIR true
-#define PARACHUTE_SERVO_4_DIR false
+#define PARACHUTE_SERVO_1_DIR false //Check these 
+#define PARACHUTE_SERVO_2_DIR true
+#define PARACHUTE_SERVO_3_DIR false
+#define PARACHUTE_SERVO_4_DIR true
 
 #define SERVO_GAIN 0.5
 
@@ -52,6 +52,8 @@
 #define MAX_HOLD_TIME 0
 
 #define DESIRED_STRING_LENGTH 70
+
+#define MAX_STOW_TIME 103000
 
 //Trajectory Constants 
 

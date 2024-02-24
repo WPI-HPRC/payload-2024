@@ -20,5 +20,11 @@ class PreLaunch : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+
+		float verticalAccelerationBuffer[10] = {0};
+		int bufferIndex = 0;
+		bool launched = false;
+		int count = 0; 
+		float verticalAcceleration = 0.0; 
 	
 };

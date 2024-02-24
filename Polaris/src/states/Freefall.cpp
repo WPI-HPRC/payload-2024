@@ -10,8 +10,7 @@ void Freefall::initialize_impl() {
 void Freefall::loop_impl() {
 		this->stateTime = this->currentTime - this->stateStartTime; 
 		if(this->stateTime > MAX_STABALIZE_TIME ){
-			this->servos->cameraServo->setServo(CAM_OUT); 
-			//think of best way to start flow of camera data, just do it in each state?  
+			this->servos->cameraServo->writeServo(CAM_OUT); 
 		}
 }
 State *Freefall::nextState_impl() {

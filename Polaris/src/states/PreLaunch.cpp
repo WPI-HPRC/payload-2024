@@ -4,8 +4,6 @@
 #include "FlightParams.hpp"
 
 
-#define IN_FOISE false //Need to edit to be Payload Specific, stole from PolarisLTS :)
-
 PreLaunch::PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
@@ -13,15 +11,39 @@ void PreLaunch::initialize_impl() {
 }
 
 void PreLaunch::loop_impl() {
+
 	this->stateTime = this->currentTime - this->stateStartTime; 
-	Serial.println("I am in Pre-Launch"); 
+	Serial.println("I am in Pre-Launch");
+	verticalAcceleration = telemPacket.accelZ; 
+	verticalAccelerationBuffer[bufferIndex] = verticalAcceleration;
+    
+    // average all values in the buffer
+    float sum = 0.0;
+    float averageVerticalAcceleration = 0.0;
+    for (int i = 0; i < 10; i++)
+    {
+        sum += verticalAccelerationBuffer[i];
+    }
+    averageVerticalAcceleration = sum / 10.0;
+	if(averageVerticalAcceleration > LAUNCH_ACCEL_THRESHOLD){
+		count++; 
+	}
+	else{
+		count = 0; 
+	}
+
+	if(count > 30){
+		launched = true; 
+	}
+
+    bufferIndex = (bufferIndex + 1) % 10;
 }
 
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
 State *PreLaunch::nextState_impl()
 {
-	if (this->telemPacket.accelZ > LAUNCH_ACCEL_THRESHOLD ) //Do we want to buffer/average this? 
+	if (launched) 
 	{
 		Serial.println("Entering Stowed!"); 
 		return new Stowed(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); 
