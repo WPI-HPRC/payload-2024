@@ -156,10 +156,8 @@ public:
                               String(telemPacket.trajC) + "," +
                               String(telemPacket.trajD); 
                               
-        Serial.println(structString); 
         flash->writeStruct(structString);
     }
-
 
     // WGS84 Ellipsoid Model
     constexpr static float a_earth = 6378137.0;       // [m] Semi-major axis of Earth

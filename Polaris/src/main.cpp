@@ -60,15 +60,13 @@ void setup() {
 		.cameraServo = new ServoController(CAMERA_SERVO),
 	}; 
 
+	flash->init();
+	int startAddress = 0;
+	startAddress = flash->rememberAddress();
+	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
 	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
-
 	state->initialize();
-
-	flash->init();
-	// int startAddress = 0;
-	// startAddress = flash.rememberAddress();
-	// Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
 	currentTime = millis();
 	previousTime = millis();
@@ -84,7 +82,7 @@ void loop() {
 		readSensors();
 
 		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
-		Serial.println("Looping in main"); 
+	
 		state->loop();
 
 		String timestamp = (String) millis();

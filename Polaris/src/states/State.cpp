@@ -5,6 +5,8 @@ void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
 	xbee->begin();
+    BLA::Matrix<10> x_0 = {1,0,0,0,0,0,0,0,0,0};
+    stateEstimator = new StateEstimator(x_0, 0.025); 
 }
 
 void State::loop() {
@@ -14,9 +16,8 @@ void State::loop() {
 	this->loopCount++;
 	loop_impl();
 	this->lastLoopTime = millis();
-    Serial.println("Got here"); 
 	//Sensor stuff here 
-	//this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
+	this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
  
     this->camGPS = openMV->onLoop(sensorData, data); 
 	this->telemPacket.state = this->getId();
@@ -76,7 +77,6 @@ void State::loop() {
     telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
     telemPacket.actualServoPos4 = this->servos->paraServo_4->readServo(); 
 
-    Serial.println("Got Data"); 
 
     // float trajA = 0.0f; //Calculated Trajectory Constants 
     // float trajB = 0.0f;
@@ -85,7 +85,6 @@ void State::loop() {
 
 	// xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
 	Utility::logData(flash, telemPacket); 
-    Serial.println("Got past the telem"); 
 
     Serial.print("Packet Success: ");
     Serial.println(millis());
