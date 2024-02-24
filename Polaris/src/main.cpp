@@ -10,6 +10,8 @@
 #include "utility.hpp"
 #include <Controls/EKF/EKF.h>
 #include <OpenMV/camera.h>
+#include <ServoControls/ServoController.h>
+#include <servos.h>
 
 // #include <TeensyDebug.h>
 // #pragma GCC optimize ("O0")
@@ -21,9 +23,8 @@ SensorFrame sensorFrame;
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
 XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
-Utility::Servos *servos; 
+struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
-
 
 unsigned long previousTime = 0;
 unsigned long currentTime = 0;
@@ -50,7 +51,17 @@ void setup() {
 		while(1) {};
 	}
 
-	state = new PreLaunch(flash, stateEstimator, xbee, servos, openMV);
+	
+	servos = {
+		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH), //double check direction 
+		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH), //double check direction; 
+		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH), //double check direction
+		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH), //double check direction;
+		.cameraServo = new ServoController(CAMERA_SERVO),
+	}; 
+
+
+	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 
 	state->initialize();
 
@@ -73,7 +84,7 @@ void loop() {
 		readSensors();
 
 		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
-
+		Serial.println("Looping in main"); 
 		state->loop();
 
 		String timestamp = (String) millis();
@@ -84,7 +95,6 @@ void loop() {
 		if(nextState != nullptr) {
 			Serial.print("State Change Detected: ");
 			state = nextState;
-
 			state->initialize();
 		};
 	};

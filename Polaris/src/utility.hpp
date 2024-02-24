@@ -106,16 +106,7 @@ public:
         float trajC = 0.0f;
         float trajD = 0.0f; 
     }; 
-    #pragma pack(pop)
-
-    struct Servos{
-        ServoController paraServo_1 = new ServoController(PARACHUTE_SERVO_1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-        ServoController paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH); //double check direction
-
-        ServoController cameraServo = new ServoController(CAMERA_SERVO); 
-    }; 
+    #pragma pack(pop); 
 
 
     static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
@@ -165,7 +156,7 @@ public:
                               String(telemPacket.trajC) + "," +
                               String(telemPacket.trajD); 
                               
-
+        Serial.println(structString); 
         flash->writeStruct(structString);
     }
 

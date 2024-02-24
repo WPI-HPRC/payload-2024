@@ -6,7 +6,7 @@ class Abort : public State
 {
     _STATE_CLASS_IMPLS_
     public:
-        Abort(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV); 
+        Abort(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
     private:
             // for z acceleration //I need to clarify why these are here 
             float transitionBufAcc[10]; 

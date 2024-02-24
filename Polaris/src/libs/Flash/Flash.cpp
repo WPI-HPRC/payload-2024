@@ -56,11 +56,13 @@ int FlashChip::rememberAddress() {
 
 bool FlashChip::writeStruct(String structString) {
     if(nextAddress == capacity) {
+        Serial.println("At cpacity"); 
         return false;
     }
     
     flash->writeStr(nextAddress, structString);
     nextAddress += 256;
+    Serial.println("wrote to flash"); 
 
     return true;
 }

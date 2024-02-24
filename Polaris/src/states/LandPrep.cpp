@@ -3,14 +3,14 @@
 #include "Recovery.h"
 #include "FlightParams.hpp"
 
-LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
+LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
 
 void LandPrep::initialize_impl() {}
 
 void LandPrep::loop_impl() {
-	this->servos->paraServo_2.adjustString(STRING_BASE_LENGTH); 
-	this->servos->paraServo_4.adjustString(STRING_BASE_LENGTH); 
-	this->servos->cameraServo.setServo(CAM_RETRACT); 
+	this->servos->paraServo_2->adjustString(STRING_BASE_LENGTH); 
+	this->servos->paraServo_4->adjustString(STRING_BASE_LENGTH); 
+	this->servos->cameraServo->setServo(CAM_RETRACT); 
 }
 
 State *LandPrep::nextState_impl() {

@@ -3,7 +3,7 @@
 #include "HoldLeft.h"
 #include "FlightParams.hpp"
 
-WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void WindLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;
@@ -11,8 +11,8 @@ void WindLeft::initialize_impl() {
 
 void WindLeft::loop_impl() {
 	this->stateTime = this->currentTime - this->stateStartTime; 
-	this->servos->paraServo_1.adjustString(DESIRED_STRING_LENGTH); 
-	this->servos->paraServo_3.adjustString(DESIRED_STRING_LENGTH); //Check Servo values 
+	this->servos->paraServo_1->adjustString(DESIRED_STRING_LENGTH); 
+	this->servos->paraServo_3->adjustString(DESIRED_STRING_LENGTH); //Check Servo values 
 }
 
 State *WindLeft::nextState_impl() {

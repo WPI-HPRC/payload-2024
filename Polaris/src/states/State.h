@@ -18,6 +18,7 @@ private:                             \
 #include <OpenMV/camera.h>
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
+#include <servos.h>
 
 
 enum StateId {
@@ -61,7 +62,7 @@ class State {
 
 
 	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV); 
+		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
@@ -72,7 +73,7 @@ class State {
 		FlashChip *flash; 
 		StateEstimator *stateEstimator; 
 		XbeeProSX *xbee; 
-		Utility::Servos *servos; 
+		struct Servos *servos; 
 		OpenMV *openMV; 
 		CameraData data; 
 		BLA::Matrix<10> currentState; 

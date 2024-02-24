@@ -1,6 +1,6 @@
 #include "State.h"
 #include <Arduino.h>
-State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, Utility::Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
@@ -14,14 +14,17 @@ void State::loop() {
 	this->loopCount++;
 	loop_impl();
 	this->lastLoopTime = millis();
-
+    Serial.println("Got here"); 
 	//Sensor stuff here 
-	this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
+	//this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
+ 
     this->camGPS = openMV->onLoop(sensorData, data); 
 	this->telemPacket.state = this->getId();
     telemPacket.accelX = sensorData.ac_x; 
     telemPacket.accelY = sensorData.ac_y;
     telemPacket.accelZ = sensorData.ac_z;
+
+ 
 
     telemPacket.gyroX = sensorData.gy_x;
     telemPacket.gyroY = sensorData.gy_y;
@@ -44,39 +47,45 @@ void State::loop() {
 	telemPacket.velX = 0.0; 
 	telemPacket.velY = 0.0;
 	telemPacket.velZ = 0.0;
+   
 
 	telemPacket.gpsLat = sensorData.gpsLat; //Make sure consistent, look at Pre-launch 
     telemPacket.gpsLong = sensorData.gpsLong;
     telemPacket.gpsAltMSL = sensorData.gpsAltMSL;
 	telemPacket.gpsAltAGL = sensorData.gpsAltAGL;
-	telemPacket.epochTime = sensorData.epochTime;
+	//telemPacket.epochTime = sensorData.epochTime;
 	telemPacket.satellites = sensorData.satellites;
 	telemPacket.gpsLock = sensorData.gpsLock;
+    
 
 	//Deal with these once objects are defined 
 	telemPacket.cx = data.cx; //Camera Centroids  
     telemPacket.cy = data.cy;
+     
 
     telemPacket.targetGpsLat = this->camGPS.lat; //Target Point GPS Estimations
     telemPacket.targetGpsLong = this->camGPS.lon;
-
+    
     //Controls 
     telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos1 = this->servos->paraServo_1.readServo(); //IDK if this works...
+    telemPacket.actualServoPos1 = this->servos->paraServo_1->readServo(); //IDK if this works...
     telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos2 = this->servos->paraServo_2.readServo();
+    telemPacket.actualServoPos2 = this->servos->paraServo_2->readServo();
     telemPacket.desiredServoPos3 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos3 = this->servos->paraServo_3.readServo();
+    telemPacket.actualServoPos3 = this->servos->paraServo_3->readServo();
     telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
-    telemPacket.actualServoPos4 = this->servos->paraServo_4.readServo(); 
+    telemPacket.actualServoPos4 = this->servos->paraServo_4->readServo(); 
+
+    Serial.println("Got Data"); 
 
     // float trajA = 0.0f; //Calculated Trajectory Constants 
     // float trajB = 0.0f;
     // float trajC = 0.0f;
     // float trajD = 0.0f; 
 
-	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+	// xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
 	Utility::logData(flash, telemPacket); 
+    Serial.println("Got past the telem"); 
 
     Serial.print("Packet Success: ");
     Serial.println(millis());
