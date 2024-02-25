@@ -22,7 +22,7 @@ SensorFrame sensorFrame;
 
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(32); // CS GPIO17
+XbeeProSX *xbee = new XbeeProSX(10); // CS GPIO17
 struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
 
