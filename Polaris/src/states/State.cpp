@@ -83,8 +83,8 @@ void State::loop() {
     // float trajC = 0.0f;
     // float trajD = 0.0f; 
 
-	// xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
-	Utility::logData(flash, telemPacket); 
+	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+	//Utility::logData(flash, telemPacket); 
 
     // Serial.print("Packet Success: ");
     // Serial.println(millis());

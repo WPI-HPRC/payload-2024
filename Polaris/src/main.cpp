@@ -22,7 +22,7 @@ SensorFrame sensorFrame;
 
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(17); // CS GPIO17
+XbeeProSX *xbee = new XbeeProSX(32); // CS GPIO17
 struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
 
@@ -51,6 +51,9 @@ void setup() {
 		while(1) {};
 	}
 
+	SPI.begin();
+    SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE0));
+
 	
 	servos = {
 		.paraServo_1 = new ServoController(-1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_1_IN), //double check direction 
@@ -62,7 +65,7 @@ void setup() {
 
 	flash->init();
 	int startAddress = 0;
-	startAddress = flash->rememberAddress();
+	//startAddress = flash->rememberAddress();
 	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
 	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);

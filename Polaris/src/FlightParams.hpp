@@ -15,15 +15,15 @@
 
 //Payload Specific- will organize tonight 
 
-#define PARACHUTE_SERVO_1 6 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_2 7 // wind clockwise in: 1100   center:1493 wind out: 2000
-#define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000
+#define PARACHUTE_SERVO_1 6 // wind counterclockwise in:2000   center:1493 wind out: 1100 //
+#define PARACHUTE_SERVO_2 7 // wind clockwise in: 1100   center:1493 wind out: 2000 //
+#define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100 //
+#define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000 //
 
-#define PARACHUTE_SERVO_1_IN 20 
-#define PARACHUTE_SERVO_2_IN 21
-#define PARACHUTE_SERVO_3_IN 16
-#define PARACHUTE_SERVO_4_IN 17
+#define PARACHUTE_SERVO_1_IN 20 //Working //Right
+#define PARACHUTE_SERVO_2_IN 21 //working
+#define PARACHUTE_SERVO_3_IN 16 //Not working //Left 
+#define PARACHUTE_SERVO_4_IN 17 //Not working 
 
 #define PARACHUTE_SERVO_1_DIR false //Check these 
 #define PARACHUTE_SERVO_2_DIR true
@@ -35,9 +35,9 @@
 #define PULLEY_D 4.374
 #define STRING_BASE_LENGTH 100
 
-#define CAMERA_SERVO 9 //Also check this 
-#define CAM_OUT 0
-#define CAM_RETRACT 0
+#define CAMERA_SERVO 33 //Also check this 
+#define CAM_OUT 2012
+#define CAM_RETRACT 988
 
 #define IR_PIN 0
 
