@@ -20,9 +20,9 @@
 #define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100
 #define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000
 
-#define PARACHUTE_SERVO_1_IN 20 
+#define PARACHUTE_SERVO_1_IN 20 //WOrking
 #define PARACHUTE_SERVO_2_IN 21
-#define PARACHUTE_SERVO_3_IN 16
+#define PARACHUTE_SERVO_3_IN 16 //Not working 
 #define PARACHUTE_SERVO_4_IN 17
 
 #define PARACHUTE_SERVO_1_DIR false //Check these 
