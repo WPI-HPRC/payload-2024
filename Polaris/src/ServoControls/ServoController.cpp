@@ -18,7 +18,13 @@ ServoController::ServoController(int pin, bool clockwise, float p, float pulleyD
 
 ServoController::ServoController(int pin){
     this->servo.attach(pin); //check if this is the correct syntax 
-    this->servo.write(90.);
+    if(pin == 33){
+        this->servo.writeMicroseconds(988);
+    }
+    else{
+        this->servo.writeMicroseconds(1493);
+    }
+    
 }
 
 void ServoController::setServo(float value){

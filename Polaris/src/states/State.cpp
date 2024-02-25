@@ -4,7 +4,7 @@ State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, 
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
-	xbee->begin();
+	//xbee->begin();
     BLA::Matrix<10> x_0 = {1,0,0,0,0,0,0,0,0,0};
     stateEstimator = new StateEstimator(x_0, 0.025); 
 }
@@ -58,15 +58,20 @@ void State::loop() {
 	telemPacket.satellites = sensorData.satellites;
 	telemPacket.gpsLock = sensorData.gpsLock;
     
-    this->camGPS = openMV->onLoop(telemPacket, data); 
+    //this->camGPS = openMV->onLoop(telemPacket, data); 
 
 	//Deal with these once objects are defined 
-	telemPacket.cx = data.cx; //Camera Centroids  
-    telemPacket.cy = data.cy;
-     
+	// telemPacket.cx = data.cx; //Camera Centroids  
+    // telemPacket.cy = data.cy;
+    telemPacket.cx = 0; //Camera Centroids  
+    telemPacket.cy = 0;
+    // Serial.println(telemPacket.cx); 
+    // Serial.println(telemPacket.cy); 
 
-    telemPacket.targetGpsLat = this->camGPS.lat; //Target Point GPS Estimations
-    telemPacket.targetGpsLong = this->camGPS.lon;
+    // telemPacket.targetGpsLat = this->camGPS.lat; //Target Point GPS Estimations
+    // telemPacket.targetGpsLong = this->camGPS.lon;
+    telemPacket.targetGpsLat = 0.0; //Target Point GPS Estimations
+    telemPacket.targetGpsLong = 0.0;
     
     //Controls 
     telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
@@ -85,11 +90,13 @@ void State::loop() {
     // float trajD = 0.0f; 
 
 	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+    // char* testPacket = "PLEASE JUST WORK AHGGGGGGAHHDH"; 
+    // xbee->send(0x0013A200423F474C, &testPacket, sizeof(testPacket));
 	Utility::logData(flash, telemPacket); 
     
 
-    Serial.print("Packet Success: ");
-    Serial.println(millis());
+    //Serial.print("Packet Success: ");
+    //Serial.println(millis());
 
 }
 

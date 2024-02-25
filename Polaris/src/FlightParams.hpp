@@ -9,7 +9,7 @@
 // measured in G's
 // checking if average Z acceleration is greater than 4 G's
 
-#define LAUNCH_ACCEL_THRESHOLD 4.0
+#define LAUNCH_ACCEL_THRESHOLD -4
 
 #define LANDING_VELOCITY 5.0
 
@@ -19,6 +19,15 @@
 #define PARACHUTE_SERVO_2 7 // wind clockwise in: 1100   center:1493 wind out: 2000
 #define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100
 #define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000
+
+#define SERVO_CLOCK_WIND 1100
+#define SERVO_CLOCK_UNWIND 1800
+
+#define SERVO_COUNTER_WIND 1800
+#define SERVO_COUNTER_UNWIND 1100
+
+#define SERVO_CENTER 1493
+
 
 #define PARACHUTE_SERVO_1_IN 20 //WOrking
 #define PARACHUTE_SERVO_2_IN 21
@@ -35,11 +44,11 @@
 #define PULLEY_D 4.374
 #define STRING_BASE_LENGTH 100
 
-#define CAMERA_SERVO 9 //Also check this 
+#define CAMERA_SERVO 33 //Also check this 
 #define CAM_OUT 2012
 #define CAM_RETRACT 988
 
-#define IR_PIN 33
+#define IR_PIN 28
 
 #define ALT_THRESHOLD_STOWED 396 //meters
 
@@ -47,9 +56,9 @@
 #define MAX_FREEFALL_TIME 10000
 
 #define MAX_SERVO_POS 0
-#define MAX_SERVO_WIND_TIME 0 
+#define MAX_SERVO_WIND_TIME 2000 
 
-#define MAX_HOLD_TIME 0
+#define MAX_HOLD_TIME 8000
 
 #define DESIRED_STRING_LENGTH 70
 

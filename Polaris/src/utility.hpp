@@ -128,10 +128,10 @@ public:
                               String(telemPacket.k) + "," +
                               String(telemPacket.posX) + "," +
                               String(telemPacket.posY) + "," +
-                              String(telemPacket.posZ) + "," + //No Position??
+                              String(telemPacket.posZ) + "," + 
                               String(telemPacket.velX) + "," +
                               String(telemPacket.velY) + "," +
-                              String(telemPacket.velZ) + "," + //No Position??
+                              String(telemPacket.velZ) + "," + 
                               String(telemPacket.gpsLat) + "," +
                               String(telemPacket.gpsLong) + "," +
                               String(telemPacket.gpsAltMSL) + "," +
@@ -157,7 +157,8 @@ public:
                               String(telemPacket.trajD); 
                               
         flash->writeStruct(structString);
-        Serial.println(structString); 
+        //Serial.println(structString.length()); 
+        //Serial.println(structString); 
     }
 
     // WGS84 Ellipsoid Model

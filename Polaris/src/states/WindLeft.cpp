@@ -11,8 +11,15 @@ void WindLeft::initialize_impl() {
 
 void WindLeft::loop_impl() {
 	this->stateTime = this->currentTime - this->stateStartTime; 
-	this->servos->paraServo_1->adjustString(DESIRED_STRING_LENGTH); 
-	this->servos->paraServo_3->adjustString(DESIRED_STRING_LENGTH); //Check Servo values 
+	if(stateTime < 1500){
+		this->servos->paraServo_3->writeServo(SERVO_COUNTER_WIND); 
+		this->servos->paraServo_4->writeServo(SERVO_CLOCK_WIND); ; //Check Servo values 
+	}
+	else{
+		this->servos->paraServo_3->writeServo(SERVO_CENTER); 
+		this->servos->paraServo_4->writeServo(SERVO_CENTER); ; //Check Servo values
+	}
+	
 }
 
 State *WindLeft::nextState_impl() {

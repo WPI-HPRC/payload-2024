@@ -13,7 +13,8 @@ void PreLaunch::initialize_impl() {
 void PreLaunch::loop_impl() {
 
 	this->stateTime = this->currentTime - this->stateStartTime; 
-	Serial.println("I am in Pre-Launch");
+	//Serial.println("I am in Pre-Launch");
+	Serial.println(telemPacket.accelZ); 
 	verticalAcceleration = telemPacket.accelZ; 
 	verticalAccelerationBuffer[bufferIndex] = verticalAcceleration;
     
@@ -24,15 +25,19 @@ void PreLaunch::loop_impl() {
     {
         sum += verticalAccelerationBuffer[i];
     }
+	
+
     averageVerticalAcceleration = sum / 10.0;
-	if(averageVerticalAcceleration > LAUNCH_ACCEL_THRESHOLD){
+	//Serial.println(averageVerticalAcceleration); 
+
+	if(averageVerticalAcceleration < LAUNCH_ACCEL_THRESHOLD){
 		count++; 
 	}
 	else{
 		count = 0; 
 	}
 
-	if(count > 30){
+	if(count > 2){ //change
 		launched = true; 
 	}
 

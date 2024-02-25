@@ -5,11 +5,23 @@
 
 LandPrep::LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
 
-void LandPrep::initialize_impl() {}
+void LandPrep::initialize_impl() {
+	this->stateStartTime = this->currentTime;
+}
 
 void LandPrep::loop_impl() {
-	this->servos->paraServo_2->adjustString(STRING_BASE_LENGTH);  //make sure these are correct 
-	this->servos->paraServo_4->adjustString(STRING_BASE_LENGTH); 
+	this->stateTime = this->currentTime - this->stateStartTime;
+	if(stateTime < 2000){
+
+		this->servos->paraServo_1->writeServo(SERVO_COUNTER_UNWIND); 
+		this->servos->paraServo_2->writeServo(SERVO_CLOCK_UNWIND); ; //Check Servo values 
+	}
+	else{
+		this->servos->paraServo_1->writeServo(SERVO_CENTER); 
+		this->servos->paraServo_2->writeServo(SERVO_CENTER);  //Check Servo values
+	}
+	
+
 	this->servos->cameraServo->writeServo(CAM_RETRACT); 
 
 	// calculate vertical velocity

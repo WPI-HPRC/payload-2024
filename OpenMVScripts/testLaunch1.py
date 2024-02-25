@@ -1,6 +1,6 @@
 # CV Filter - By: paigerust - Sat Dec 9 2023
 
-import sensor, image, time, utime, rpc, machine, pyb, struct
+import sensor, image, time, utime, rpc, machine, pyb, struct, mjpeg
 
 sensor.reset()
 sensor.set_pixformat(sensor.GRAYSCALE)
@@ -16,45 +16,48 @@ start = pyb.millis()
 m = mjpeg.Mjpeg('test_launch1.mjpeg')
 
 with open("time_stamps.txt", "wb") as f:
-    while(True):
-        clock.tick()
-        img = sensor.snapshot()
-        m.add_frame(img)
+    with open("coordinates.txt","wb") as f2:
 
-        img.lens_corr(strength = 1.5)
-        blob_size = []
+        while(True):
+            clock.tick()
+            img = sensor.snapshot()
+            m.add_frame(img)
 
-        f.write("%d\n" % pyb.elapsed_millis(start))
+            img.lens_corr(strength = 1.5)
+            blob_size = []
 
-        img.mode(7)
+            f.write("%d\n" % pyb.elapsed_millis(start))
 
-        blobs = img.find_blobs([(180, 255), (180, 255)], merge = True) # Detects all blobs with an average color lighter than 180
+            img.mode(7)
 
-        if len(blobs) > 0:
-            for blob in blobs: # Appends the blob size of each blob to the array blob_size, in total number of pixels
-                blob_size.append(blob.pixels())
+            blobs = img.find_blobs([(180, 255), (180, 255)], merge = True) # Detects all blobs with an average color lighter than 180
 
-            for blob in blobs:
-                if blob.pixels() == max(blob_size): #
-                    optimal_blob = blob
+            if len(blobs) > 0:
+                for blob in blobs: # Appends the blob size of each blob to the array blob_size, in total number of pixels
+                    blob_size.append(blob.pixels())
 
-            # Draw ellipse and crosshairs for optimal_blob
-            img.draw_ellipse(optimal_blob.enclosed_ellipse(), color = (255, 255, 255))
-            img.draw_cross(optimal_blob.cx(), optimal_blob.cy(), color = (0, 0, 0))
+                for blob in blobs:
+                    if blob.pixels() == max(blob_size): #
+                        optimal_blob = blob
 
-            dat_buf = struct.pack("<ii",optimal_blob.cx,optimal_blob.cy)
+                # Draw ellipse and crosshairs for optimal_blob
+                img.draw_ellipse(optimal_blob.enclosed_ellipse(), color = (255, 255, 255))
+                img.draw_cross(optimal_blob.cx(), optimal_blob.cy(), color = (0, 0, 0))
+                f2.write("%d\t%d\n" % (optimal_blob.cx(), optimal_blob.cy()))
 
-            # Print optimal_blob centroid to terminal
-            # print("Blob centroid: " + str(optimal_blob.cx()) + ", " + str(optimal_blob.cy()))
-        try:
-            print("Trying Send")
-            interface.put_bytes(dat_buf, timeout_ms=10)
-        except OSError as e:
-            pass
 
-        time.sleep(0.1)
+                dat_buf = struct.pack("<ii",optimal_blob.cx(),optimal_blob.cy())
 
-        if pyb.elapsed_millis(start) > 18000:
+                # Print optimal_blob centroid to terminal
+                print("Blob centroid: " + str(optimal_blob.cx()) + ", " + str(optimal_blob.cy()))
+            try:
+                print("Trying Send")
+                interface.put_bytes(dat_buf, timeout_ms=10)
+            except OSError as e:
+                pass
 
-            m.close(clock.fps())
-            break
+            time.sleep(0.1)
+
+            if pyb.elapsed_millis(start) > 10800000:
+                m.close()
+                break

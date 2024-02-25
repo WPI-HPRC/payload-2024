@@ -22,7 +22,7 @@ SensorFrame sensorFrame;
 
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(10); // CS GPIO17
+XbeeProSX *xbee = new XbeeProSX(45); // CS GPIO17
 struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
 
@@ -51,12 +51,16 @@ void setup() {
 		while(1) {};
 	}
 
+
+	SPI.begin();
+    // SPI.beginTransaction(SPISettings(19000000, MSBFIRST, SPI_MODE0));
+	xbee->begin();
 	
 	servos = {
-		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1, PARACHUTE_SERVO_1_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_1_IN), //double check direction 
-		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2, PARACHUTE_SERVO_2_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_2_IN), //double check direction; 
-		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3, PARACHUTE_SERVO_3_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_3_IN), //double check direction
-		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4, PARACHUTE_SERVO_4_DIR, SERVO_GAIN, PULLEY_D, STRING_BASE_LENGTH,PARACHUTE_SERVO_4_IN), //double check direction;
+		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1), //double check direction 
+		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2),
+		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3),		
+		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4),	
 		.cameraServo = new ServoController(CAMERA_SERVO),
 	}; 
 
@@ -89,10 +93,10 @@ void loop() {
 		readSensors();
 
 		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
-	
-		state->loop();
 
 		String timestamp = (String) millis();
+	
+		state->loop();
 
 		// Check for state transition each loop
 		State *nextState = state->nextState();

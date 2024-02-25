@@ -36,7 +36,7 @@ public:
 
     //add functions for GPS point Calcs 
     GPSPoint getTargetPoint(CameraData& data, float currLat, float currLong, float alt, float anglePitch, float heading); 
-    GPSPoint onLoop(Utility::TelemPacket sensorPacket, CameraData& data); 
+    GPSPoint onLoop(Utility::TelemPacket sensorPacket, CameraData data); 
     // Trajectory getReferenceTrajectory(GPSPoint targetPoint, GPSPoint payloadPos); 
 };
 
