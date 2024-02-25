@@ -157,6 +157,7 @@ public:
                               String(telemPacket.trajD); 
                               
         flash->writeStruct(structString);
+        Serial.println(structString); 
     }
 
     // WGS84 Ellipsoid Model

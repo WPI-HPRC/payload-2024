@@ -10,7 +10,7 @@ void LandPrep::initialize_impl() {}
 void LandPrep::loop_impl() {
 	this->servos->paraServo_2->adjustString(STRING_BASE_LENGTH);  //make sure these are correct 
 	this->servos->paraServo_4->adjustString(STRING_BASE_LENGTH); 
-	this->servos->cameraServo->setServo(CAM_RETRACT); 
+	this->servos->cameraServo->writeServo(CAM_RETRACT); 
 
 	// calculate vertical velocity
     float verticalVelocity = (Utility::pressureToAltitude(sensorData.Pressure) - lastAltitude) / (deltaTime / 1000.0);
