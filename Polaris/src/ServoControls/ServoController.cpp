@@ -4,14 +4,22 @@
 // const float stringLength = 100.;
 // const float pGain = 5.;
 
-ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength, int inputPin) {
+ServoController::ServoController(
+		int pin,
+		bool clockwise,
+		float p,
+		float pulleyDiameter,
+		float stringLength,
+		int inputPin,
+		int avgFirst) {
     this->servo = servo; 
     this->clockwise = clockwise;
     this->servo.attach(pin);
     this->p = p;
     this->pulleyDiameter = pulleyDiameter; //p is P-gain 
     this->stringLength = stringLength;
-    this->inputPin = inputPin; 
+    this->inputPin = inputPin;
+	this->avgFirst = avgFirst;
     // Set servo to be still
     this->servo.write(90.);
 }
@@ -29,16 +37,22 @@ float shortestAngle(float angle) {
     return fmod(angle + 180., 360.) - 180.;
 }
 
+int wrap(int t, int max) {
+	return (t + m/2) % m - m/2;
+}
+
 void ServoController::setToAngle(float newAngle, float currAngle) {
-    float angleDiff = shortestAngle((newAngle - currAngle));
-    float degreesPerSec = (this->clockwise ? -1. : 1.)*(this->p)*angleDiff;
-    const float reduction = 1. / 1.;
-    this->servo.write(constrain(90. + (0.085*90./60.)/reduction*degreesPerSec,
-                                0., 180.));
+    float angleDiff = shortestAngle(newAngle - currAngle);
+    float targetSpeed = (this->clockwise ? -1. : 1.)*(this->p)*angleDiff;
+    const float reduction = 1. / 1.; // Not true
+	const float maxSpeed = ( // in °/s
+		60./0.085 // 0.085 s/60° -> °/s (from https://docs.axon-robotics.com/axon-servos/axon-max+)
+	)*reduction;
+    this->servo.write(180.*constrain(.5 + .5*targetSpeed/maxSpeed, 0., 1.));
 }
 
 void ServoController::adjustString(float newStringLength) {
-    const float  angleOffset = 0.0;
+    const float angleOffset = 0.0;
     float currAngle = analogRead(inputPin);
     float currStringLength = shortestAngle(currAngle - angleOffset) *
                              PI/180.*(0.5*this->pulleyDiameter);

@@ -26,7 +26,7 @@
 #define PARACHUTE_SERVO_4_IN 17 //Not working 
 
 #define PARACHUTE_SERVO_1_DIR false //Check these 
-#define PARACHUTE_SERVO_2_DIR true
+#define PARACHUTE_SERVO_2_DIR true  // true = CW?
 #define PARACHUTE_SERVO_3_DIR false
 #define PARACHUTE_SERVO_4_DIR true
 
@@ -63,5 +63,24 @@
 #define W_P GRAV * MASS;
 #define H_CP 2; // [m] Distance from center of mass to center of pressure
 
+// Analog read for parachute motors at center (longest string length),
+// and at 25 cm wound
+const int
+      MOTOR_1_CENTER = 289, // 245, 278, 
+      MOTOR_2_CENTER = 389, // 386, 384, 
+      MOTOR_3_CENTER =  38, //  38,  63, 
+      MOTOR_4_CENTER = 755, // 733, 736, 
+      MOTOR_1_25_CM = 894,
+      MOTOR_2_25_CM = 995,
+      MOTOR_3_25_CM = 669,
+      MOTOR_4_25_CM = 321;   
 
 
+// CW
+// 262, 387,  43, 733
+// 289, 405, 382, 749 ???
+// 289, 405,  81, 749
+// CCW
+// 267, 367, 383, 743 ???
+// 267, 367,  36, 743
+// 267, 367,  36, 743

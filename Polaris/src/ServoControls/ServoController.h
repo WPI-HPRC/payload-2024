@@ -14,7 +14,7 @@ class ServoController {
         float stringLength;   // cm
         int inputPin; 
     public: 
-        ServoController(int, bool, float, float, float, int);
+        ServoController(int, bool, float, float, float, int, int);
 
         ServoController(int); 
 
