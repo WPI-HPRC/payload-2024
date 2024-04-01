@@ -37,7 +37,7 @@ float shortestAngle(float angle) {
     return fmod(angle + 180., 360.) - 180.;
 }
 
-int wrap(int t, int max) {
+int wrap(int t, int m) {
 	return (t + m/2) % m - m/2;
 }
 
