@@ -111,7 +111,7 @@ public:
 
     static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
     {
-        String structString = String(telemPacket.accelX) + "," +
+        String structString = String(telemPacket.accelX) + "," + //Need to add in state lol
                               String(telemPacket.accelY) + "," +
                               String(telemPacket.accelZ) + "," +
                               String(telemPacket.gyroX) + "," +

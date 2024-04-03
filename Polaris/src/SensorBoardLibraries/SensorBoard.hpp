@@ -36,11 +36,11 @@ class Sensorboard{
         if (!imu.setup()) return false;
         if (!barometer.setup()) return false;
         if (!mag.setup()) return false;
-        if(!gps.begin()) return false;
+        // if(!gps.begin()) return false;
 
-        gps.setI2COutput(COM_TYPE_UBX);
-        gps.setNavigationFrequency(40);
-        gps.setAutoPVT(true);
+        // gps.setI2COutput(COM_TYPE_UBX);
+        // gps.setNavigationFrequency(40);
+        // gps.setAutoPVT(true);
         // if(!mag.begin()) return false;
 
         // mag.softReset();
@@ -99,12 +99,12 @@ class Sensorboard{
         Inertial_Baro_frame.mag_y *= 8; // [Gauss]
         Inertial_Baro_frame.mag_z *= 8; // [Gauss]
 
-        Inertial_Baro_frame.gpsLock = gps.getGnssFixOk();
-        Inertial_Baro_frame.gpsLat = gps.getLatitude();
-        Inertial_Baro_frame.gpsLong = gps.getLongitude();
-        Inertial_Baro_frame.gpsAltAGL = gps.getAltitude();
-        Inertial_Baro_frame.gpsAltMSL = gps.getAltitudeMSL();
-        Inertial_Baro_frame.satellites = gps.getSIV();
+        // Inertial_Baro_frame.gpsLock = gps.getGnssFixOk();
+        // Inertial_Baro_frame.gpsLat = gps.getLatitude();
+        // Inertial_Baro_frame.gpsLong = gps.getLongitude();
+        // Inertial_Baro_frame.gpsAltAGL = gps.getAltitude();
+        // Inertial_Baro_frame.gpsAltMSL = gps.getAltitudeMSL();
+        // Inertial_Baro_frame.satellites = gps.getSIV();
         //Inertial_Baro_frame.epochTime = gps.getUnixEpoch();
 
         // Inertial_Baro_frame.mag_x = mag.getMeasurementX();

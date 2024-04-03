@@ -22,7 +22,7 @@ SensorFrame sensorFrame;
 
 FlashChip *flash = new FlashChip();
 StateEstimator *stateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(45); // CS GPIO17
+XbeeProSX *xbee = new XbeeProSX(10); // CS GPIO17
 struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
 
@@ -39,7 +39,7 @@ Sensorboard sensorBoard;
 void setup() {
 	Serial.begin(115200);
 
-	while(!Serial);
+	while(!Serial); //Double check this- should be ok
 	Wire.begin();
 	Wire.setClock(400000);
 
@@ -51,9 +51,9 @@ void setup() {
 		while(1) {};
 	}
 
-
+	
 	SPI.begin();
-    // SPI.beginTransaction(SPISettings(19000000, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(19000000, MSBFIRST, SPI_MODE0));
 	xbee->begin();
 	
 	servos = {
@@ -75,6 +75,8 @@ void setup() {
 	pinMode(PARACHUTE_SERVO_3_IN, INPUT); 
 	pinMode(PARACHUTE_SERVO_4_IN, INPUT); 
 
+	xbee->begin(); //This is probably wrong 
+
 
 	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 	state->initialize();
@@ -92,7 +94,7 @@ void loop() {
 	if(timer.check() == 1) {
 		readSensors();
 
-		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
+		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame)); 
 
 		String timestamp = (String) millis();
 	

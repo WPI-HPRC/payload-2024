@@ -7,8 +7,17 @@ FlashChip::FlashChip() {
 void FlashChip::init() {
     Serial.println("[Flash Chip]: Beginning initialization");
     flash = new SPIFlash(10);
+    u_int32_t nextAddress = 0; 
+    String data  = ""; 
 
-    flash->begin();
+    if(flash->begin()){
+        Serial.println("Flash Found");
+    }
+    else{
+        while(true){
+            Serial.println("1"); 
+        }
+    }
 
     capacity = flash->getCapacity();
     maxPage = flash->getMaxPage();
@@ -19,6 +28,22 @@ void FlashChip::init() {
     Serial.print("Max Page: "); Serial.println(maxPage);
     Serial.println("[Flash Chip]: Initialization Complete");
 
+//     while (nextAddress < 16777216 ){
+       
+//     flash->readStr(nextAddress, data, true);
+//     Serial.println(data);
+//      if(data.equals("")){
+//             while(true){
+//                 //Serial.println("Stuck"); 
+//             }
+//     }
+
+//     nextAddress += 256; 
+//   }
+
+//   while(true){
+//     //Serial.println("2"); 
+//   }
 
 }
 
@@ -56,6 +81,7 @@ int FlashChip::rememberAddress() {
 
 bool FlashChip::writeStruct(String structString) {
     if(nextAddress == capacity) {
+    
         return false;
     }
     

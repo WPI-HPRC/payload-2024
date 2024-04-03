@@ -4,7 +4,6 @@ State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, 
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
-	//xbee->begin();
     BLA::Matrix<10> x_0 = {1,0,0,0,0,0,0,0,0,0};
     stateEstimator = new StateEstimator(x_0, 0.025); 
 }
@@ -89,7 +88,7 @@ void State::loop() {
     // float trajC = 0.0f;
     // float trajD = 0.0f; 
 
-	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
+	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket)); //POTENTIAL PROBLEM 
     // char* testPacket = "PLEASE JUST WORK AHGGGGGGAHHDH"; 
     // xbee->send(0x0013A200423F474C, &testPacket, sizeof(testPacket));
 	Utility::logData(flash, telemPacket); 

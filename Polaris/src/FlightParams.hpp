@@ -9,7 +9,7 @@
 // measured in G's
 // checking if average Z acceleration is greater than 4 G's
 
-#define LAUNCH_ACCEL_THRESHOLD -4
+#define LAUNCH_ACCEL_THRESHOLD 3
 
 #define LANDING_VELOCITY 5.0
 
@@ -62,7 +62,7 @@
 
 #define DESIRED_STRING_LENGTH 70
 
-#define MAX_STOW_TIME 103000
+#define MAX_STOW_TIME 5
 
 //Trajectory Constants 
 
