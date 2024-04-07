@@ -14,7 +14,7 @@ void PreLaunch::loop_impl() {
 
 	this->stateTime = this->currentTime - this->stateStartTime; 
 	//Serial.println("I am in Pre-Launch");
-	Serial.println(telemPacket.accelZ); 
+	//Serial.println(telemPacket.accelZ); 
 	verticalAcceleration = telemPacket.accelZ; 
 	verticalAccelerationBuffer[bufferIndex] = verticalAcceleration;
     

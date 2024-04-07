@@ -57,15 +57,17 @@ void State::loop() {
 	telemPacket.satellites = sensorData.satellites;
 	telemPacket.gpsLock = sensorData.gpsLock;
     
-    //this->camGPS = openMV->onLoop(telemPacket, data); 
+    this->camGPS = openMV->onLoop(telemPacket, data); 
 
 	//Deal with these once objects are defined 
-	// telemPacket.cx = data.cx; //Camera Centroids  
-    // telemPacket.cy = data.cy;
+	telemPacket.cx = data.cx; //Camera Centroids  
+    telemPacket.cy = data.cy;
     telemPacket.cx = 0; //Camera Centroids  
     telemPacket.cy = 0;
-    // Serial.println(telemPacket.cx); 
-    // Serial.println(telemPacket.cy); 
+    Serial.print("CX: "); 
+    Serial.println(telemPacket.cx); 
+    Serial.print("CY: "); 
+    Serial.println(telemPacket.cy); 
 
     // telemPacket.targetGpsLat = this->camGPS.lat; //Target Point GPS Estimations
     // telemPacket.targetGpsLong = this->camGPS.lon;

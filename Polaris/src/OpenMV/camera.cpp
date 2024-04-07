@@ -9,7 +9,7 @@ bool OpenMV::readData(CameraData& data)
 {
     bool retVal = false;
 
-    delayMicroseconds(250); //may need to delete this depending on speed requirements 
+    //delayMicroseconds(250); //may need to delete this depending on speed requirements 
 
     uint8_t buffer[sizeof(CameraData)];
     //use some explicit casts to suppress warnings
@@ -73,9 +73,11 @@ GPSPoint OpenMV::onLoop(Utility::TelemPacket sensorPacket, CameraData data){
     float anglePitch = -PI/2 + 2*atan2(sqrt(1+2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k)),sqrt(1-2*(sensorPacket.w*sensorPacket.j - sensorPacket.i*sensorPacket.k))); 
     float heading = atan2(2*(sensorPacket.w*sensorPacket.k + sensorPacket.i*sensorPacket.j),1-2*(sensorPacket.j*sensorPacket.j + sensorPacket.k*sensorPacket.k)); 
     readData(data); 
-        //Serial.println("Got here"); 
-    // Serial.println(data.cx); 
-    // Serial.println(data.cy); 
+    Serial.println("Got here"); 
+    Serial.print("CX Cam Function: "); 
+    Serial.println(data.cx); 
+    Serial.print("CX Cam Function: "); 
+    Serial.println(data.cy); 
 
     return getTargetPoint(data, sensorPacket.gpsLat, sensorPacket.gpsLong, sensorPacket.gpsAltAGL, anglePitch, heading); //THis will be wrong, need quaternion stuff
 
