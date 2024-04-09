@@ -1,11 +1,12 @@
 #pragma once
 #include "State.h"
+// #define MAX_CONTROLLED_DESCENT_TIME 10  // need to be changed is placeholder
+// #define ALT_THRESHOLD_CONTROLLED 10 // need to be changed
 
-
-class Recovery : public State {
+class HoldRight : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Recovery(struct Sensors *sensors, StateEstimator *stateEstimator); 
+		HoldRight(struct Sensors *sensors, StateEstimator *stateEstimator); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 

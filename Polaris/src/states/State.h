@@ -61,30 +61,29 @@ class State {
 		GPSPoint camGPS; 
 
 
-	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
-		//! @brief number of milliseconds since the initialize call
-		long long currentTime = 0;
-		//! @brief number of milliseconds since the last loop call
-		long long deltaTime = 0;
-		long long loopCount = 0;
-		long long stateTime = 0; 
-		long long stateStartTime = 0; 
-		FlashChip *flash; 
-		StateEstimator *stateEstimator; 
-		XbeeProSX *xbee; 
-		struct Servos *servos; 
-		OpenMV *openMV; 
-		CameraData data; 
-		BLA::Matrix<10> currentState; 
-		
-
-	private:
-		//! @brief number of milliseconds from boot to the initialize call
-		long long startTime = 0;
-		//! @brief number of milliseconds from boot to the previous loop call
-		long long lastLoopTime = 0;
-		virtual void initialize_impl() = 0;
-		virtual void loop_impl() = 0;
-		virtual State *nextState_impl() = 0;
+protected:
+	State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+	//! @brief number of milliseconds since the initialize call
+	long long currentTime = 0;
+	//! @brief number of milliseconds since the last loop call
+	long long deltaTime = 0;
+	long long loopCount = 0;
+	long long stateTime = 0; 
+	long long stateStartTime = 0; 
+	FlashChip *flash; 
+	StateEstimator *stateEstimator; 
+	XbeeProSX *xbee; 
+	struct Servos *servos; 
+	OpenMV *openMV; 
+	CameraData data; 
+	BLA::Matrix<10> currentState; 
+	
+private:
+	//! @brief number of milliseconds from boot to the initialize call
+	long long startTime = 0;
+	//! @brief number of milliseconds from boot to the previous loop call
+	long long lastLoopTime = 0;
+	virtual void initialize_impl() = 0;
+	virtual void loop_impl() = 0;
+	virtual State *nextState_impl() = 0;
 };

@@ -1,11 +1,11 @@
 #pragma once
 #include "State.h"
+//#define MAX_LAND_TIME 10  // need to be changed is placeholder
 
-
-class Recovery : public State {
+class LandPrep : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Recovery(struct Sensors *sensors, StateEstimator *stateEstimator); 
+		LandPrep(struct Sensors *sensors, StateEstimator *stateEstimator); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 
@@ -19,4 +19,10 @@ class Recovery : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+
+		float verticalVelocityBuffer[10] = {0};
+		int bufferIndex = 0;
+		float lastAltitude = 0;
+		bool landed = false;
+		int count = 0; 
 };

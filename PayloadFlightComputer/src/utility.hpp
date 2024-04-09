@@ -2,6 +2,7 @@
 
 #define DEBUG_MODE true
 #define LOOP_RATE 40
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
 class Utility
 {
@@ -25,73 +26,146 @@ public:
         return hb + (Tb / Lb) * (pow((pressure_Pa / pb), (-R * Lb / (g0 * M))) - 1);
     };
 
+        #pragma pack(push,1)
+    struct TelemPacket {
+
+	    // State Integer
+        // 0 - PreLaunch
+        // 1 - Stowed
+        // 2 - Freefall
+        // 3 - WindLeft
+        // 4 - HoldLeft
+        // 5 - WindRight
+	    // 6 - HoldRight
+	    // 7 - LandPrep
+	    // 8 - Recovery 
+        // 9 - Abort
+        uint8_t state;
+
+        // Raw Sensor Readings
+        float accelX = 0.0f;
+        float accelY = 0.0f;
+        float accelZ = 0.0f;
+        float gyroX = 0.0f;
+        float gyroY = 0.0f;
+        float gyroZ = 0.0f;
+        float magX = 0.0f;
+        float magY = 0.0f;
+        float magZ = 0.0f;
+        float pressure = 0.0f;
+
+        // Calculated Values
+        float altitude = 0.0f;
+
+        // EKF Results
+        float w = 0.0f; // Quaternion State
+        float i = 0.0f;
+        float j = 0.0f;
+        float k = 0.0f;
+        float posX = 0.0f; // Position State ECEF
+        float posY = 0.0f;
+        float posZ = 0.0f;
+        float velX = 0.0f; // Velocity State ECEF
+        float velY = 0.0f;
+        float velZ = 0.0f;
+
+        // GPS Inputs
+        float gpsLat = 0.0f;
+        float gpsLong = 0.0f;
+        float gpsAltMSL = 0.0f;
+        float gpsAltAGL = 0.0f;
+        uint32_t epochTime = 0;
+        uint8_t satellites = 0;
+        boolean gpsLock = false;
+
+        uint32_t timestamp = 0;
+
+        //Payload Specific 
+
+        //CV 
+        uint32_t cx = 0; //Camera Centroids 
+        uint32_t cy = 0;
+
+        float targetGpsLat = 0.0f; //Target Point GPS Estimations
+        float targetGpsLong = 0.0f;
+
+        //Controls 
+        uint32_t desiredServoPos1 = 0; //Servo Controls Values 
+        uint32_t actualServoPos1 = 0;
+        uint32_t desiredServoPos2 = 0; 
+        uint32_t actualServoPos2 = 0;
+        uint32_t desiredServoPos3 = 0; 
+        uint32_t actualServoPos3 = 0;
+        uint32_t desiredServoPos4 = 0; 
+        uint32_t actualServoPos4 = 0;
+
+        float trajA = 0.0f; //Calculated Trajectory Constants 
+        float trajB = 0.0f;
+        float trajC = 0.0f;
+        float trajD = 0.0f; 
+
+        uint32_t loopCount = 0;
+    }; 
+    #pragma pack(pop); 
+
     struct SensorPacket
     {
         // Raw Sensor Readings
-        float accelX;
-        float accelY;
-        float accelZ;
-        float gyroX;
-        float gyroY;
-        float gyroZ;
-        uint32_t magX;
-        uint32_t magY;
-        uint32_t magZ;
-        float pressure;
+        float accelX = 0.0;
+        float accelY = 0.0;
+        float accelZ = 0.0;
+        float gyroX = 0.0;
+        float gyroY = 0.0;
+        float gyroZ = 0.0;
+        float magX = 0.0;
+        float magY = 0.0;
+        float magZ = 0.0;
+        float pressure = 0.0;
 
         // Calculated Values
-        float altitude;
-
-        // State Estimator Outputs
-        float w;
-        float i;
-        float j;
-        float k;
-
-        // Geocentric Position
-        float X;
-        float Y;
-        float Z;
+        float altitude = 0.0;
 
         // GPS Inputs
         float gpsLat;
         float gpsLong;
         float gpsAltMSL;
         float gpsAltAGL;
+        uint32_t epochTime;
         uint8_t satellites;
-        boolean gpsLock = false;
+        bool gpsLock = false;
 
-        long timestamp;
+        uint32_t timestamp = 0;
     };
 
-    static void logData(FlashChip &flash, SensorPacket &sensorPacket, String &structString)
-    {
-        String structString = String(sensorPacket.accelX) + "," +
-                              String(sensorPacket.accelY) + "," +
-                              String(sensorPacket.accelZ) + "," +
-                              String(sensorPacket.gyroX) + "," +
-                              String(sensorPacket.gyroY) + "," +
-                              String(sensorPacket.gyroZ) + "," +
-                              String(sensorPacket.magX) + "," +
-                              String(sensorPacket.magY) + "," +
-                              String(sensorPacket.magZ) + "," +
-                              String(sensorPacket.pressure) + "," +
-                              String(sensorPacket.altitude) + "," +
-                              String(sensorPacket.q) + "," +
-                              String(sensorPacket.i) + "," +
-                              String(sensorPacket.j) + "," +
-                              String(sensorPacket.k) + "," +
-                              String(sensorPacket.X) + "," +
-                              String(sensorPacket.Y) + "," +
-                              String(sensorPacket.Z) + "," +
-                              String(sensorPacket.gpsLat) + "," +
-                              String(sensorPacket.gpsLong) + "," +
-                              String(sensorPacket.gpsAltMSL) + "," +
-                              String(sensorPacket.gpsAltAGL) + "," +
-                              String(sensorPacket.gpsLock) + "," +
-                              String(sensorPacket.timestamp);
-        flash.writeStruct(structString);
-    }
+    //Update to be consistent with folight computer (get rid of flash chip)
+    // static void logData(FlashChip &flash, SensorPacket &sensorPacket, String &structString)
+    // {
+    //     String structString = String(sensorPacket.accelX) + "," +
+    //                           String(sensorPacket.accelY) + "," +
+    //                           String(sensorPacket.accelZ) + "," +
+    //                           String(sensorPacket.gyroX) + "," +
+    //                           String(sensorPacket.gyroY) + "," +
+    //                           String(sensorPacket.gyroZ) + "," +
+    //                           String(sensorPacket.magX) + "," +
+    //                           String(sensorPacket.magY) + "," +
+    //                           String(sensorPacket.magZ) + "," +
+    //                           String(sensorPacket.pressure) + "," +
+    //                           String(sensorPacket.altitude) + "," +
+    //                           String(sensorPacket.q) + "," +
+    //                           String(sensorPacket.i) + "," +
+    //                           String(sensorPacket.j) + "," +
+    //                           String(sensorPacket.k) + "," +
+    //                           String(sensorPacket.X) + "," +
+    //                           String(sensorPacket.Y) + "," +
+    //                           String(sensorPacket.Z) + "," +
+    //                           String(sensorPacket.gpsLat) + "," +
+    //                           String(sensorPacket.gpsLong) + "," +
+    //                           String(sensorPacket.gpsAltMSL) + "," +
+    //                           String(sensorPacket.gpsAltAGL) + "," +
+    //                           String(sensorPacket.gpsLock) + "," +
+    //                           String(sensorPacket.timestamp);
+    //     flash.writeStruct(structString);
+    // }
 
     // WGS84 Ellipsoid Model
     constexpr static float a_earth = 6378137.0;       // [m] Semi-major axis of Earth

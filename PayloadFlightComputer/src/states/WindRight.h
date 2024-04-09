@@ -1,11 +1,11 @@
 #pragma once
 #include "State.h"
+//#define MAX_INITIALDESCENT_TIME 10  // need to be changed is placeholder
 
-
-class Recovery : public State {
+class WindRight : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Recovery(struct Sensors *sensors, StateEstimator *stateEstimator); 
+		WindRight(struct Sensors *sensors, StateEstimator *stateEstimator); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 
