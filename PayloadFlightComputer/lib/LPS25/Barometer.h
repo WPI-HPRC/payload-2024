@@ -7,8 +7,8 @@
 
 typedef struct
 {
-    sensors_event_t temp;
-    sensors_event_t pressure;
+    float pressure;
+    float temp;
 } LPS25_data;
 
 
@@ -18,6 +18,7 @@ public:
     Barometer();
     void init(int sda, int scl);
     void readSensor(LPS25_data *data);
+    LPS25_data read();
 
 private:
     Adafruit_LPS25 sensor;

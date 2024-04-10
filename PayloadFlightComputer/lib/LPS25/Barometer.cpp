@@ -11,7 +11,15 @@ void Barometer::init(int sda, int scl)
     TwoWire W(sda, scl);
     this->sensor.begin_I2C(LPS2X_I2CADDR_DEFAULT, &W);
 }
-void Barometer::readSensor(LPS25_data *data)
-{
-    this->sensor.getEvent(&data->pressure, &data->temp);
+LPS25_data Barometer::read() {
+    sensors_event_t pressure, temp;
+    this->sensor.getEvent(&pressure, &temp);
+
+    LPS25_data data = {
+        .pressure = pressure.pressure,
+        .temp = temp.temperature,
+    };
+
+    return data;
 }
+
