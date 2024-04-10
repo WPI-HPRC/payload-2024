@@ -11,8 +11,8 @@ Utility::SensorPacket Sensors::readSensors() {
   LPS25_data *barometerData;
   barometer->readSensor(barometerData);
 
-  sensorPacket.pressure = barometerData.pressure.pressure; // [hPa/mBar]
-  sensorPacket.altitude = Utility::pressureToAltitude(barometerData.pressure.pressure); // m
+  sensorPacket.pressure = barometerData->pressure.pressure; // [hPa/mBar]
+  sensorPacket.altitude = Utility::pressureToAltitude(barometerData->pressure.pressure); // m
 
   ICM_data accelerometerData = this->acc->read();  
 
