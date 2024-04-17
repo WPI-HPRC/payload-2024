@@ -75,6 +75,9 @@ const int
       MOTOR_3_25_CM = 669,
       MOTOR_4_25_CM = 321;   
 
+
+const int WRAP_MAX = 1024;
+
 // CW
 // 262, 387,  43, 733
 // 289, 405, 382, 749 ???
