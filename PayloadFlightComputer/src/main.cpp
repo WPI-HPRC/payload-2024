@@ -19,6 +19,8 @@
 #include <Accelerometer.h>
 #include <Magnetometer.h>
 
+#include <TelemetryBoard/XBeeProSX.h>
+
 #define LOOP_RATE 100
 
 Metro timer = Metro(1000 / LOOP_RATE);

@@ -4,6 +4,9 @@
 #define LOOP_RATE 40
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
+#include <cstddef>
+#include <cstdint>
+
 class Utility
 {
 
@@ -26,8 +29,10 @@ public:
         return hb + (Tb / Lb) * (pow((pressure_Pa / pb), (-R * Lb / (g0 * M))) - 1);
     };
 
-        #pragma pack(push,1)
+    #pragma pack(push,1)
     struct TelemPacket {
+
+        uint8_t packetType = 0x02;
 
 	    // State Integer
         // 0 - PreLaunch
@@ -76,7 +81,7 @@ public:
         float gpsAltAGL = 0.0f;
         uint32_t epochTime = 0;
         uint8_t satellites = 0;
-        boolean gpsLock = false;
+        bool gpsLock = false;
 
         uint32_t timestamp = 0;
 
@@ -106,7 +111,7 @@ public:
 
         uint32_t loopCount = 0;
     }; 
-    #pragma pack(pop); 
+    #pragma pack(pop)
 
     struct SensorPacket
     {

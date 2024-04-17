@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "*.tcc": "cpp"
-    }
+        "*.tcc": "cpp",
+        "cstdint": "cpp"
+    },
+    "cmake.sourceDirectory": "/Users/will/Documents/GitHub/HPRC/payload-2024/PayloadFlightComputer/.pio/libdeps/pico/Adafruit BusIO"
 }
