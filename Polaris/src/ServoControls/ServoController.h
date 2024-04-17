@@ -12,7 +12,8 @@ class ServoController {
         float p; // s^-1
         float pulleyDiameter; // cm
         float stringLength;   // cm
-        int inputPin; 
+        int inputPin;
+        int woundTick;
     public: 
         ServoController(int, bool, float, float, float, int, int);
 
@@ -30,6 +31,12 @@ class ServoController {
          * @param currAngle The current angle. 
         */
         void setToAngle(float, float);
+        
+        /**
+         * @brief "Wraps" t to find the shortest distance to 0 around a circle of circumference WRAP_MAX
+         * @param t the number to wrap
+        */
+        int wrap(int);
 
         /**
          * @brief Reads current Servo value 

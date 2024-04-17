@@ -11,7 +11,8 @@ ServoController::ServoController(
 		float pulleyDiameter,
 		float stringLength,
 		int inputPin,
-		int avgFirst) {
+		int avgFirst,
+        int zeroPos) {
     this->servo = servo; 
     this->clockwise = clockwise;
     this->servo.attach(pin);
@@ -19,6 +20,7 @@ ServoController::ServoController(
     this->pulleyDiameter = pulleyDiameter; //p is P-gain 
     this->stringLength = stringLength;
     this->inputPin = inputPin;
+    this->woundTicks = zeroPos + wrap(analogRead(inputPin) - zeroPos);
 	this->avgFirst = avgFirst;
     // Set servo to be still
     this->servo.write(90.);
@@ -37,8 +39,13 @@ float shortestAngle(float angle) {
     return fmod(angle + 180., 360.) - 180.;
 }
 
-int wrap(int t, int m) {
-	return (t + m/2) % m - m/2;
+int wrap(int t) {
+    const int WRAP_MAX = 1024;
+	return (t + WRAP_MAX/2) % WRAP_MAX - WRAP_MAX/2;
+}
+
+void ServoController::updateWoundTicks() {
+    woundTicks += wrap(analogRead(inputPin) - woundTicks);
 }
 
 void ServoController::setToAngle(float newAngle, float currAngle) {
