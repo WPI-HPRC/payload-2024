@@ -14,24 +14,20 @@ private:                             \
 #include <BasicLinearAlgebra.h>
 #include <TelemetryBoard/XBeeProSX.h>
 #include <libs/Flash/Flash.h>
-#include <Controls/EKF/EKF.h>
-#include <OpenMV/camera.h>
-#include <OpenMV/cameraData.h>
-#include <OpenMV/gps.h>
-#include <servos.h>
+#include <SensorBoardLibraries/Sensor_Frames.hpp>
 
 
-enum StateId {
-  ID_PreLaunch = 0,
-  ID_Stowed,
-  ID_Freefall,
-  ID_WindLeft,
-  ID_HoldLeft,
-  ID_WindRight,
-  ID_HoldRight,
-  ID_LandPrep,
-  ID_Recovery,
-  ID_Abort,
+
+
+enum StateId
+{
+    ID_PreLaunch = 0,
+    ID_Launch,
+    ID_Coast,
+    ID_DrogueDescent,
+    ID_MainDescent,
+    ID_Recovery,
+    ID_Abort
 };
 
 /**
@@ -57,12 +53,11 @@ class State {
 
 		SensorFrame sensorData; //Protected? 
 		Utility::TelemPacket telemPacket;
-		CameraData camData; 
-		GPSPoint camGPS; 
+ 
 
 
 	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		State(); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
@@ -70,14 +65,7 @@ class State {
 		long long loopCount = 0;
 		long long stateTime = 0; 
 		long long stateStartTime = 0; 
-		FlashChip *flash; 
-		StateEstimator *stateEstimator; 
-		XbeeProSX *xbee; 
-		struct Servos *servos; 
-		OpenMV *openMV; 
-		CameraData data; 
-		BLA::Matrix<10> currentState; 
-		
+
 
 	private:
 		//! @brief number of milliseconds from boot to the initialize call

@@ -1,10 +1,18 @@
 #pragma once
 #include "FlightParams.hpp"
-#include <ServoControls/ServoController.h>
 #include <libs/Flash/Flash.h>
+#include <Servo.h>
 
 // #define DEBUG_MODE 
 #define LOOP_RATE 40
+
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
+
+#define SERVO_FEEDBACK_GPIO 20
+#define SERVO_PWM_GPIO 6
+
+extern Servo airbrakesServo;
+extern FlashChip flash; 
 
 class Utility
 {
@@ -31,18 +39,15 @@ public:
     #pragma pack(push,1)
     struct TelemPacket {
 
-	    // State Integer
+	     // State Integer
         // 0 - PreLaunch
-        // 1 - Stowed
-        // 2 - Freefall
-        // 3 - WindLeft
-        // 4 - HoldLeft
-        // 5 - WindRight
-	    // 6 - HoldRight
-	    // 7 - LandPrep
-	    // 8 - Recovery 
-        // 9 - Abort
-        uint8_t state;
+        // 1 - Launch
+        // 2 - Coast
+        // 3 - DrogueDescent
+        // 4 - MainDescent
+        // 5 - Recovery
+        // 6 - Abort
+        uint8_t state = 0;
 
         // Raw Sensor Readings
         float accelX = 0.0f;
@@ -56,60 +61,17 @@ public:
         float magZ = 0.0f;
         float pressure = 0.0f;
 
+        uint32_t servoPosition = 0;
+
         // Calculated Values
         float altitude = 0.0f;
 
-        // EKF Results
-        float w = 0.0f; // Quaternion State
-        float i = 0.0f;
-        float j = 0.0f;
-        float k = 0.0f;
-        float posX = 0.0f; // Position State ECEF
-        float posY = 0.0f;
-        float posZ = 0.0f;
-        float velX = 0.0f; // Velocity State ECEF
-        float velY = 0.0f;
-        float velZ = 0.0f;
-
-        // GPS Inputs
-        float gpsLat = 0.0f;
-        float gpsLong = 0.0f;
-        float gpsAltMSL = 0.0f;
-        float gpsAltAGL = 0.0f;
-        uint32_t epochTime = 0;
-        uint8_t satellites = 0;
-        boolean gpsLock = false;
-
         uint32_t timestamp = 0;
-
-        //Payload Specific 
-
-        //CV 
-        uint32_t cx = 0; //Camera Centroids 
-        uint32_t cy = 0;
-
-        float targetGpsLat = 0.0f; //Target Point GPS Estimations
-        float targetGpsLong = 0.0f;
-
-        //Controls 
-        uint32_t desiredServoPos1 = 0; //Servo Controls Values 
-        uint32_t actualServoPos1 = 0;
-        uint32_t desiredServoPos2 = 0; 
-        uint32_t actualServoPos2 = 0;
-        uint32_t desiredServoPos3 = 0; 
-        uint32_t actualServoPos3 = 0;
-        uint32_t desiredServoPos4 = 0; 
-        uint32_t actualServoPos4 = 0;
-
-        float trajA = 0.0f; //Calculated Trajectory Constants 
-        float trajB = 0.0f;
-        float trajC = 0.0f;
-        float trajD = 0.0f; 
     }; 
     #pragma pack(pop); 
 
 
-    static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
+    static void logData(FlashChip flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
     {
         String structString = String(telemPacket.accelX) + "," + //Need to add in state lol
                               String(telemPacket.accelY) + "," +
@@ -122,41 +84,9 @@ public:
                               String(telemPacket.magZ) + "," +
                               String(telemPacket.pressure) + "," +
                               String(telemPacket.altitude) + "," +
-                              String(telemPacket.w) + "," +
-                              String(telemPacket.i) + "," +
-                              String(telemPacket.j) + "," +
-                              String(telemPacket.k) + "," +
-                              String(telemPacket.posX) + "," +
-                              String(telemPacket.posY) + "," +
-                              String(telemPacket.posZ) + "," + 
-                              String(telemPacket.velX) + "," +
-                              String(telemPacket.velY) + "," +
-                              String(telemPacket.velZ) + "," + 
-                              String(telemPacket.gpsLat) + "," +
-                              String(telemPacket.gpsLong) + "," +
-                              String(telemPacket.gpsAltMSL) + "," +
-                              String(telemPacket.gpsAltAGL) + "," +
-                              String(telemPacket.gpsLock) + "," +
-                              String(telemPacket.satellites) + "," +
-                              String(telemPacket.timestamp) + "," +
-                              String(telemPacket.cx) + "," +
-                              String(telemPacket.cy) + "," +
-                              String(telemPacket.targetGpsLat) + "," +
-                              String(telemPacket.targetGpsLong) + "," +
-                              String(telemPacket.desiredServoPos1) + "," +
-                              String(telemPacket.actualServoPos1) + "," +
-                              String(telemPacket.desiredServoPos2) + "," +
-                              String(telemPacket.actualServoPos2) + "," +
-                              String(telemPacket.desiredServoPos3) + "," +
-                              String(telemPacket.actualServoPos3) + "," +
-                              String(telemPacket.desiredServoPos4) + "," +
-                              String(telemPacket.actualServoPos4) + "," +
-                              String(telemPacket.trajA) + "," +
-                              String(telemPacket.trajB) + "," +
-                              String(telemPacket.trajC) + "," +
-                              String(telemPacket.trajD); 
+                              String(telemPacket.servoPosition); 
                               
-        flash->writeStruct(structString);
+        flash.writeStruct(structString);
         //Serial.println(structString.length()); 
         //Serial.println(structString); 
     }

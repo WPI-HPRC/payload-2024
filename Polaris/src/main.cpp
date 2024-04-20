@@ -5,13 +5,12 @@
 #include <Wire.h>
 
 #include <states/State.h>
-#include <states/PreLaunch.h>
+#include <states/00-PreLaunch.h>
 #include "libs/Flash/Flash.h"
 #include "utility.hpp"
-#include <Controls/EKF/EKF.h>
-#include <OpenMV/camera.h>
-#include <ServoControls/ServoController.h>
-#include <servos.h>
+#include <Servo.h>
+#include <SensorBoardLibraries/Sensor_Frames.hpp>
+#include <SensorBoardLibraries/SensorBoard.hpp>
 
 // #include <TeensyDebug.h>
 // #pragma GCC optimize ("O0")
@@ -20,19 +19,16 @@
 
 SensorFrame sensorFrame;
 
-FlashChip *flash = new FlashChip();
-StateEstimator *stateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(10); // CS GPIO17
-struct Servos servos; 
-OpenMV *openMV = new OpenMV(); 
+FlashChip flash = FlashChip();
+Servo airbrakesServo = Servo();
 
-unsigned long previousTime = 0;
+unsigned long previousTime = 0; //still need these? 
 unsigned long currentTime = 0;
 uint32_t counter = 0;
 
 Metro timer = Metro(1000/ LOOP_RATE);
 
-State * state;
+State *state = new PreLaunch();
 
 Sensorboard sensorBoard;
 
@@ -43,7 +39,11 @@ void setup() {
 	Wire.begin();
 	Wire.setClock(400000);
 
-	Serial.println("[Polaris] Initializing Sensor Board");
+	pinMode(SERVO_FEEDBACK_GPIO, INPUT);
+    Serial.println(airbrakesServo.attach(SERVO_PWM_GPIO));
+    airbrakesServo.write(AIRBRAKE_RETRACTED);
+
+	Serial.println("[Polaris] Initializing Sensor Board"); //Make sure GPS is off (should be)
 	if(sensorBoard.setup()) {
 		Serial.println("[Polaris] Sensor Setup Complete!");
 	} else {
@@ -51,34 +51,11 @@ void setup() {
 		while(1) {};
 	}
 
-	
-	SPI.begin();
-    SPI.beginTransaction(SPISettings(19000000, MSBFIRST, SPI_MODE0));
-	xbee->begin();
-	
-	servos = {
-		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1), //double check direction 
-		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2),
-		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3),		
-		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4),	
-		.cameraServo = new ServoController(CAMERA_SERVO),
-	}; 
-
-	flash->init();
+	flash.init();
 	int startAddress = 0;
-	startAddress = flash->rememberAddress();
+	startAddress = flash.rememberAddress();
 	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
 
-	pinMode(IR_PIN, INPUT);
-	pinMode(PARACHUTE_SERVO_1_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_2_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_3_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_4_IN, INPUT); 
-
-	xbee->begin(); //This is probably wrong 
-
-
-	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
 	state->initialize();
 
 	currentTime = millis();
