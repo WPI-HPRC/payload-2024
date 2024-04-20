@@ -29,7 +29,7 @@ uint32_t counter = 0;
 
 Metro timer = Metro(1000/ LOOP_RATE);
 
-State *state = new Coast();
+State *state = new PreLaunch();
 
 Sensorboard sensorBoard;
 

@@ -39,6 +39,9 @@ void Coast::loop_impl()
     // If the average vertical velocity <= 0 for more than 30 cycles, rocket has passed apogee
     apogeePassed = apogeeDebouncer.checkOut(averageVerticalVelocity <= 0);
 
+    // Serial.print("SERVO POS: ");
+    // Serial.println(analogRead(SERVO_FEEDBACK_GPIO));
+
     // Handle airbrake control
     // TODO: I don't really know which values correspond to which positions yet, so these values are subject to change
     switch (this->servoState) {
@@ -49,7 +52,8 @@ void Coast::loop_impl()
         }
         break;
     case FULL:
-        airbrakesServo.write(AIRBRAKE_FULL_EXTENSION);
+        // NOTE: This is misnamed since we changed it at the last moment to be another 50% extension
+        airbrakesServo.write(AIRBRAKE_HALF_EXTENSION);
         if (this->currentTime >= 12500) {
             this->servoState = RETRACTED;
         }
