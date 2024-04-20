@@ -6,6 +6,7 @@
 
 #include <states/State.h>
 #include <states/00-PreLaunch.h>
+#include <states/02-Coast.h>
 #include "libs/Flash/Flash.h"
 #include "utility.hpp"
 #include <Servo.h>
@@ -28,7 +29,7 @@ uint32_t counter = 0;
 
 Metro timer = Metro(1000/ LOOP_RATE);
 
-State *state = new PreLaunch();
+State *state = new Coast();
 
 Sensorboard sensorBoard;
 

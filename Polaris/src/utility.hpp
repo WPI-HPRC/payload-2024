@@ -68,7 +68,7 @@ public:
 
         uint32_t timestamp = 0;
     }; 
-    #pragma pack(pop); 
+    #pragma pack(pop) 
 
 
     static void logData(FlashChip flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
