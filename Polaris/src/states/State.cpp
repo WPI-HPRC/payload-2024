@@ -33,6 +33,7 @@ void State::loop() {
     telemPacket.pressure = sensorData.Pressure;
     telemPacket.altitude = Utility::pressureToAltitude(sensorData.Pressure);
     telemPacket.timestamp = this->currentTime;
+    telemPacket.servoPosition = analogRead(SERVO_FEEDBACK_GPIO); 
 
 	Utility::logData(flash, telemPacket); 
     

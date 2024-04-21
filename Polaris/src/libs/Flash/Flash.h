@@ -8,7 +8,7 @@ class FlashChip {
 public:
     FlashChip();
     void init();
-    uint32_t nextAddress;
+    uint32_t nextAddress; 
 
     String addressString;
 

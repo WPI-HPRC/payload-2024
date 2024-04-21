@@ -71,7 +71,7 @@ public:
     #pragma pack(pop) 
 
 
-    static void logData(FlashChip flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
+    static void logData(FlashChip &flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
     {
         String structString = String(telemPacket.accelX) + "," + //Need to add in state lol
                               String(telemPacket.accelY) + "," +
@@ -84,11 +84,13 @@ public:
                               String(telemPacket.magZ) + "," +
                               String(telemPacket.pressure) + "," +
                               String(telemPacket.altitude) + "," +
+                              String(telemPacket.timestamp) + "," +
+                              String(telemPacket.state) + "," +
                               String(telemPacket.servoPosition); 
                               
         flash.writeStruct(structString);
         //Serial.println(structString.length()); 
-        //Serial.println(structString); 
+        Serial.println(structString); 
     }
 
     // WGS84 Ellipsoid Model

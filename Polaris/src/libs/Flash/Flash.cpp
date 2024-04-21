@@ -7,7 +7,7 @@ FlashChip::FlashChip() {
 void FlashChip::init() {
     Serial.println("[Flash Chip]: Beginning initialization");
     flash = new SPIFlash(10);
-    u_int32_t nextAddress = 0; 
+    nextAddress = 0; 
     String data  = ""; 
 
     if(flash->begin()){
@@ -81,13 +81,12 @@ int FlashChip::rememberAddress() {
 
 bool FlashChip::writeStruct(String structString) {
     if(nextAddress == capacity) {
-    
         return false;
     }
     
     flash->writeStr(nextAddress, structString);
-    nextAddress += 256;
-
+    nextAddress = nextAddress + 256;  
+    Serial.println(nextAddress); 
     return true;
 }
 
