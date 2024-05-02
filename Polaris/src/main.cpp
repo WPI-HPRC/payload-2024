@@ -36,7 +36,6 @@ Sensorboard sensorBoard;
 void setup() {
 	Serial.begin(115200);
 
-	while(!Serial); //Double check this- should be ok
 	Wire.begin();
 	Wire.setClock(400000);
 
