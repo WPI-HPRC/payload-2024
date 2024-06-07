@@ -76,7 +76,6 @@ protected:
     OpenMV *openMV = new OpenMV();
     CameraData data;
     GPSPoint camGPS;
-    AnalogData analogData; 
 
 private:
     //! @brief number of milliseconds from boot to the initialize call

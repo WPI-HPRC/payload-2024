@@ -31,11 +31,12 @@ void PreLaunch::loop_impl()
         // delay(100);
         // return;
     }
-    if (this->attitudeStateEstimator->initialized && this->kinematicStateEstimator->initialized)
+
+    if (this->attitudeStateEstimator->initialized && this->kinematicStateEstimator->initialized) //Don't need to detect acceleration for test code 
     {
-        this->accelReadingBuffer[this->buffIdx++] = this->telemPacket.accelZ;
-        this->buffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
-        launched = launchDebouncer.checkOut(this->avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
+        // this->accelReadingBuffer[this->buffIdx++] = this->telemPacket.accelZ;
+        // this->buffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
+        // launched = launchDebouncer.checkOut(this->avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
         return;
     }
 
@@ -105,7 +106,7 @@ void PreLaunch::loop_impl()
 
 State *PreLaunch::nextState_impl()
 {
-    if (launched)
+    if (currentTime > 5000) //Stay in Pre-Launch for 5 seconds 
     {
         return new Test(sensors, servos, attitudeStateEstimator, kinematicStateEstimator);
     }

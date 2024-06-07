@@ -1,5 +1,5 @@
 #include "ServoController.h"
-#include "analogData.h"
+
 
 // const float pulleyDiameter = 4.374;
 // const float stringLength = 100.;
