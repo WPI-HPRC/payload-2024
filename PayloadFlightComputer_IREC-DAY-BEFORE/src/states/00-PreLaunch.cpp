@@ -23,7 +23,8 @@ void PreLaunch::initialize_impl()
 }
 
 void PreLaunch::loop_impl()
-{
+{ 
+    Serial.println(currentTime);   
     if (!telemPacket.gpsLock)
     {
         // Serial.println("[PreLaunch] Gps Lock Failed...");
@@ -108,6 +109,7 @@ State *PreLaunch::nextState_impl()
 {
     if (currentTime > 5000) //Stay in Pre-Launch for 5 seconds 
     {
+        Serial.println("Transitioning"); 
         return new Test(sensors, servos, attitudeStateEstimator, kinematicStateEstimator);
     }
 

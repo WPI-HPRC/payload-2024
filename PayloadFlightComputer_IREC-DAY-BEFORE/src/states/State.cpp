@@ -139,16 +139,20 @@ void State::loop() {
   Serial.printf("GPS: %f %f\n", camGPS.lat, camGPS.lon);
   #endif
 
-this->servos->paraServo_1->readAnalogData(&analogData); //Since analogData struct holds data from all servos, only need to call once 
+//this->servos->paraServo_1->readAnalogData(&analogData); //Since analogData struct holds data from all servos, only need to call once 
   //Controls
   //TODO: add in controller methods  
   telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
+  this->analogData.servo1 = 0; 
   telemPacket.actualServoPos1 = this->analogData.servo1; //IDK if this works...
   telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
+  this->analogData.servo2 = 0; 
   telemPacket.actualServoPos2 = this->analogData.servo2;
   telemPacket.desiredServoPos3 = MAX_SERVO_POS; 
+  this->analogData.servo3 = 0; 
   telemPacket.actualServoPos3 = this->analogData.servo3;
   telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
+  this->analogData.servo4 = 0; 
   telemPacket.actualServoPos4 = this->analogData.servo4; 
 
 

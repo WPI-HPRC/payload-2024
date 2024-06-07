@@ -9,14 +9,15 @@
 #include <cstdint>
 #include <cmath>
 #include "buzzerPitches.h"
+#include <ServoControls/analogData.h> 
 
 // #define DEBUG_MODE 
 #define LOOP_RATE 40
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
-#define SERVO_FEEDBACK_GPIO 27
-#define SERVO_PWM_GPIO 20
+// #define SERVO_FEEDBACK_GPIO 27
+// #define SERVO_PWM_GPIO 20
 #define BUZZER_PIN 14
 
 // FIXME: This seems bad but I need somewhere to track this and I don't want to have to pass it to every state constructor
@@ -26,7 +27,7 @@ extern SdFat sd;
 extern File32 dataFile;
 extern uint sd_spi_dma_chan;
 #endif
-extern Servo airbrakesServo;
+extern AnalogData analogData;
 #ifndef NO_XBEE
 extern XbeeProSX xbee;
 #endif
