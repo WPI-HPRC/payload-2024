@@ -37,10 +37,12 @@ uint64_t now = 0;
 
 struct Sensors sensors;
 struct Servos servos; 
+struct AnalogData analogData; 
+
 AttitudeStateEstimator *attitudeStateEstimator = new AttitudeStateEstimator();
-KinematicStateEstimator *kinematicStateEstimator = new KinematicStateEstimator();
+
 // Start in pre-launch
-State *state = new PreLaunch(&sensors, &servos, attitudeStateEstimator, kinematicStateEstimator);
+State *state = new PreLaunch(&sensors, &servos, attitudeStateEstimator);
 
 // void handleMagInterrupt() {
 //     sensors.mag->handleInterrupt();
@@ -157,6 +159,7 @@ void setup()
         Serial.println("[Sensorboard] NEOM10S GPS Detected");
     }
     Wire.setClock(400000);
+    Wire1.setClock(400000); 
 
     // pinMode(magInterruptPin, INPUT);
     // attachInterrupt(digitalPinToInterrupt(magInterruptPin), handleMagInterrupt, RISING);

@@ -2,7 +2,7 @@
 #include "01-Test.h"
 
 
-Test::Test(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator, KinematicStateEstimator *kinematicStateEstimator) : State(sensors, servos, attitudeStateEstimator, kinematicStateEstimator) {}
+Test::Test(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : State(sensors, servos, attitudeStateEstimator) {}
 
 void Test::initialize_impl() {
 	Serial.println("Initialized"); 
