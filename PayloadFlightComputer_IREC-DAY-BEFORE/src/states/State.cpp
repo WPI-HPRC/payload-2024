@@ -3,7 +3,7 @@
 #include "utility.hpp"
 #include <Arduino.h>
 
-State::State(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator, KinematicStateEstimator *kinematicStateEstimator) : sensors(sensors), servos(servos), attitudeStateEstimator(attitudeStateEstimator), kinematicStateEstimator(kinematicStateEstimator) {}
+State::State(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : sensors(sensors), servos(servos), attitudeStateEstimator(attitudeStateEstimator) {}
 
 void break_uint16(uint16_t value, uint8_t *byte_array) {
     byte_array[1] = (uint8_t)(value & 0xFF);        // Low byte
@@ -125,10 +125,6 @@ void State::loop() {
         // Serial.println(telemPacket.k);
 	}
 
-    if(this->kinematicStateEstimator->initialized) {
-        this->kinematicStateEstimator->onLoop(this->telemPacket);
-    }
-
   this->camGPS = openMV->onLoop(telemPacket, &data);
 
   #ifdef CV_DEBUG
@@ -143,17 +139,17 @@ void State::loop() {
   //Controls
   //TODO: add in controller methods  
   telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
-  this->analogData.servo1 = 0; 
-  telemPacket.actualServoPos1 = this->analogData.servo1; //IDK if this works...
+  analogData.servo1 = 0; 
+  telemPacket.actualServoPos1 = analogData.servo1; //IDK if this works...
   telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
-  this->analogData.servo2 = 0; 
-  telemPacket.actualServoPos2 = this->analogData.servo2;
+  analogData.servo2 = 0; 
+  telemPacket.actualServoPos2 = analogData.servo2;
   telemPacket.desiredServoPos3 = MAX_SERVO_POS; 
-  this->analogData.servo3 = 0; 
-  telemPacket.actualServoPos3 = this->analogData.servo3;
+  analogData.servo3 = 0; 
+  telemPacket.actualServoPos3 = analogData.servo3;
   telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
-  this->analogData.servo4 = 0; 
-  telemPacket.actualServoPos4 = this->analogData.servo4; 
+  analogData.servo4 = 0; 
+  telemPacket.actualServoPos4 = analogData.servo4; 
 
 
   // float trajA = 0.0f; //Calculated Trajectory Constants 

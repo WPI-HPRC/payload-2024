@@ -3,7 +3,7 @@
 #include "01-Test.h"
 #include "utility.hpp"
 
-PreLaunch::PreLaunch(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator, KinematicStateEstimator *kinematicStateEstimator) : State(sensors, servos, attitudeStateEstimator, kinematicStateEstimator) {}
+PreLaunch::PreLaunch(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : State(sensors, servos, attitudeStateEstimator) {}
 
 float PreLaunch::avgAccelZ()
 {
@@ -33,7 +33,7 @@ void PreLaunch::loop_impl()
         // return;
     }
 
-    if (this->attitudeStateEstimator->initialized && this->kinematicStateEstimator->initialized) //Don't need to detect acceleration for test code 
+    if (this->attitudeStateEstimator->initialized) //Don't need to detect acceleration for test code 
     {
         // this->accelReadingBuffer[this->buffIdx++] = this->telemPacket.accelZ;
         // this->buffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
@@ -90,19 +90,6 @@ void PreLaunch::loop_impl()
         Serial.println("[Prelaunch] Initialized Attitude EKF");
     }
 
-    if (!this->kinematicStateEstimator->initialized) {
-        // float r_adj = Utility::r_earth + sensorPacket.gpsAltMSL; // [m]
-        // float N_earth = Utility::a_earth / sqrt(1 - pow(Utility::e_earth, 2) * pow(sin(sensorPacket.gpsLat), 2));
-
-        // float X_0 = (N_earth + sensorPacket.gpsAltAGL) * cos(sensorPacket.gpsLat * DEG_TO_RAD) * cos(sensorPacket.gpsLong * DEG_TO_RAD);
-        // float Y_0 = (N_earth + sensorPacket.gpsAltAGL) * cos(sensorPacket.gpsLat * DEG_TO_RAD) * sin(sensorPacket.gpsLong * DEG_TO_RAD);
-        // float Z_0 = (((Utility::b_earth * Utility::b_earth) / (Utility::a_earth * Utility::a_earth)) * N_earth + sensorPacket.gpsAltAGL) * sin(sensorPacket.gpsLat * DEG_TO_RAD);
-        // float Z_0 = (N_earth*(1-pow(Utility::e_earth,2))+sensorPacket.gpsAltAGL)*sin(sensorPacket.gpsLat);
-        BLA::Matrix<6> x_0 = {0,0,0, 0,0,0};
-        this->kinematicStateEstimator->init(x_0, telemPacket.altitude, 0.025);
-
-        Serial.println("[Prelaunch] Initialized Kinematic EKF");
-    }
 }
 
 State *PreLaunch::nextState_impl()
@@ -110,7 +97,7 @@ State *PreLaunch::nextState_impl()
     if (currentTime > 5000) //Stay in Pre-Launch for 5 seconds 
     {
         Serial.println("Transitioning"); 
-        return new Test(sensors, servos, attitudeStateEstimator, kinematicStateEstimator);
+        return new Test(sensors, servos, attitudeStateEstimator);
     }
 
     return nullptr;

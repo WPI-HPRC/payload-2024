@@ -7,7 +7,6 @@
 #include <TelemetryBoard/XBeeProSX.h>
 #include <Controls/ApogeeEstimation.h>
 #include <EKF/AttitudeEKF.h>
-#include <EKF/KinematicEKF.h>
 #include <OpenMV/camera.h>
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
@@ -55,11 +54,11 @@ public:
 
     Utility::SensorPacket sensorPacket;
     Utility::TelemPacket telemPacket;
-    AnalogData analogData; 
+    //AnalogData analogData; 
 
 protected:
     //! @note Constructor to be called from subclasses to initialize the `sensors` object
-    State(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator, KinematicStateEstimator *kinematicStateEstimator);
+    State(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator);
     //! @brief number of milliseconds since the initialize call
     long long currentTime = 0;
     //! @brief number of milliseconds since the last loop call
@@ -70,7 +69,6 @@ protected:
     struct Sensors *sensors;
     struct Servos *servos; 
     AttitudeStateEstimator *attitudeStateEstimator;
-    KinematicStateEstimator *kinematicStateEstimator;
     // ApogeeEstimation *apogeeEstimator; //TODO - Implement
 
     OpenMV *openMV = new OpenMV();
