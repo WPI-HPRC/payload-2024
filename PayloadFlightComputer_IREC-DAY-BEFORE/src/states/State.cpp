@@ -179,9 +179,13 @@ void State::loop() {
     #ifdef PRINT_TIMINGS
     start = millis();
     #endif
-    SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE0));
-    xbee.sendTransmitRequestCommand(0x0013A200423F474C, (uint8_t *)&telemPacket, sizeof(telemPacket));
-    SPI.endTransaction();
+    // This will cause transmissions to be done at 20hz, since the loop rate is 40hz
+    if(this->loopCount % 2 == 0)
+    {
+      SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE0));
+      xbee.sendTransmitRequestCommand(0x0013A200423F474C, (uint8_t *)&telemPacket, sizeof(telemPacket));
+      SPI.endTransaction();
+    }
     #ifdef PRINT_TIMINGS
     Serial.printf("\tXBEE SEND TIME: %llu\n", millis() - start);
     #endif
