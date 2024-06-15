@@ -6,8 +6,7 @@
 #include <Wire.h>
 #include "analogData.h"
 
-//Change this!! 
-#define ANALOG_I2C_ADDRESS 0x00 
+#define ANALOG_I2C_ADDRESS 0x35 
 
 class ServoController {
     private:    
