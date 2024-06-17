@@ -73,7 +73,7 @@ void setup()
     Wire1.begin(); //Cam I2C, 26/27
     Wire1.setClock(400000);
 
-    SPI.setSCK(18);
+    SPI.setSCK(18); //THIS WILL NEED TO BE CHECKED AND CHANGED (PAYLOAD USING REVISION 3 BOARD)
     SPI.setTX(19);
     SPI.setRX(16);
     SPI.begin();
@@ -158,8 +158,8 @@ void setup()
     {
         Serial.println("[Sensorboard] NEOM10S GPS Detected");
     }
-    Wire.setClock(400000);
-    Wire1.setClock(400000); 
+    // Wire.setClock(400000);
+    // Wire1.setClock(400000); //IDT we need these? 
 
     // pinMode(magInterruptPin, INPUT);
     // attachInterrupt(digitalPinToInterrupt(magInterruptPin), handleMagInterrupt, RISING);

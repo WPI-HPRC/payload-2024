@@ -4,13 +4,13 @@
 
 // IREC 2024 Rocket Global Definitions (4/16/2024)
 
-// constexpr static float magneticDip = 13.8 * (180/PI); // [rad] Magnetic Inclination of launch site
-// constexpr static float rocketMass = 22.745; // [kg] Rocket mass from ORK
-// constexpr static float C_d = 0.5; // Eyeball averaged from ORK
-// constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2] Cross Sectional Area -- Body Tube + 4 Fins
+constexpr static float magneticDip = 13.8 * (180/PI); // [rad] Magnetic Inclination of launch site
+constexpr static float rocketMass = 22.745; // [kg] Rocket mass from ORK
+constexpr static float C_d = 0.5; // Eyeball averaged from ORK
+constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2] Cross Sectional Area -- Body Tube + 4 Fins
 
 // Debug things
-#define DEBUG_MODE
+//#define DEBUG_MODE
 #ifdef DEBUG_MODE
 
 //#define NO_TRANSITION
@@ -35,7 +35,7 @@
 // measured in G's
 // checking if average Z acceleration is greater than 4 G's
 
-#define LAUNCH_ACCEL_THRESHOLD 3
+#define LAUNCH_ACCEL_THRESHOLD 4
 
 #define LANDING_VELOCITY 5.0
 
@@ -79,6 +79,9 @@
 
 #define MAX_STABALIZE_TIME 5000
 #define MAX_FREEFALL_TIME 10000
+#define MAX_STOW_TIME 159000 //142 seconds + 15 for buffer
+//Change stowed conditions to be abort based on time and change to wind based on altitude + buffer
+//Maybe acceleration...buffer barometer to get vertical, expected is 20ft/s
 
 #define MAX_SERVO_POS 0
 #define MAX_SERVO_WIND_TIME 2000 
@@ -87,7 +90,7 @@
 
 #define DESIRED_STRING_LENGTH 70
 
-#define MAX_STOW_TIME 5
+
 
 //Trajectory Constants 
 

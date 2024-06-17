@@ -3,10 +3,10 @@
 // #define MAX_CONTROLLED_DESCENT_TIME 10  // need to be changed is placeholder
 // #define ALT_THRESHOLD_CONTROLLED 10 // need to be changed
 
-class ControlPrep : public State {
+class HoldRight : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		ControlPrep(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator); 
+		HoldRight(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator); 
 	private: 
 	
 };

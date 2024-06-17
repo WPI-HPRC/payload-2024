@@ -20,8 +20,8 @@ enum StateId
     ID_Freefall, 
     ID_WindLeft, 
     ID_HoldLeft, 
-    ID_ControlPrep, 
-    ID_ControlledDescent, 
+    ID_WindRight, 
+    ID_HoldRight, 
     ID_LandPrep, 
     ID_Recovery
 };
