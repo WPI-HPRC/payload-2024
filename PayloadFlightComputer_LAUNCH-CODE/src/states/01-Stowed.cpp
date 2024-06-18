@@ -31,14 +31,17 @@ void Stowed::loop_impl() {
 
     bufferIndex = (bufferIndex + 1) % 10;
 
-    released = releasedDebouncer.checkOut(abs(averageJerk) < JERK);
-
-	//TO DO: FIX THIS, calculate release time 
-	
-	if(released && releasedTime > 1000){
-		released == false; 
-		releasedTime = 0; 
+	if(telemPacket.altitude < 365){
+		released = releasedDebouncer.checkOut(abs(averageJerk) < JERK);
 	}
+    
+	//TO DO: FIX THIS, calculate release time 
+	//I think the above might be a better way to do this- only checks if the payload has been released below a certain altitude 
+	
+	// if(released && releasedTime > 1000){
+	// 	released == false; 
+	// 	releasedTime = 0; 
+	// }
 }
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
@@ -55,7 +58,7 @@ State *Stowed::nextState_impl()
 
 	#endif
 	
-	if(released && telemPacket.altitude < 1200){ //check alt- needs to be in meters 
+	if(released && telemPacket.altitude < 365){ //check alt- needs to be in meters, if you guys decide to go ahead with checking alt in loop, won't need this 
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
 	}
 	else if (currentTime > MAX_STOW_TIME){ 
