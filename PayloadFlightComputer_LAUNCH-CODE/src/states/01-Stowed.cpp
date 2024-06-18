@@ -1,6 +1,8 @@
 #include "01-Stowed.h"
 #include "State.h"
 #include "FlightParams.hpp"
+#include "02-Freefall.h"
+#include "Abort.h"
 
 
 
@@ -11,8 +13,25 @@ void Stowed::initialize_impl() {
 	
 }
 
-void Stowed::loop_impl() { //Shouldn't need anything in here 
-	
+void Stowed::loop_impl() { 
+	float jerk = (telemPacket.accelZ - lastAcceleration) / (deltaTime / 1000.0);
+    lastAcceleration = telemPacket.accelZ;
+
+    // add to buffer
+    jerkBuffer[bufferIndex] = jerk;
+    
+    // average all values in the buffer
+    float sum = 0.0;
+    float averageJerk = 0.0;
+    for (int i = 0; i < 10; i++)
+    {
+        sum += jerkBuffer[i];
+    }
+    averageJerk = sum / 10.0;
+
+    bufferIndex = (bufferIndex + 1) % 10;
+
+    released = releasedDebouncer.checkOut(abs(averageJerk) < JERK);
 }
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
@@ -21,7 +40,7 @@ State *Stowed::nextState_impl()
 
 	#ifdef TEST_STATE_MACHINE
 
-    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
+    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 3 seconds 
     {
         Serial.println("Entering Freefall!"); 
         return new Stowed(sensors, servos, attitudeStateEstimator);
@@ -29,7 +48,7 @@ State *Stowed::nextState_impl()
 
 	#endif
 	
-	if(change in acceleration > 0){
+	if(released){
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
 	}
 	else if (currentTime > MAX_STOW_TIME){ 

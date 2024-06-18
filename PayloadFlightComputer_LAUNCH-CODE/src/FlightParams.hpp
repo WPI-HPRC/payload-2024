@@ -2,11 +2,15 @@
 
 #include <Arduino.h>
 
-//Magnetic Dip Estimate 
+// IREC 2024 Rocket Global Definitions (4/16/2024)
+
 constexpr static float magneticDip = 13.8 * (180/PI); // [rad] Magnetic Inclination of launch site
+constexpr static float rocketMass = 22.745; // [kg] Rocket mass from ORK
+constexpr static float C_d = 0.5; // Eyeball averaged from ORK
+constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2] Cross Sectional Area -- Body Tube + 4 Fins
 
 // Debug things, general debugger 
-//#define DEBUG_MODE
+#define DEBUG_MODE
 #ifdef DEBUG_MODE
 
 //#define NO_TRANSITION
@@ -65,6 +69,10 @@ constexpr static float magneticDip = 13.8 * (180/PI); // [rad] Magnetic Inclinat
 
 //LandPrep, measured in m/s
 #define LANDING_VELOCITY 5.0
+
+#define JERK 0.5 //in g's, may need to be adjusted 
+
+#define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 
 
 //Timer Constants, for servos and abort state: 
 

@@ -1,4 +1,4 @@
-#include "06-Abort.h"
+#include "Abort.h"
 #include "State.h"
 
 Abort::Abort(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : State(sensors, servos, attitudeStateEstimator) {}

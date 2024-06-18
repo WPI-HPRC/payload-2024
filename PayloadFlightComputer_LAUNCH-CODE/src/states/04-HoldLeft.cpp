@@ -1,6 +1,6 @@
 #include "State.h"
 #include "04-HoldLeft.h"
-#include "05-ControlPrep.h"
+#include "05-WindRight.h"
 #include "FlightParams.hpp"
 
 
@@ -15,7 +15,7 @@ void HoldLeft::loop_impl() {
 State *HoldLeft::nextState_impl() {
 	if (currentTime > MAX_HOLD_TIME)
 	{
-        #ifdef TEST_STATE MACHINE 
+        #ifdef TEST_STATE_MACHINE 
 		Serial.println("Entering WindRight!");
 		#endif
 		return new WindRight(sensors, servos, attitudeStateEstimator);

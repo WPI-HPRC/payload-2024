@@ -26,7 +26,7 @@ State *WindLeft::nextState_impl() {
 	if (currentTime > MAX_SERVO_WIND_TIME)
 	{
 		//stop servos 
-		#ifdef TEST_STATE MACHINE 
+		#ifdef TEST_STATE_MACHINE 
 		Serial.println("Entering HoldLeft!");
 		#endif
 		return new HoldLeft(sensors, servos, attitudeStateEstimator);

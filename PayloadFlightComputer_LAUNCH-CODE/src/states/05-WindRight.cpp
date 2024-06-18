@@ -29,7 +29,7 @@ void WindRight::loop_impl() {
 State *WindRight::nextState_impl() {
 	if (currentTime > MAX_SERVO_WIND_TIME)
 	{
-		#ifdef TEST_STATE MACHINE 
+		#ifdef TEST_STATE_MACHINE 
 		Serial.println("Entering HoldRight!");
 		#endif
 		return new HoldRight(sensors, servos, attitudeStateEstimator);

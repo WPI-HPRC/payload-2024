@@ -11,7 +11,7 @@ void LandPrep::initialize_impl() {
 
 void LandPrep::loop_impl() {
 
-	if(currentTime < 2000){
+	if(currentTime < MAX_SERVO_WIND_TIME){
 
 		servos->paraServo_1->writeServo(SERVO_COUNTER_UNWIND); 
 		servos->paraServo_2->writeServo(SERVO_CLOCK_UNWIND); //Check Servo values 
@@ -54,14 +54,13 @@ State *LandPrep::nextState_impl() {
     if (currentTime > MAX_LANDPREP) //Stay in Pre-Launch for 5 seconds 
     {
         Serial.println("Entering Recovery!");
-        return new Stowed(sensors, servos, attitudeStateEstimator);
+        return new Recovery(sensors, servos, attitudeStateEstimator);
     }
 
     #endif
 
 	if (landed) 
 	{	
-		
 		return new Recovery(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

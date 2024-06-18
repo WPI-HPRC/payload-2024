@@ -13,9 +13,9 @@ void HoldRight::loop_impl() {
 }
 
 State *HoldRight::nextState_impl() {
-	if (currentTime > MAX_HOLD_TIME || add in alt)
+	if (currentTime > MAX_HOLD_TIME || telemPacket.altitude < MIN_ALT)
 	{	
-		#ifdef TEST_STATE MACHINE 
+		#ifdef TEST_STATE_MACHINE 
 		Serial.println("Entering LandPrep!");
 		#endif
 		return new LandPrep(sensors, servos, attitudeStateEstimator);

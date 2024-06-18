@@ -127,7 +127,7 @@ void State::loop() {
 
   #ifndef NO_CV
   this->camGPS = openMV->onLoop(telemPacket, &data);
-  #end if
+  #endif
 
   #ifdef CV_DEBUG
   Serial.print("CX: "); 

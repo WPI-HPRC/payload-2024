@@ -4,18 +4,20 @@
 #include "FlightParams.hpp"
 
 Freefall::Freefall(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : State(sensors, servos, attitudeStateEstimator) {}
-void Freefall::initialize_impl() {
-}
+
+void Freefall::initialize_impl() {}
+
 void Freefall::loop_impl() {
 		
-		if(currentTime > MAX_STABALIZE_TIME ){
-			servos->cameraServo->writeServo(CAM_OUT); 
-		}
+	if(currentTime > MAX_STABALIZE_TIME ){
+		servos->cameraServo->writeServo(CAM_OUT); 
+	}
 }
+
 State *Freefall::nextState_impl() {
 	if (currentTime > MAX_FREEFALL_TIME)
 	{	
-		#ifdef TEST_STATE MACHINE 
+		#ifdef TEST_STATE_MACHINE 
 		Serial.println("Entering WindLeft!");
 		#endif
 		return new WindLeft(sensors, servos, attitudeStateEstimator);

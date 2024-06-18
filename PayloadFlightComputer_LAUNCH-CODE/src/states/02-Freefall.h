@@ -7,5 +7,4 @@ class Freefall : public State {
 	_STATE_CLASS_IMPLS_
 	public:
 		Freefall(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator); 
-	private: 
-		
+};
