@@ -16,5 +16,6 @@ class Stowed : public State {
         float lastAcceleration = 0;
         bool released = false;
         Debouncer releasedDebouncer = Debouncer(10); //Will be quick, change if needed 
+		long releaseTime = 0; 
 };
 		

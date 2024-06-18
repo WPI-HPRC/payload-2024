@@ -7,6 +7,6 @@ class WindRight : public State {
 	_STATE_CLASS_IMPLS_
 	public:
 		WindRight(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator); 
-	private: 
+
 	
 };

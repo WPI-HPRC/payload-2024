@@ -7,6 +7,6 @@ class HoldLeft : public State {
 	_STATE_CLASS_IMPLS_
 	public:
 		HoldLeft(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator); 
-	private: 
+	
 	
 };

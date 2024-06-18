@@ -32,6 +32,13 @@ void Stowed::loop_impl() {
     bufferIndex = (bufferIndex + 1) % 10;
 
     released = releasedDebouncer.checkOut(abs(averageJerk) < JERK);
+
+	//TO DO: FIX THIS, calculate release time 
+	
+	if(released && releasedTime > 1000){
+		released == false; 
+		releasedTime = 0; 
+	}
 }
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
@@ -40,7 +47,7 @@ State *Stowed::nextState_impl()
 
 	#ifdef TEST_STATE_MACHINE
 
-    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 3 seconds 
+    if (currentTime > MAX_PRELAUNCH) //Time is the same so just used Prelaunch param 
     {
         Serial.println("Entering Freefall!"); 
         return new Stowed(sensors, servos, attitudeStateEstimator);
@@ -48,7 +55,7 @@ State *Stowed::nextState_impl()
 
 	#endif
 	
-	if(released){
+	if(released && telemPacket.altitude < 1200){ //check alt- needs to be in meters 
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
 	}
 	else if (currentTime > MAX_STOW_TIME){ 
