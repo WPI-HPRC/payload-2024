@@ -11,17 +11,18 @@ interface = rpc.rpc_i2c_slave(slave_addr=0x12)
 
 clock = time.clock()
 utime.sleep_ms(1000)
-start = pyb.millis()
+
 
 
 count = 0
 
-while True: 
+while True:
+    start = pyb.millis()
     m = mjpeg.Mjpeg('IREC2024%s.mjpeg' % count)
     with open("time_stamps%s.txt" % count, "wb") as f:
         with open("coordinates%s.txt" % count,"wb") as f2:
 
-            while(True):
+            while(pyb.elapsed_millis(start) < 30000):
                 clock.tick()
                 img = sensor.snapshot()
                 m.add_frame(img)
@@ -61,6 +62,6 @@ while True:
 
                 time.sleep(0.1)
 
-                if pyb.elapsed_millis(start) > 30: #record in 30 second intervals
-                    m.close()
-                    break
+            m.close()
+            count += 1
+
