@@ -13,7 +13,7 @@ void HoldRight::loop_impl() {
 }
 
 State *HoldRight::nextState_impl() {
-	if (currentTime > MAX_HOLD_TIME)
+	if (currentTime > MAX_HOLD_TIME || add in alt)
 	{	
 		#ifdef TEST_STATE MACHINE 
 		Serial.println("Entering LandPrep!");

@@ -29,8 +29,11 @@ State *Stowed::nextState_impl()
 
 	#endif
 	
-	if (currentTime > MAX_STOW_TIME){ 
+	if(change in acceleration > 0){
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
+	}
+	else if (currentTime > MAX_STOW_TIME){ 
+		return new Abort(sensors, servos, attitudeStateEstimator); 
 	}
 	return nullptr;
 }

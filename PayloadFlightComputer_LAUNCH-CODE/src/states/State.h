@@ -23,7 +23,8 @@ enum StateId
     ID_WindRight, 
     ID_HoldRight, 
     ID_LandPrep, 
-    ID_Recovery
+    ID_Recovery, 
+    ID_Abort
 };
 
 #define _STATE_CLASS_IMPLS_           \
