@@ -10,7 +10,7 @@ void WindRight::initialize_impl() {
 }
 
 void WindRight::loop_impl() {
-	if(currentTime < 1500){
+	if(currentTime < MAX_SERVO_WIND_TIME){
 		servos->paraServo_3->writeServo(SERVO_COUNTER_UNWIND); 
 		servos->paraServo_4->writeServo(SERVO_CLOCK_UNWIND); ; //Check Servo values 
 
@@ -27,8 +27,11 @@ void WindRight::loop_impl() {
 }
 
 State *WindRight::nextState_impl() {
-	if (true)
+	if (currentTime > MAX_SERVO_WIND_TIME)
 	{
+		#ifdef TEST_STATE MACHINE 
+		Serial.println("Entering HoldRight!");
+		#endif
 		return new HoldRight(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

@@ -15,7 +15,9 @@ void Freefall::loop_impl() {
 State *Freefall::nextState_impl() {
 	if (currentTime > MAX_FREEFALL_TIME)
 	{	
+		#ifdef TEST_STATE MACHINE 
 		Serial.println("Entering WindLeft!");
+		#endif
 		return new WindLeft(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

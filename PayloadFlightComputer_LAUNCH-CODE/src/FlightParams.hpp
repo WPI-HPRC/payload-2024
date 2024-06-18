@@ -2,14 +2,10 @@
 
 #include <Arduino.h>
 
-// IREC 2024 Rocket Global Definitions (4/16/2024)
-
+//Magnetic Dip Estimate 
 constexpr static float magneticDip = 13.8 * (180/PI); // [rad] Magnetic Inclination of launch site
-constexpr static float rocketMass = 22.745; // [kg] Rocket mass from ORK
-constexpr static float C_d = 0.5; // Eyeball averaged from ORK
-constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2] Cross Sectional Area -- Body Tube + 4 Fins
 
-// Debug things
+// Debug things, general debugger 
 //#define DEBUG_MODE
 #ifdef DEBUG_MODE
 
@@ -20,27 +16,19 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 #define WAIT_FOR_SERIAL
 #define NO_SDCARD
 #define PRINT_TIMINGS
+#define TEST_STATE_MACHINE
 
 #endif
 
+//#define NO_CV
+//#define NO_SERVOS
 
 #pragma once 
-// These constants define transitions between states and the conditions for those transitions
 
-// PreLaunch -------------------------
-// PreLaunch to Launch Conditions
-    // average Z acceleration > LAUNCH_ACCEL_THRESHOLD
-// Cannot go to Abort state from PreLaunch
 
-// measured in G's
-// checking if average Z acceleration is greater than 4 G's
+//PAYLOAD DEFINITIONS AND FLIGHT PARAMETERS====================================================
 
-#define LAUNCH_ACCEL_THRESHOLD 4
-
-#define LANDING_VELOCITY 5.0
-
-//Payload Specific- will organize tonight 
-
+//SERVO PIN and PWM DEFINITIONS 
 #define PARACHUTE_SERVO_1 23 // wind counterclockwise in:2000   center:1493 wind out: 1100
 #define PARACHUTE_SERVO_2 25 // wind clockwise in: 1100   center:1493 wind out: 2000
 #define PARACHUTE_SERVO_3 24 // wind counterclockwise in:2000   center:1493 wind out: 1100
@@ -54,43 +42,47 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 
 #define SERVO_CENTER 1493
 
-// #define PARACHUTE_SERVO_1_IN 20 //WOrking
-// #define PARACHUTE_SERVO_2_IN 21
-// #define PARACHUTE_SERVO_3_IN 16 //Not working 
-// #define PARACHUTE_SERVO_4_IN 17
-
-#define PARACHUTE_SERVO_1_DIR false //Check these 
+#define PARACHUTE_SERVO_1_DIR false 
 #define PARACHUTE_SERVO_2_DIR true
 #define PARACHUTE_SERVO_3_DIR false
 #define PARACHUTE_SERVO_4_DIR true
 
-#define SERVO_GAIN 0.5
-
-#define PULLEY_D 4.374
-#define STRING_BASE_LENGTH 100
-
-#define CAMERA_SERVO 28 //Also check this 
+#define CAMERA_SERVO 28 
 #define CAM_OUT 2012
 #define CAM_RETRACT 988
 
-#define IR_PIN 28
+#define MAX_SERVO_POS 0
 
-#define ALT_THRESHOLD_STOWED 396 //meters
+//Max times for winding and holding servos 
+#define MAX_SERVO_WIND_TIME 2000 //Could change to 1500 
+#define MAX_HOLD_TIME 8000
 
+
+//STATE CHANGE PARAMETERS (last updated 6/18/2024 by Colette Scott)
+
+//Pre-launch, measured in G's 
+#define LAUNCH_ACCEL_THRESHOLD 4
+
+//LandPrep, measured in m/s
+#define LANDING_VELOCITY 5.0
+
+//Timer Constants, for servos and abort state: 
+
+//Max time to allow payload to stabilize 
 #define MAX_STABALIZE_TIME 5000
+
+//Max time to allow payload to fall freely  
 #define MAX_FREEFALL_TIME 10000
-#define MAX_STOW_TIME 159000 //142 seconds + 15 for buffer
+
+//Max time payload should be stowed in the Rocket: THIS ONE NEEDS TO BE CHECKED 
+#define MAX_STOW_TIME 159000 
+//142 seconds + 15 for buffer
 //Change stowed conditions to be abort based on time and change to wind based on altitude + buffer
 //Maybe acceleration...buffer barometer to get vertical, expected is 20ft/s
 
-#define MAX_SERVO_POS 0
-#define MAX_SERVO_WIND_TIME 2000 
-
-#define MAX_HOLD_TIME 8000
-
-#define DESIRED_STRING_LENGTH 70
-
-
+//Times for state transitions with Debug: 
+#define MAX_PRELAUNCH 3000
+#define MAX_LANDPREP 8000
 
 //Trajectory Constants 
 

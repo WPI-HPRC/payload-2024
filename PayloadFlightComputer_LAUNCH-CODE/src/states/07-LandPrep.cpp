@@ -48,9 +48,20 @@ void LandPrep::loop_impl() {
 }
 
 State *LandPrep::nextState_impl() {
+
+    #ifdef TEST_STATE_MACHINE
+
+    if (currentTime > MAX_LANDPREP) //Stay in Pre-Launch for 5 seconds 
+    {
+        Serial.println("Entering Recovery!");
+        return new Stowed(sensors, servos, attitudeStateEstimator);
+    }
+
+    #endif
+
 	if (landed) 
 	{	
-		Serial.println("Entering Recovery!");
+		
 		return new Recovery(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

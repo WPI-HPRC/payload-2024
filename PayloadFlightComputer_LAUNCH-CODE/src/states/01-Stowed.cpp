@@ -17,10 +17,19 @@ void Stowed::loop_impl() { //Shouldn't need anything in here
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
 State *Stowed::nextState_impl()
-{
+{	
+
+	#ifdef TEST_STATE_MACHINE
+
+    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
+    {
+        Serial.println("Entering Freefall!"); 
+        return new Stowed(sensors, servos, attitudeStateEstimator);
+    }
+
+	#endif
 	
 	if (currentTime > MAX_STOW_TIME){ 
-		Serial.println("Entering Freefall!"); 
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
 	}
 	return nullptr;

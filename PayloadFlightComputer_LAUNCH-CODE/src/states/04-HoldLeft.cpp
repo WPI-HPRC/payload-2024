@@ -15,7 +15,10 @@ void HoldLeft::loop_impl() {
 State *HoldLeft::nextState_impl() {
 	if (currentTime > MAX_HOLD_TIME)
 	{
-		return new ControlPrep(sensors, servos, attitudeStateEstimator);
+        #ifdef TEST_STATE MACHINE 
+		Serial.println("Entering WindRight!");
+		#endif
+		return new WindRight(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;
 }

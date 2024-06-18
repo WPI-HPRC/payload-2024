@@ -14,7 +14,10 @@ void HoldRight::loop_impl() {
 
 State *HoldRight::nextState_impl() {
 	if (currentTime > MAX_HOLD_TIME)
-	{
+	{	
+		#ifdef TEST_STATE MACHINE 
+		Serial.println("Entering LandPrep!");
+		#endif
 		return new LandPrep(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

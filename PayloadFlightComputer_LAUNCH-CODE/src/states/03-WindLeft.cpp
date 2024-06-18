@@ -11,7 +11,7 @@ void WindLeft::initialize_impl() {
 
 void WindLeft::loop_impl() {
 
-	if(currentTime < 1500){
+	if(currentTime < MAX_SERVO_WIND_TIME){
 		servos->paraServo_3->writeServo(SERVO_COUNTER_WIND); 
 		servos->paraServo_4->writeServo(SERVO_CLOCK_WIND); //Check Servo values 
 	}
@@ -23,10 +23,12 @@ void WindLeft::loop_impl() {
 }
 
 State *WindLeft::nextState_impl() {
-	if (currentTime > MAX_SERVO_WIND_TIME /*||servo values = MAX_SERVO_POS*/)
+	if (currentTime > MAX_SERVO_WIND_TIME)
 	{
 		//stop servos 
-		Serial.println("Entering HoldLeft!"); 
+		#ifdef TEST_STATE MACHINE 
+		Serial.println("Entering HoldLeft!");
+		#endif
 		return new HoldLeft(sensors, servos, attitudeStateEstimator);
 	}
 	return nullptr;

@@ -93,10 +93,19 @@ void PreLaunch::loop_impl()
 }
 
 State *PreLaunch::nextState_impl()
-{
+{   
+    #ifdef TEST_STATE_MACHINE
+
+    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
+    {
+        Serial.println("Entering Stowed!"); 
+        return new Stowed(sensors, servos, attitudeStateEstimator);
+    }
+
+    #endif 
+
     if (launched) //Stay in Pre-Launch for 5 seconds 
     {
-        Serial.println("Transitioning"); 
         return new Stowed(sensors, servos, attitudeStateEstimator);
     }
 

@@ -125,7 +125,9 @@ void State::loop() {
         // Serial.println(telemPacket.k);
 	}
 
+  #ifndef NO_CV
   this->camGPS = openMV->onLoop(telemPacket, &data);
+  #end if
 
   #ifdef CV_DEBUG
   Serial.print("CX: "); 
@@ -135,12 +137,15 @@ void State::loop() {
   Serial.printf("GPS: %f %f\n", camGPS.lat, camGPS.lon);
   #endif
 
-//this->servos->paraServo_1->readAnalogData(&analogData); //Since analogData struct holds data from all servos, only need to call once 
+  #ifndef NO_SERVOS
+  //I HAVE NO IDEA IF THIS WORKS, hence the ifndef...
+  servos->paraServo_1->readAnalogData(&analogData); //Since analogData struct holds data from all servos, only need to call once 
+  #endif
+
   //Controls
-  //TODO: add in controller methods  
   telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
   analogData.servo1 = 0; 
-  telemPacket.actualServoPos1 = analogData.servo1; //IDK if this works...
+  telemPacket.actualServoPos1 = analogData.servo1; 
   telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
   analogData.servo2 = 0; 
   telemPacket.actualServoPos2 = analogData.servo2;
