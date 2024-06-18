@@ -13,7 +13,7 @@
 class CustomSPIClass : public SdSpiBaseClass {
  public:
   // Activate SPI hardware with correct speed and mode.
-  void activate() { SPI.beginTransaction(m_spiSettings); }
+  void activate() { SPI1.beginTransaction(m_spiSettings); }
   // Initialize the SPI bus.
   void begin(SdSpiConfig config) {
     (void)config;
@@ -26,24 +26,28 @@ class CustomSPIClass : public SdSpiBaseClass {
     // irq_set_exclusive_handler(DMA_IRQ_0, spi_dma_irq_handler);
     // irq_set_enabled(DMA_IRQ_0, true);
     // SPI.begin();
+    SPI1.setSCK(10);
+    SPI1.setRX(8);
+    SPI1.setTX(11);
+    SPI1.begin();
   }
   // Deactivate SPI hardware.
   void deactivate() {
-    SPI.endTransaction();
+    SPI1.endTransaction();
   }
   // Receive a byte.
-  uint8_t receive() { return SPI.transfer(0XFF); }
+  uint8_t receive() { return SPI1.transfer(0XFF); }
   // Receive multiple bytes.
   // Replace this function if your board has multiple byte receive.
   uint8_t receive(uint8_t* buf, size_t count) {
-    SPI.transfer(nullptr, buf, count);
+    SPI1.transfer(nullptr, buf, count);
     // for (size_t i = 0; i < count; i++) {
     //   buf[i] = SPI.transfer(0XFF);
     // }
     return 0;
   }
   // Send a byte.
-  void send(uint8_t data) { SPI.transfer(data); }
+  void send(uint8_t data) { SPI1.transfer(data); }
   // Send multiple bytes.
   // Replace this function if your board has multiple byte send.
   void send(const uint8_t* buf, size_t count) {
@@ -62,7 +66,7 @@ class CustomSPIClass : public SdSpiBaseClass {
     //   preventDeassert = true;
     //   dma_channel_wait_for_finish_blocking(sd_spi_dma_chan);
     // } else {
-      SPI.transfer(buf, nullptr, count);
+      SPI1.transfer(buf, nullptr, count);
     // }
 
 
