@@ -30,7 +30,7 @@ bool ServoController::readAnalogData(AnalogData *analogData){
 
     uint8_t buffer[sizeof(AnalogData)];
     //use some explicit casts to suppress warnings
-    if (Wire.requestFrom(ANALOG_I2C_ADDRESS, (int)sizeof(AnalogData), true) == sizeof(AnalogData)) 
+    if (Wire1.requestFrom(ANALOG_I2C_ADDRESS, (int)sizeof(AnalogData), true) == sizeof(AnalogData)) 
     {
         for(uint8_t i = 0; i < sizeof(AnalogData); i++) buffer[i] = Wire.read();
         memcpy(analogData, buffer, sizeof(AnalogData));

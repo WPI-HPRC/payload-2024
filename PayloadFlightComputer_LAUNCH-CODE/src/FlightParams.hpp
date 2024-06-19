@@ -25,7 +25,7 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 #endif
 
 //#define NO_CV
-//#define NO_SERVOS
+#define NO_SERVOS
 
 #pragma once 
 
@@ -71,7 +71,6 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 #define LANDING_VELOCITY 5.0
 
 #define PAYLOAD_DEPLOY_HEIGHT 365 // [m] AGL. Payload is considered deployed when falling below this height
-#define JERK 0.5 //in g's, may need to be adjusted 
 
 #define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 
 
@@ -83,7 +82,7 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 //Max time to allow payload to fall freely  
 #define MAX_FREEFALL_TIME 10000
 
-//Max time payload should be stowed in the Rocket: THIS ONE NEEDS TO BE CHECKED 
+//Max time payload should be stowed in the Rocket: Checked 06/18
 #define MAX_STOW_TIME 159000 
 //142 seconds + 15 for buffer
 //Change stowed conditions to be abort based on time and change to wind based on altitude + buffer
@@ -96,9 +95,9 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 //Trajectory Constants 
 
 #define GRAV 9.81
-#define MASS 5.5; // [kg] Total system mass
-#define D_P 1.8288; // [m] Diameter of Parachute
+#define MASS 5.5 // [kg] Total system mass
+#define D_P 1.8288 // [m] Diameter of Parachute
 #define S_P (PI/4) * (D_P*D_P); // [m^2] Surface Area of Parachute 
-#define C_D 0.7; // Coefficient of drag
+#define C_D 0.7 // Coefficient of drag
 #define W_P GRAV * MASS;
-#define H_CP 2; // [m] Distance from center of mass to center of pressure
+#define H_CP 2 // [m] Distance from center of mass to center of pressure
