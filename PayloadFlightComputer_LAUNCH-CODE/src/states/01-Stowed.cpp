@@ -14,34 +14,30 @@ void Stowed::initialize_impl() {
 }
 
 void Stowed::loop_impl() { 
-	float jerk = (telemPacket.accelZ - lastAcceleration) / (deltaTime / 1000.0);
-    lastAcceleration = telemPacket.accelZ;
+	float velocity = (telemPacket.altitude - lastAltitude) / (deltaTime / 1000.0);
+    lastAltitude = telemPacket.altitude;
 
     // add to buffer
-    jerkBuffer[bufferIndex] = jerk;
+    velocityBuffer[bufferIndex] = velocity;
     
     // average all values in the buffer
     float sum = 0.0;
-    float averageJerk = 0.0;
+    float averageVelocity = 0.0;
     for (int i = 0; i < 10; i++)
     {
-        sum += jerkBuffer[i];
+        sum += velocityBuffer[i];
     }
-    averageJerk = sum / 10.0;
+    averageVelocity = sum / 10.0;
 
     bufferIndex = (bufferIndex + 1) % 10;
 
-	if(telemPacket.altitude < 365){
-		released = releasedDebouncer.checkOut(abs(averageJerk) < JERK);
+  if (passedDeployHeight) {
+		if(telemPacket.altitude < PAYLOAD_DEPLOY_HEIGHT){
+			released = releasedDebouncer.checkOut(averageVelocity < 0);
+		}
+	} else {
+		passedDeployHeight = passedDeployHeightDebouncer.checkOut(telemPacket.altitude > PAYLOAD_DEPLOY_HEIGHT);
 	}
-    
-	//TO DO: FIX THIS, calculate release time 
-	//I think the above might be a better way to do this- only checks if the payload has been released below a certain altitude 
-	
-	// if(released && releasedTime > 1000){
-	// 	released == false; 
-	// 	releasedTime = 0; 
-	// }
 }
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
@@ -58,7 +54,7 @@ State *Stowed::nextState_impl()
 
 	#endif
 	
-	if(released && telemPacket.altitude < 365){ //check alt- needs to be in meters, if you guys decide to go ahead with checking alt in loop, won't need this 
+	if(released){
 		return new Freefall(sensors, servos, attitudeStateEstimator); 
 	}
 	else if (currentTime > MAX_STOW_TIME){ 

@@ -33,17 +33,26 @@ void PreLaunch::loop_impl()
         return;
     }
 
-    if (this->attitudeStateEstimator->initialized) 
-    {
-        this->accelReadingBuffer[this->buffIdx++] = this->telemPacket.accelZ;
-        this->buffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
-        launched = launchDebouncer.checkOut(this->avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
-        return;
+    altitudeBuff[altitudeBuffIdx++] = telemPacket.altitude;
+    size_t altitudeBuffLen = sizeof(altitudeBuff) / sizeof(float);
+    altitudeBuffIdx %= altitudeBuffLen;
+
+    // Calibrate initial altitude
+    if (loopCount == 20) {
+        float sum = 0;
+        for (size_t i = 0; i < altitudeBuffLen; i++) {
+            sum += altitudeBuff[i];
+        }
+        initialAltitude = sum / altitudeBuffLen;
     }
 
-    // Intialize EKF
-    if (!this->attitudeStateEstimator->initialized)
+    if (this->attitudeStateEstimator->initialized) 
     {
+        this->accelReadingBuffer[this->accelBuffIdx++] = this->telemPacket.accelZ;
+        this->accelBuffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
+        launched = launchDebouncer.checkOut(this->avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
+    } else {
+    // Intialize EKF
         // Calculate Initial Quaternion using Accel and Mag
         // Normalize Acceleration Vector
         BLA::Matrix<3> a = {telemPacket.accelX, telemPacket.accelY, telemPacket.accelZ};

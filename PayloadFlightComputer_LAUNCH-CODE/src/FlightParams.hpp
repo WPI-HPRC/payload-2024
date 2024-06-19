@@ -70,6 +70,7 @@ constexpr static float S_r = (PI/4) * (0.1524*0.1524) + (0.00088386*4); // [m^2]
 //LandPrep, measured in m/s
 #define LANDING_VELOCITY 5.0
 
+#define PAYLOAD_DEPLOY_HEIGHT 365 // [m] AGL. Payload is considered deployed when falling below this height
 #define JERK 0.5 //in g's, may need to be adjusted 
 
 #define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 

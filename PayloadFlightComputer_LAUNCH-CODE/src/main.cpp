@@ -20,6 +20,7 @@
 #include <servos.h>
 #include <CustomSPI.h>
 
+float initialAltitude = 0;
 bool sdCardInitialized = false;
 #ifndef NO_SDCARD
 File32 dataFile;

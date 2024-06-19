@@ -21,6 +21,7 @@
 #define BUZZER_PIN 14
 
 // FIXME: This seems bad but I need somewhere to track this and I don't want to have to pass it to every state constructor
+extern float initialAltitude;
 extern bool sdCardInitialized;
 #ifndef NO_SDCARD
 extern SdFat sd;
