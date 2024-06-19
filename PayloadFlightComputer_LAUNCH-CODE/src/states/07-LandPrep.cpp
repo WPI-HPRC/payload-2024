@@ -6,7 +6,6 @@
 LandPrep::LandPrep(struct Sensors *sensors, struct Servos *servos, AttitudeStateEstimator *attitudeStateEstimator) : State(sensors, servos, attitudeStateEstimator) {}
 
 void LandPrep::initialize_impl() {
-
 }
 
 void LandPrep::loop_impl() {
@@ -57,12 +56,13 @@ State *LandPrep::nextState_impl() {
         return new Recovery(sensors, servos, attitudeStateEstimator);
     }
 
-    #endif
+    #else
 
 	if (landed) 
 	{	
 		return new Recovery(sensors, servos, attitudeStateEstimator);
 	}
+	#endif
 	return nullptr;
 }
 

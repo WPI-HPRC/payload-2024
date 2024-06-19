@@ -13,6 +13,10 @@ void break_uint16(uint16_t value, uint8_t *byte_array) {
 void State::initialize()
 {
     this->startTime = millis();
+		servos->paraServo_1->writeServo(SERVO_CENTER);
+		servos->paraServo_2->writeServo(SERVO_CENTER);
+		servos->paraServo_3->writeServo(SERVO_CENTER);
+		servos->paraServo_4->writeServo(SERVO_CENTER);
     initialize_impl();
 
 

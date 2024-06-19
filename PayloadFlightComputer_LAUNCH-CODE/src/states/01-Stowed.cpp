@@ -49,7 +49,7 @@ State *Stowed::nextState_impl()
     if (currentTime > MAX_PRELAUNCH) //Time is the same so just used Prelaunch param 
     {
         Serial.println("Entering Freefall!"); 
-        return new Stowed(sensors, servos, attitudeStateEstimator);
+        return new Freefall(sensors, servos, attitudeStateEstimator);
     }
 
 	#endif
