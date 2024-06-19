@@ -27,18 +27,10 @@ while True:
             with open("oscillations%s.txt" % count,"wb") as f3:
 
                 while(pyb.elapsed_millis(loopTime) < 30000):
-                    clock.tick()
-                    img = sensor.snapshot()
-                    m.add_frame(img)
 
-                    img.lens_corr(strength = 1.5)
                     blob_size = []
                     oblob_cx = []
                     oblob_cy = []
-
-                    f.write("%d\n" % pyb.elapsed_millis(start))
-
-                    img.mode(7)
 
                     oblob_cx_count = 0
                     oblob_cy_count = 0
@@ -46,6 +38,16 @@ while True:
                     oscstart = pyb.millis()
 
                     while(pyb.elapsed_millis(oscstart) < 1000):
+
+                        clock.tick()
+                        img = sensor.snapshot()
+
+                        m.add_frame(img)
+                        img.lens_corr(strength = 1.5)
+                        img.mode(7)
+
+                        f.write("%d\n" % pyb.elapsed_millis(start))
+
                         blobs = img.find_blobs([(180, 255), (180, 255)], merge = True) # Detects all blobs with an average color lighter than 180
 
                         if len(blobs) > 0:
@@ -58,6 +60,10 @@ while True:
 
                                     oblob_cx.append(optimal_blob.cx())
                                     oblob_cy.append(optimal_blob.cy())
+                                    f2.write("%d\t%d\n" % (optimal_blob.cx(), optimal_blob.cy()))
+                                    # Draw ellipse and crosshairs for optimal_blob
+                                    img.draw_ellipse(optimal_blob.enclosed_ellipse(), color = (255, 255, 255))
+                                    img.draw_cross(optimal_blob.cx(), optimal_blob.cy(), color = (0, 0, 0))
 
                                     if len(oblob_cx) > 1: # AKA, if there have been at least two different blob centroids recorded
 
@@ -70,20 +76,19 @@ while True:
                                         oblob_cy_count = oblob_cy_count + oblob_cy_diff
 
                                         oblob_num = oblob_num + 1
-                        
+
                     # Find the average difference in centroid values over a period of 1 second
-                    osc_cx = oblob_cx_count/oblob_num
-                    osc_cy = oblob_cy_count/oblob_num
+                    if oblob_num == 0:
+                        osc_cx = oblob_cx_count/0.01
+                        osc_cy = oblob_cy_count/0.01
+
+                    else:
+                        osc_cx = oblob_cx_count/oblob_num
+                        osc_cy = oblob_cy_count/oblob_num
 
                     # Calculate a "vector" quantity for the difference in centroids
                     osc_rate = math.sqrt((osc_cx**2) + (osc_cy**2))
                     f3.write("%d\n" % osc_rate)
-
-                    # Draw ellipse and crosshairs for optimal_blob
-                    img.draw_ellipse(optimal_blob.enclosed_ellipse(), color = (255, 255, 255))
-                    img.draw_cross(optimal_blob.cx(), optimal_blob.cy(), color = (0, 0, 0))
-                    f2.write("%d\t%d\n" % (optimal_blob.cx(), optimal_blob.cy()))
-
 
                     dat_buf = struct.pack("<ii",optimal_blob.cx(),optimal_blob.cy())
 
