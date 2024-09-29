@@ -1,4 +1,4 @@
-#include "PreLaunch.h"
+#include "00-PreLaunch.h"
 #include "State.h"
 #include "Stowed.h"
 #include "FlightParams.hpp"
@@ -30,7 +30,7 @@ void PreLaunch::loop_impl() {
     averageVerticalAcceleration = sum / 10.0;
 	//Serial.println(averageVerticalAcceleration); 
 
-	if(averageVerticalAcceleration < LAUNCH_ACCEL_THRESHOLD){
+	if(abs(averageVerticalAcceleration) < LAUNCH_ACCEL_THRESHOLD){
 		count++; 
 	}
 	else{
