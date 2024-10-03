@@ -7,7 +7,7 @@ class HoldLeft : public State {
 	_STATE_CLASS_IMPLS_
 	public:
 		HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
-	private: 
+	/*private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 
 		uint8_t transitionBufIndAcc = 0;
@@ -20,4 +20,5 @@ class HoldLeft : public State {
 		int16_t transitionBufAlt[10];
 		uint8_t transitionBufIndAlt = 0;
 		int16_t altitudePreviousAvg;
+		*/ 
 };
