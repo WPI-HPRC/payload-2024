@@ -1,23 +1,28 @@
 #include "State.h"
-#include "Freefall.h"
+#include "02-Freefall.h"
 #include "WindLeft.h"
 #include "FlightParams.hpp"
 
 Freefall::Freefall(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 void Freefall::initialize_impl() {
-	this->stateStartTime = this->currentTime; 
+	stateStartTime = currentTime; 
 }
 void Freefall::loop_impl() {
-		this->stateTime = this->currentTime - this->stateStartTime; 
-		if(this->stateTime > MAX_STABALIZE_TIME ){
-			this->servos->cameraServo->writeServo(CAM_OUT); 
+		stateTime = currentTime - stateStartTime; 
+		if(stateTime > MAX_STABILIZE_TIME ){
+            #ifdef DEBUG_MODE
+            Serial.println("Camera Deployed!");
+            #endif
+			servos->cameraServo->writeServo(CAM_OUT); 
 		}
 }
 State *Freefall::nextState_impl() {
-	if (this->stateTime > MAX_FREEFALL_TIME)
+	if (stateTime > MAX_FREEFALL_TIME)
 	{	
+        #ifdef DEBUG_MODE
 		Serial.println("Entering WindLeft!");
-		return new WindLeft(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
+        #endif
+		return new WindLeft(flash, stateEstimator, xbee, servos, openMV);
 	}
 	return nullptr;
 }
