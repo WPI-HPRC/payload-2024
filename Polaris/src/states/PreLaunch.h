@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "Debouncer.h"
 
 //! @brief max number of milliseconds we can remain in the prelaunch (initialization) state
 #define MAX_PRELAUNCH_TIME 3000
@@ -8,23 +9,12 @@ class PreLaunch : public State {
 	public:
 		PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 	private:
-		// for z acceleration //I need to clarify why these are here 
-		float transitionBufAcc[10]; 
-		uint8_t transitionBufIndAcc = 0;
-		
-		// for vertical velocity
-		int16_t transitionBufVelVert[10];
-		uint8_t transitionBufIndVelVert = 0;
-
-		// Altitude buffer
-		int16_t transitionBufAlt[10];
-		uint8_t transitionBufIndAlt = 0;
-		int16_t altitudePreviousAvg;
-
-		float verticalAccelerationBuffer[10] = {0};
-		int bufferIndex = 0;
+		float accelReadingBuffer[10] = {0};
+		uint8_t accelBuffIdx = 0;
+		float avgAccelZ();
+		float altitudeBuff[10] = {};
+		size_t altitudeBuffIdx = 0;
 		bool launched = false;
-		int count = 0; 
-		float verticalAcceleration = 0.0; 
+		Debouncer launchDebouncer = Debouncer(10);
 	
 };
