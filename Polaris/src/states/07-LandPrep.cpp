@@ -39,7 +39,7 @@ void LandPrep::loop_impl() {
         sum += verticalVelocityBuffer[i];
     }
     averageVerticalVelocity = sum / 10.0;
-	if(averageVerticalVelocity < 10){
+	if(abs(averageVerticalVelocity) < 10){
 		count++; 
 	}
 	else{
