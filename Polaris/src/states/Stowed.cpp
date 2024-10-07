@@ -4,7 +4,7 @@
 
 
 
-Stowed::Stowed(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+Stowed::Stowed(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 
 void Stowed::initialize_impl() {
@@ -21,7 +21,7 @@ State *Stowed::nextState_impl()
 	
 	if (digitalRead(IR_PIN)==HIGH || stateTime > MAX_STOW_TIME){ 
 		Serial.println("Entering Freefall!"); 
-		return new Freefall(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); 
+		return new Freefall(this->flash, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV); 
 	}
 	return nullptr;
 }

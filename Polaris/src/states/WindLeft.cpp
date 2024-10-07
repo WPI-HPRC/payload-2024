@@ -3,7 +3,7 @@
 #include "HoldLeft.h"
 #include "FlightParams.hpp"
 
-WindLeft::WindLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+WindLeft::WindLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void WindLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;
@@ -27,7 +27,7 @@ State *WindLeft::nextState_impl() {
 	{
 		//stop servos 
 		Serial.println("Entering HoldLeft!"); 
-		return new HoldLeft(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
+		return new HoldLeft(this->flash, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;
 }

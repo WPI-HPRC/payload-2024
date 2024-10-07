@@ -15,6 +15,7 @@ private:                             \
 #include <TelemetryBoard/XBeeProSX.h>
 #include <libs/Flash/Flash.h>
 #include <Controls/EKF/EKF.h>
+#include <EKF/AttitudeEKF.h>
 #include <OpenMV/camera.h>
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
@@ -62,7 +63,7 @@ class State {
 
 
 	protected:
-		State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		State(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
@@ -71,7 +72,7 @@ class State {
 		long long stateTime = 0; 
 		long long stateStartTime = 0; 
 		FlashChip *flash; 
-		StateEstimator *stateEstimator; 
+		AttitudeStateEstimator *attitudeStateEstimator; 
 		XbeeProSX *xbee; 
 		struct Servos *servos; 
 		OpenMV *openMV; 

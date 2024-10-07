@@ -7,7 +7,7 @@
 class PreLaunch : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		PreLaunch(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 	private:
 		float accelReadingBuffer[10] = {0};
 		uint8_t accelBuffIdx = 0;

@@ -2,9 +2,9 @@
 #include "State.h"
 #include "Stowed.h"
 #include "FlightParams.hpp"
+#include "utility.hpp"
 
-
-PreLaunch::PreLaunch(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+PreLaunch::PreLaunch(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
 	this->stateStartTime = this->currentTime; 
@@ -42,16 +42,7 @@ void PreLaunch::loop_impl() {
         initialAltitude = sum / altitudeBuffLen;
     }
 
-<<<<<<< Updated upstream:Polaris/src/states/PreLaunch.cpp
-	if(averageVerticalAcceleration < LAUNCH_ACCEL_THRESHOLD){
-		count++; 
-	}
-	else{
-		count = 0; 
-	}
-=======
 	launched = launchDebouncer.checkOut(abs(this->avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
->>>>>>> Stashed changes:Polaris/src/states/00-PreLaunch.cpp
 
 	if (this->attitudeStateEstimator->initialized) 
     {
@@ -125,7 +116,7 @@ State *PreLaunch::nextState_impl()
 	if (launched) 
 	{
 		Serial.println("Entering Stowed!"); 
-		return new Stowed(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV); 
+		return new Stowed(this->flash, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV); 
 	}
 	return nullptr;
 }
