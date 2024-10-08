@@ -3,7 +3,7 @@
 #include "HoldLeft.h"
 #include "FlightParams.hpp"
 
-WindLeft::WindLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+WindLeft::WindLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void WindLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;

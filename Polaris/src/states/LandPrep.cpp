@@ -3,7 +3,7 @@
 #include "Recovery.h"
 #include "FlightParams.hpp"
 
-LandPrep::LandPrep(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
+LandPrep::LandPrep(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void LandPrep::initialize_impl() {
 	this->stateStartTime = this->currentTime;

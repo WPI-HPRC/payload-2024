@@ -3,7 +3,7 @@
 #include "WindLeft.h"
 #include "FlightParams.hpp"
 
-Freefall::Freefall(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+Freefall::Freefall(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 void Freefall::initialize_impl() {
 	this->stateStartTime = this->currentTime; 
 }

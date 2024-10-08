@@ -1,6 +1,8 @@
 #pragma once 
 // These constants define transitions between states and the conditions for those transitions
 
+// magneticDip const used for EKF, unsure if it needs to be changed Oct 7 2024
+constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Inclination of launch site
 // PreLaunch -------------------------
 // PreLaunch to Launch Conditions
     // average Z acceleration > LAUNCH_ACCEL_THRESHOLD

@@ -1,5 +1,5 @@
 #include "AttitudeEKF.h"
-
+#include <BasicLinearAlgebra.h>
 // TODO: Fix comments, do be wrong - Dan Pearson
 
 /**

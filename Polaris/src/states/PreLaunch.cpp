@@ -39,7 +39,7 @@ void PreLaunch::loop_impl() {
         for (size_t i = 0; i < altitudeBuffLen; i++) {
             sum += altitudeBuff[i];
         }
-        initialAltitude = sum / altitudeBuffLen;
+        float initialAltitude = sum / altitudeBuffLen;
     }
 
 	launched = launchDebouncer.checkOut(abs(this->avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);

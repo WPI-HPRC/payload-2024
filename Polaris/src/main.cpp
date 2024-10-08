@@ -21,7 +21,7 @@
 SensorFrame sensorFrame;
 
 FlashChip *flash = new FlashChip();
-StateEstimator *stateEstimator = nullptr; 
+AttitudeStateEstimator *attitudeStateEstimator = nullptr; 
 XbeeProSX *xbee = new XbeeProSX(45); // CS GPIO17
 struct Servos servos; 
 OpenMV *openMV = new OpenMV(); 
@@ -76,7 +76,7 @@ void setup() {
 	pinMode(PARACHUTE_SERVO_4_IN, INPUT); 
 
 
-	state = new PreLaunch(flash, stateEstimator, xbee, &servos, openMV);
+	state = new PreLaunch(flash, attitudeStateEstimator, xbee, &servos, openMV);
 	state->initialize();
 
 	currentTime = millis();

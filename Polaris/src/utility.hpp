@@ -2,7 +2,7 @@
 #include "FlightParams.hpp"
 #include <ServoControls/ServoController.h>
 #include <libs/Flash/Flash.h>
-
+#include <BasicLinearAlgebra.h>
 // #define DEBUG_MODE 
 #define LOOP_RATE 40
 
@@ -161,6 +161,16 @@ public:
         //Serial.println(structString); 
     }
 
+    static BLA::Matrix<3> crossProduct(const BLA::Matrix<3>& vec1, const BLA::Matrix<3>& vec2) {
+        BLA::Matrix<3> result;
+        result(0) = vec1(1) * vec2(2) - vec1(2) * vec2(1);
+        result(1) = vec1(2) * vec2(0) - vec1(0) * vec2(2);
+        result(2) = vec1(0) * vec2(1) - vec1(1) * vec2(0);
+        return result;
+    }
+
+    constexpr static float g = 9.80665; // [m/s/s] Grav Acceleration of Earth
+    
     // WGS84 Ellipsoid Model
     constexpr static float a_earth = 6378137.0;       // [m] Semi-major axis of Earth
     constexpr static float b_earth = 6356752.3142;    // [m] Semi-Minor axis of Earth

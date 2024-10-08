@@ -4,7 +4,7 @@
 #include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+HoldLeft::HoldLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void HoldLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;

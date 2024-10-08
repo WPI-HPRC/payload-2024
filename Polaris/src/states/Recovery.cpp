@@ -1,7 +1,7 @@
 #include "Recovery.h"
 #include "State.h"
 
-Recovery::Recovery(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, stateEstimator, xbee, servos, openMV){}
+Recovery::Recovery(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void Recovery::initialize_impl() {}
 
