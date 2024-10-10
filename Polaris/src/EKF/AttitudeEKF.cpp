@@ -91,8 +91,8 @@ void AttitudeStateEstimator::onLoop(Utility::TelemPacket telemPacket)
 
     // Compute the kalman gain from the magnetometer covariance readings
     BLA::Matrix<6> v = z - h;
-    BLA::Matrix<6, 6> S = H * P_min * BLA::MatrixTranspose<BLA::Matrix<6, 4>>(H) + R;
-    BLA::Matrix<4, 6> K = P_min * BLA::MatrixTranspose<BLA::Matrix<6, 4>>(H) * BLA::Inverse(S);
+    BLA::Matrix<6, 6> s = H * P_min * BLA::MatrixTranspose<BLA::Matrix<6, 4>>(H) + R;
+    BLA::Matrix<4, 6> K = P_min * BLA::MatrixTranspose<BLA::Matrix<6, 4>>(H) * BLA::Inverse(s);
 
     // Use our kalman gain and magnetometer readings to correct priori orientation
     x = x_min + K * v;
