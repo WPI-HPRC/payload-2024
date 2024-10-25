@@ -1,6 +1,6 @@
 #include "WindRight.h"
 #include "State.h"
-#include "HoldRight.h"
+#include "06-HoldRight.h"
 #include "FlightParams.hpp"
 
 WindRight::WindRight(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}

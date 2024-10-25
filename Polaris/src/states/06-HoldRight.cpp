@@ -1,5 +1,5 @@
 #include "State.h"
-#include "HoldRight.h"
+#include "06-HoldRight.h"
 #include "LandPrep.h"
 #include "FlightParams.hpp"
 
@@ -7,21 +7,24 @@
 HoldRight::HoldRight(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
 
 void HoldRight::initialize_impl() {
-	this->stateStartTime = this->currentTime;
+	stateStartTime = currentTime;
 
 }
 
 void HoldRight::loop_impl() {
-	this->stateTime = this->currentTime - this->stateStartTime;
+	stateTime = currentTime - stateStartTime;
 	//Again, continue running servos? 
 }
 
 State *HoldRight::nextState_impl() {
-	if (this->stateTime > MAX_HOLD_TIME)
+	if (stateTime > MAX_HOLD_TIME || telemPacket.altitude < MIN_ALT) //Ported from IREC-Dev
 	{	
 		//unwind servos
+        // Looks like nothing was implemented later :(, still WIP in my mind
+        #ifdef DEBUG_MODE
 		Serial.println("Entering LandPrep!");
-		return new LandPrep(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
+        #endif
+		return new LandPrep(flash, stateEstimator, xbee, servos, openMV);
 	}
 	return nullptr;
 }

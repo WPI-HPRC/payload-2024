@@ -13,6 +13,8 @@
 
 #define LANDING_VELOCITY 5.0
 
+#define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 
+
 //Payload Specific- will organize tonight 
 
 #define PARACHUTE_SERVO_1 6 // wind counterclockwise in:2000   center:1493 wind out: 1100
