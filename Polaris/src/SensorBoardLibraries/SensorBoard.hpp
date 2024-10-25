@@ -1,7 +1,7 @@
 #pragma once
-#include <SensorBoardLibraries\IMU\IMU_SB.h>
-#include <SensorBoardLibraries\Barometer\Barometer_SB.h>
-#include <SensorBoardLibraries\Magnetometer\Magnetometer_SB.h>
+#include <SensorBoardLibraries/IMU/IMU_SB.h>
+#include <SensorBoardLibraries/Barometer/Barometer_SB.h>
+#include <SensorBoardLibraries/Magnetometer/Magnetometer_SB.h>
 #include "Config.h"
 #include "Sensor_Frames.hpp"
 #include <SparkFun_Ublox_Arduino_Library.h>

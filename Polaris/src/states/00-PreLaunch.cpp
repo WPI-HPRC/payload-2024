@@ -1,4 +1,4 @@
-#include "PreLaunch.h"
+#include "00-PreLaunch.h"
 #include "State.h"
 #include "Stowed.h"
 #include "FlightParams.hpp"
@@ -7,17 +7,17 @@
 PreLaunch::PreLaunch(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
-	this->stateStartTime = this->currentTime; 
+	stateStartTime = currentTime; 
 }
 
 float PreLaunch::avgAccelZ()
 {
     float sum = 0;
-    uint8_t len = sizeof(this->accelReadingBuffer) / sizeof(float);
+    uint8_t len = sizeof(accelReadingBuffer) / sizeof(float);
 
     for (uint8_t i = 0; i < len; i++)
     {
-        sum += this->accelReadingBuffer[i];
+        sum += accelReadingBuffer[i];
     }
 
     return sum / len;
@@ -25,7 +25,7 @@ float PreLaunch::avgAccelZ()
 
 void PreLaunch::loop_impl() {
 
-	this->stateTime = this->currentTime - this->stateStartTime; 
+	stateTime = currentTime - stateStartTime; 
 	//Serial.println("I am in Pre-Launch");
 	
     altitudeBuff[altitudeBuffIdx++] = telemPacket.altitude;
@@ -42,13 +42,13 @@ void PreLaunch::loop_impl() {
         float initialAltitude = sum / altitudeBuffLen;
     }
 
-	launched = launchDebouncer.checkOut(abs(this->avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
+	launched = launchDebouncer.checkOut(abs(avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
 
-	if (this->attitudeStateEstimator->initialized) 
+	if (attitudeStateEstimator->initialized) 
     {
-        this->accelReadingBuffer[this->accelBuffIdx++] = this->telemPacket.accelZ;
-        this->accelBuffIdx %= sizeof(this->accelReadingBuffer) / sizeof(float);
-        launched = launchDebouncer.checkOut(this->avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
+        accelReadingBuffer[accelBuffIdx++] = telemPacket.accelZ;
+        accelBuffIdx %= sizeof(accelReadingBuffer) / sizeof(float);
+        launched = launchDebouncer.checkOut(avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
     } else {
     // Intialize EKF
         // Calculate Initial Quaternion using Accel and Mag
@@ -92,7 +92,7 @@ void PreLaunch::loop_impl() {
             Serial.println("");
         };
 
-        this->attitudeStateEstimator->init(q_0, 0.025);
+        attitudeStateEstimator->init(q_0, 0.025);
         
         Serial.println("[Prelaunch] Initialized Attitude EKF");
     }
@@ -105,10 +105,10 @@ State *PreLaunch::nextState_impl()
 {
 	#ifdef TEST_STATE_MACHINE
 
-    if (this->stateTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
+    if (stateTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
     {
         Serial.println("Entering Stowed!"); 
-        Stowed(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
+        Stowed(flash, attitudeStateEstimator, xbee, servos, openMV);
     }
 
     #endif 
@@ -116,7 +116,7 @@ State *PreLaunch::nextState_impl()
 	if (launched) 
 	{
 		Serial.println("Entering Stowed!"); 
-		return new Stowed(this->flash, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV); 
+		return new Stowed(flash, attitudeStateEstimator, xbee, servos, openMV); 
 	}
 	return nullptr;
 }

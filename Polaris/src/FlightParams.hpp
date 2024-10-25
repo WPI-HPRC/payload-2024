@@ -15,6 +15,8 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 
 #define LANDING_VELOCITY 5.0
 
+#define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 
+
 //Payload Specific- will organize tonight 
 
 #define PARACHUTE_SERVO_1 6 // wind counterclockwise in:2000   center:1493 wind out: 1100
@@ -54,7 +56,7 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 
 #define ALT_THRESHOLD_STOWED 396 //meters
 
-#define MAX_STABALIZE_TIME 5000
+#define MAX_STABILIZE_TIME 5000
 #define MAX_FREEFALL_TIME 10000
 
 #define MAX_SERVO_POS 0
