@@ -11,11 +11,17 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 // measured in G's
 // checking if average Z acceleration is greater than 4 G's
 
+// Pre-launch, measured in G's
 #define LAUNCH_ACCEL_THRESHOLD 4
 
+//LandPrep, measured in m/s
 #define LANDING_VELOCITY 5.0
 
-#define MIN_ALT 200 //Lowest altitude before Land_prep, PLEASE CONFIRM 
+// Stowed, measured in meters
+#define PAYLOAD_DEPLOY_HEIGHT 365 //Payload is considered deployed when falling below this height
+
+// Hold Right, in meters? - Kai 10/24/2024
+#define MIN_ALT 61 //Lowest altitude before Land_prep, PLEASE CONFIRM 
 
 //Payload Specific- will organize tonight 
 
