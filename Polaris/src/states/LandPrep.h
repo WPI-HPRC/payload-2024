@@ -5,7 +5,7 @@
 class LandPrep : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		LandPrep(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee,struct Servos *servos, OpenMV *openMV); 
+		LandPrep(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee,struct Servos *servos, OpenMV *openMV); 
 	private: 
 		// for z acceleration //I need to clarify why these are here 
 		float transitionBufAcc[10]; 

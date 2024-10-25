@@ -1,12 +1,13 @@
 #include "State.h"
 #include <Arduino.h>
-State::State(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), stateEstimator(stateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+State::State(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), attitudeStateEstimator(attitudeStateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
 	//xbee->begin();
     BLA::Matrix<10> x_0 = {1,0,0,0,0,0,0,0,0,0};
-    stateEstimator = new StateEstimator(x_0, 0.025); 
+    // stateEstimator = new StateEstimator(x_0, 0.025);
+    // I am unaware if there is an AttitudeStateEstimator equivalent to this that should be used Oct 7 2024
 }
 
 void State::loop() {
@@ -17,8 +18,8 @@ void State::loop() {
 	loop_impl();
 	this->lastLoopTime = millis();
 	//Sensor stuff here 
-	this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
- 
+	//this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
+    //Once again- unsure if there is an AttitudeStateEstimator equivalent which should be used Oct 7 2024
     
 	this->telemPacket.state = this->getId();
     telemPacket.accelX = sensorData.ac_x; 

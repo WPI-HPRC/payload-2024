@@ -4,7 +4,7 @@
 #include "FlightParams.hpp"
 
 
-HoldRight::HoldRight(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+HoldRight::HoldRight(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void HoldRight::initialize_impl() {
 	stateStartTime = currentTime;
@@ -24,7 +24,7 @@ State *HoldRight::nextState_impl() {
         #ifdef DEBUG_MODE
 		Serial.println("Entering LandPrep!");
         #endif
-		return new LandPrep(flash, stateEstimator, xbee, servos, openMV);
+		return new LandPrep(flash, attitudeStateEstimator, xbee, servos, openMV);
 	}
 	return nullptr;
 }
