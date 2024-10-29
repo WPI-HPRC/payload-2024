@@ -1,6 +1,8 @@
 #pragma once 
 // These constants define transitions between states and the conditions for those transitions
 
+// magneticDip const used for EKF, unsure if it needs to be changed Oct 7 2024
+constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Inclination of launch site
 // PreLaunch -------------------------
 // PreLaunch to Launch Conditions
     // average Z acceleration > LAUNCH_ACCEL_THRESHOLD
@@ -9,9 +11,17 @@
 // measured in G's
 // checking if average Z acceleration is greater than 4 G's
 
-#define LAUNCH_ACCEL_THRESHOLD -4
+// Pre-launch, measured in G's
+#define LAUNCH_ACCEL_THRESHOLD 4
 
+//LandPrep, measured in m/s
 #define LANDING_VELOCITY 5.0
+
+// Stowed, measured in meters
+#define PAYLOAD_DEPLOY_HEIGHT 365 //Payload is considered deployed when falling below this height
+
+// Hold Right, in meters? - Kai 10/24/2024
+#define MIN_ALT 61 //Lowest altitude before Land_prep, PLEASE CONFIRM 
 
 //Payload Specific- will organize tonight 
 
@@ -63,6 +73,10 @@
 #define DESIRED_STRING_LENGTH 70
 
 #define MAX_STOW_TIME 103000
+
+//Times for state transitions with Debug: 
+#define MAX_PRELAUNCH 3000
+#define MAX_LANDPREP 8000
 
 //Trajectory Constants 
 

@@ -1,10 +1,10 @@
 #include "State.h"
 #include "04-HoldLeft.h"
-#include "WindRight.h"
+#include "05-WindRight.h"
 #include "FlightParams.hpp"
 
 
-HoldLeft::HoldLeft(FlashChip *flash, StateEstimator *stateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, stateEstimator, xbee, servos, openMV){}
+HoldLeft::HoldLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
 
 void HoldLeft::initialize_impl() {
 	this->stateStartTime = this->currentTime;
@@ -19,7 +19,7 @@ State *HoldLeft::nextState_impl() {
 	if (this->stateTime > MAX_HOLD_TIME)
 	{
 		Serial.println("Entering WindRight!");
-		return new WindRight(this->flash, this->stateEstimator, this->xbee, this->servos, this->openMV);
+		return new WindRight(this->flash, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV);
 	}
 	return nullptr;
 }
