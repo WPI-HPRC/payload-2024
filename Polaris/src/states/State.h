@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-#include "utility.hpp"
 
 #define _STATE_CLASS_IMPLS_          \
 private:                             \
@@ -10,17 +8,16 @@ private:                             \
 	StateId getId() override;
 
 #include "Arduino.h"
-#include "../utility.hpp" //why this again? 
+#include "utility.hpp"
+#include "FlightParams.hpp"
 #include <BasicLinearAlgebra.h>
 #include <TelemetryBoard/XBeeProSX.h>
-#include <libs/Flash/Flash.h>
-#include <Controls/EKF/EKF.h>
 #include <EKF/AttitudeEKF.h>
 #include <OpenMV/camera.h>
 #include <OpenMV/cameraData.h>
 #include <OpenMV/gps.h>
 #include <servos.h>
-
+#include <SensorBoardLibraries/SensorBoard.hpp>
 
 enum StateId {
   ID_PreLaunch = 0,
@@ -56,14 +53,13 @@ class State {
 		virtual enum StateId getId() = 0;
 		virtual ~State() {}
 
-		SensorFrame sensorData; //Protected? 
 		Utility::TelemPacket telemPacket;
 		CameraData camData; 
 		GPSPoint camGPS; 
 
 
 	protected:
-		State(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		State(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 		//! @brief number of milliseconds since the initialize call
 		long long currentTime = 0;
 		//! @brief number of milliseconds since the last loop call
@@ -71,7 +67,7 @@ class State {
 		long long loopCount = 0;
 		long long stateTime = 0; 
 		long long stateStartTime = 0; 
-		FlashChip *flash; 
+        Sensorboard *sensors;
 		AttitudeStateEstimator *attitudeStateEstimator; 
 		XbeeProSX *xbee; 
 		struct Servos *servos; 

@@ -5,5 +5,5 @@
 class Recovery : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		Recovery(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		Recovery(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 };

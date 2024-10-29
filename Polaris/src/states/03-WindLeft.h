@@ -5,5 +5,5 @@
 class WindLeft : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		WindLeft(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
+		WindLeft(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV); 
 };

@@ -4,7 +4,7 @@
 #include "Abort.h"
 #include "State.h"
 
-Abort::Abort(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, attitudeStateEstimator, xbee, servos, openMV){}
+Abort::Abort(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(sensors, attitudeStateEstimator, xbee, servos, openMV){}
 
 void Abort::initialize_impl() {}
 

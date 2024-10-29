@@ -64,6 +64,13 @@ class Sensorboard{
 
         // mag.readSensor(*magData);
         this->ProcessBuffer();
+
+        Inertial_Baro_frame.gpsLat = gps.getLatitude();
+        Inertial_Baro_frame.gpsLong = gps.getLongitude();
+        Inertial_Baro_frame.gpsLock = gps.getGnssFixOk();
+        Inertial_Baro_frame.satellites = gps.getSIV();
+        Inertial_Baro_frame.gpsAltAGL = gps.getAltitude();
+        Inertial_Baro_frame.gpsAltMSL = gps.getAltitudeMSL();
     }
 
     void ProcessBuffer(){

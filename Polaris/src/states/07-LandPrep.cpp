@@ -3,7 +3,7 @@
 #include "07-LandPrep.h"
 #include "FlightParams.hpp"
 
-LandPrep::LandPrep(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(flash, attitudeStateEstimator, xbee, servos, openMV) {}
+LandPrep::LandPrep(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(sensors, attitudeStateEstimator, xbee, servos, openMV) {}
 
 void LandPrep::initialize_impl()
 {
@@ -55,7 +55,7 @@ State *LandPrep::nextState_impl()
         #ifdef DEBUG_MODE
         Serial.println("Entering Recovery!");
         #endif
-        return new Recovery(flash, attitudeStateEstimator, xbee, servos, openMV);
+        return new Recovery(sensors, attitudeStateEstimator, xbee, servos, openMV);
     }
     return nullptr;
 }

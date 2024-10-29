@@ -1,6 +1,11 @@
 #include "State.h"
 #include <Arduino.h>
-State::State(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : flash(flash), attitudeStateEstimator(attitudeStateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+#include "utility.hpp"
+#include <SD.h>
+
+State::State(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : sensors(sensors), attitudeStateEstimator(attitudeStateEstimator), xbee(xbee), servos(servos), openMV(openMV){}
+
+
 void State::initialize() {
 	this->startTime = millis();
 	initialize_impl();
@@ -15,30 +20,38 @@ void State::loop() {
 	this->currentTime = now - this->startTime;
 	this->deltaTime = now - this->lastLoopTime;
 	this->loopCount++;
-	loop_impl();
+	
+    this->sensors->readInertialSensors();
+
 	this->lastLoopTime = millis();
 	//Sensor stuff here 
 	//this->currentState = stateEstimator->onLoop(sensorData); //THis is sus, check pointers and such (tomorrow)
     //Once again- unsure if there is an AttitudeStateEstimator equivalent which should be used Oct 7 2024
     
 	this->telemPacket.state = this->getId();
-    telemPacket.accelX = sensorData.ac_x; 
-    telemPacket.accelY = sensorData.ac_y;
-    telemPacket.accelZ = sensorData.ac_z;
+    this->telemPacket.accelX = this->sensors->Inertial_Baro_frame.ac_x;
+    this->telemPacket.accelY = this->sensors->Inertial_Baro_frame.ac_y;
+    this->telemPacket.accelZ = this->sensors->Inertial_Baro_frame.ac_z;
 
- 
+    this->telemPacket.gyroX = this->sensors->Inertial_Baro_frame.gy_x;
+    this->telemPacket.gyroY = this->sensors->Inertial_Baro_frame.gy_y;
+    this->telemPacket.gyroZ = this->sensors->Inertial_Baro_frame.gy_z;
 
-    telemPacket.gyroX = sensorData.gy_x;
-    telemPacket.gyroY = sensorData.gy_y;
-    telemPacket.gyroZ = sensorData.gy_z;
+    this->telemPacket.magX = this->sensors->Inertial_Baro_frame.mag_x;
+    this->telemPacket.magY = this->sensors->Inertial_Baro_frame.mag_y;
+    this->telemPacket.magZ = this->sensors->Inertial_Baro_frame.mag_z;
 
-    telemPacket.magX = sensorData.mag_x;
-    telemPacket.magY = sensorData.mag_y;
-    telemPacket.magZ = sensorData.mag_z;
+    this->telemPacket.pressure = this->sensors->Inertial_Baro_frame.Pressure;
+    this->telemPacket.temperature = this->sensors->Inertial_Baro_frame.Temperature;
+    this->telemPacket.altitude = Utility::pressureToAltitude(this->telemPacket.pressure);
 
-    telemPacket.pressure = sensorData.Pressure;
-    telemPacket.altitude = Utility::pressureToAltitude(sensorData.Pressure);
+    this->telemPacket.gpsLat = this->sensors->Inertial_Baro_frame.gpsLat;
+    this->telemPacket.gpsLong = this->sensors->Inertial_Baro_frame.gpsLong;
+    this->telemPacket.gpsLock = this->sensors->Inertial_Baro_frame.gpsLock;
+    this->telemPacket.satellites = this->sensors->Inertial_Baro_frame.satellites;
+
     telemPacket.timestamp = this->currentTime;
+
     telemPacket.w = currentState(0);
     telemPacket.i = currentState(1);
     telemPacket.j = currentState(2);
@@ -49,16 +62,10 @@ void State::loop() {
 	telemPacket.velX = 0.0; 
 	telemPacket.velY = 0.0;
 	telemPacket.velZ = 0.0;
-   
 
-	telemPacket.gpsLat = sensorData.gpsLat; //Make sure consistent, look at Pre-launch 
-    telemPacket.gpsLong = sensorData.gpsLong;
-    telemPacket.gpsAltMSL = sensorData.gpsAltMSL;
-	telemPacket.gpsAltAGL = sensorData.gpsAltAGL;
-	//telemPacket.epochTime = sensorData.epochTime;
-	telemPacket.satellites = sensorData.satellites;
-	telemPacket.gpsLock = sensorData.gpsLock;
-    
+    this->telemPacket.loopCount = this->loopCount;
+    this->telemPacket.timestamp = now;
+
     //this->camGPS = openMV->onLoop(telemPacket, data); 
 
 	//Deal with these once objects are defined 
@@ -84,25 +91,75 @@ void State::loop() {
     telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
     telemPacket.actualServoPos4 = this->servos->paraServo_4->readServo(); 
 
+    static const BLA::Matrix<3, 3> softIronCal = {
+        1.120602,
+        -0.003242,
+        0.005510,
+        -0.003242,
+        1.143276,
+        0.013794,
+        0.005510,
+        0.013794,
+        1.104641,
+    };
 
+    static const BLA::Matrix<3> hardIronCal = {54062.849827, 5545.343210, 89181.770655};
+
+    BLA::Matrix<3> magVector = {telemPacket.magX, telemPacket.magY, telemPacket.magZ};
+
+    BLA::Matrix<3> magCal = softIronCal * (magVector - hardIronCal);
+
+    this->telemPacket.magX = magCal(0);
+    this->telemPacket.magY = magCal(1);
+    this->telemPacket.magZ = magCal(2);
+
+    if (this->attitudeStateEstimator->initialized)
+    {
+        this->attitudeStateEstimator->onLoop(this->telemPacket);
+        this->telemPacket.w = this->attitudeStateEstimator->x(0);
+        this->telemPacket.i = this->attitudeStateEstimator->x(1);
+        this->telemPacket.j = this->attitudeStateEstimator->x(2);
+        this->telemPacket.k = this->attitudeStateEstimator->x(3);
+        loop_impl();
+        this->lastLoopTime = now;
+
+    }
+    
     // float trajA = 0.0f; //Calculated Trajectory Constants 
     // float trajB = 0.0f;
     // float trajC = 0.0f;
     // float trajD = 0.0f; 
+    #ifndef NO_XBEE
+    if (loopCount % 5 == 0)
+    {
+        SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
+        xbee->sendTransmitRequestCommand(0x0013A200423F474C, (uint8_t *)&telemPacket, sizeof(telemPacket));
+        SPI.endTransaction();
+    }
+    #endif
 
-	xbee->send(0x0013A200423F474C, &telemPacket, sizeof(telemPacket));
     // char* testPacket = "PLEASE JUST WORK AHGGGGGGAHHDH"; 
     // xbee->send(0x0013A200423F474C, &testPacket, sizeof(testPacket));
-	Utility::logData(flash, telemPacket); 
-    
 
-    //Serial.print("Packet Success: ");
-    //Serial.println(millis());
+    #ifndef NO_SDCARD
+    if (sdCardInitialized)
+    {
+        dataFile.write((uint8_t *)&this->telemPacket, sizeof(this->telemPacket));
+        if (this->loopCount % 20 == 0)
+        {
+            dataFile.flush();
+        }
+    }   
+    #endif 
 
 }
 
 State *State::nextState() {
-	return nextState_impl();
+    #ifndef NO_TRANSITION
+	    return nextState_impl();
+    #else
+        return nullptr;
+    #endif
 }
 
 

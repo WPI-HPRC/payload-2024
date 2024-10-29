@@ -2,31 +2,26 @@
 
 #include <Arduino.h>
 #include <SPI.h>
-#include <vector>
-#include <string>
-#include <algorithm>
 
-struct ReceivePacket {
-    size_t length;
-    uint64_t address;
-    uint8_t *data;
-};
+#include "xbee/XBeeDevice.h"
 
-class XbeeProSX {
+class XbeeProSX: public XBeeDevice {
 public:
     XbeeProSX(uint8_t cs_pin);
 
-    void begin();
+    void writeBytes(const char *data, size_t length_bytes) override;
 
-    bool isDataAvailable();
+    void handleReceivePacket(XBee::ReceivePacket::Struct *frame) override;
 
-    void send(uint64_t address, const void *data, size_t size_bytes);
-    ReceivePacket* receive();
+    void handleReceivePacket64Bit(XBee::ReceivePacket64Bit::Struct *frame) override;
 
-    void broadcast(const void *data, size_t size);
+    void didCycle() override;
 
-    void updateSubscribers();
-    void sendToSubscribers(const void *data, size_t size);
+    void start() override;
+
+    void incorrectChecksum(uint8_t calculated, uint8_t received) override;
+
+    void log(const char *format, ...) override;
 
 private:
     uint8_t _cs_pin;

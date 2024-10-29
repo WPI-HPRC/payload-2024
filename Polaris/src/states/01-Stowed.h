@@ -9,7 +9,7 @@ class Stowed : public State
 {
     _STATE_CLASS_IMPLS_
 public:
-    Stowed(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV);
+    Stowed(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV);
 
 private:
     float velocityBuffer[10] = {0};

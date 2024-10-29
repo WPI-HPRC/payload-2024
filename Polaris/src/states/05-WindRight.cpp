@@ -3,7 +3,7 @@
 #include "06-HoldRight.h"
 #include "FlightParams.hpp"
 
-WindRight::WindRight(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
+WindRight::WindRight(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(sensors, attitudeStateEstimator, xbee, servos, openMV){}
 
 void WindRight::initialize_impl() {
 	stateStartTime = currentTime;
@@ -35,7 +35,7 @@ State *WindRight::nextState_impl() {
         #ifdef DEBUG_MODE
 		Serial.println("Entering HoldRight!");
         #endif
-		return new HoldRight(flash, attitudeStateEstimator, xbee, servos, openMV);
+		return new HoldRight(sensors, attitudeStateEstimator, xbee, servos, openMV);
 	}
 	return nullptr;
 }

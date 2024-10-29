@@ -6,7 +6,7 @@
 class LandPrep : public State {
 	_STATE_CLASS_IMPLS_
 	public:
-		LandPrep(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee,struct Servos *servos, OpenMV *openMV); 
+		LandPrep(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee,struct Servos *servos, OpenMV *openMV); 
 	private: 
 
 		float verticalVelocityBuffer[10] = {0};
