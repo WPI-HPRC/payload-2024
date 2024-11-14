@@ -120,10 +120,9 @@ void State::loop() {
         this->telemPacket.i = this->attitudeStateEstimator->x(1);
         this->telemPacket.j = this->attitudeStateEstimator->x(2);
         this->telemPacket.k = this->attitudeStateEstimator->x(3);
-        loop_impl();
-        this->lastLoopTime = now;
-
     }
+    loop_impl();
+    this->lastLoopTime = now;
     
     // float trajA = 0.0f; //Calculated Trajectory Constants 
     // float trajB = 0.0f;

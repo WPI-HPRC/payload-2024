@@ -7,7 +7,9 @@
 PreLaunch::PreLaunch(Sensorboard *sensorBoard, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(sensorBoard, attitudeStateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
-	stateStartTime = currentTime; 
+    #ifdef DEBUG_MODE
+    Serial.println("PreLaunch Initialized");
+    #endif
 }
 
 float PreLaunch::avgAccelZ()
@@ -24,8 +26,6 @@ float PreLaunch::avgAccelZ()
 }
 
 void PreLaunch::loop_impl() {
-
-	stateTime = currentTime - stateStartTime; 
 	//Serial.println("I am in Pre-Launch");
 	
     altitudeBuff[altitudeBuffIdx++] = telemPacket.altitude;
@@ -43,72 +43,18 @@ void PreLaunch::loop_impl() {
     }
 
 	launched = launchDebouncer.checkOut(abs(avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
-
-	if (attitudeStateEstimator->initialized) 
-    {
-        accelReadingBuffer[accelBuffIdx++] = telemPacket.accelZ;
-        accelBuffIdx %= sizeof(accelReadingBuffer) / sizeof(float);
-        launched = launchDebouncer.checkOut(avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
-    } else {
-    // Intialize EKF
-        // Calculate Initial Quaternion using Accel and Mag
-        // Normalize Acceleration Vector
-        BLA::Matrix<3> a = {telemPacket.accelX, telemPacket.accelY, telemPacket.accelZ};
-        float aLen = BLA::Norm(a);
-        if (aLen != 0) {
-            a /= aLen;
-        }
-
-        // Normalize Magnetometer Vector
-        BLA::Matrix<3> m = {telemPacket.magX, telemPacket.magY, telemPacket.magZ};
-        float mLen = BLA::Norm(m);
-        if (mLen != 0) {
-            m /= mLen;
-        }
-
-        // Observation Matrix
-
-        BLA::Matrix<3> crossProd1 = Utility::crossProduct(a,m);
-        BLA::Matrix<3> crossProd2 = Utility::crossProduct(crossProd1, a);
-        
-        BLA::Matrix<3,3> C = {
-            crossProd2(0), crossProd1(0), a(0),
-            crossProd2(1), crossProd1(1), a(1),
-            crossProd2(3), crossProd1(2), a(2)
-        };
-
-        BLA::Matrix<4> q_0 = {
-            0.5f * sqrt(C(1,1) + C(2,2) + C(3,3) + 1),
-            0.5f * std::copysign(1, C(2,1) - C(1,2)) * sqrt(C(0,0) - C(1,1) - C(2,2) + 1),
-            0.5f * std::copysign(1, C(0,2) - C(2,0)) * sqrt(C(1,1) - C(2,2) - C(0,0) + 1),
-            0.5f * std::copysign(1, C(1,0) - C(0,1)) * sqrt(C(2,2) - C(0,0) - C(1,1) + 1)
-        };
-
-        Serial.println("<----- Initial Quaternion ----->");
-        for (int i = 0; i < q_0.Rows; i++) {
-            for (int j = 0; j < q_0.Cols; j++) {
-                Serial.print(String(q_0(i,j)) + "\t");
-            }
-            Serial.println("");
-        };
-
-        attitudeStateEstimator->init(q_0, 0.025);
-        
-        Serial.println("[Prelaunch] Initialized Attitude EKF");
-    }
-
 }
 
 
 //! @details If we are separating this from `Launch`, we need a time limit on this state or something
 State *PreLaunch::nextState_impl()
 {
+    
 	#ifdef TEST_STATE_MACHINE
-
-    if (stateTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
-    {
+    if (currentTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
+    {   
         Serial.println("Entering Stowed!"); 
-        Stowed(sensors, attitudeStateEstimator, xbee, servos, openMV);
+        return new Stowed(sensors, attitudeStateEstimator, xbee, servos, openMV);
     }
 
     #endif 

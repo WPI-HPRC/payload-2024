@@ -3,12 +3,9 @@
 #include "SpiDriver/SdSpiDriver.h"
 #include <Arduino.h>
 #include <Metro.h>
-
 #include <SPI.h>
 #include <Wire.h>
-
 #include <SD.h>
-
 #include <states/00-PreLaunch.h>
 #include <states/State.h>
 
@@ -53,7 +50,7 @@ void setup()
 #ifdef WAIT_FOR_SERIAL
     while (!Serial)
     {
-        yield()
+        yield();
     }
 #endif
 
@@ -111,6 +108,7 @@ void setup()
     pinMode(PARACHUTE_SERVO_2_IN, INPUT);
     pinMode(PARACHUTE_SERVO_3_IN, INPUT);
     pinMode(PARACHUTE_SERVO_4_IN, INPUT);
+
 
     state = (State *)new PreLaunch(&sensorBoard, attitudeStateEstimator, xbee, &servos, openMV);
 

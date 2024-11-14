@@ -25,10 +25,10 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 
 //Payload Specific- will organize tonight 
 
-#define PARACHUTE_SERVO_1 6 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_2 7 // wind clockwise in: 1100   center:1493 wind out: 2000
-#define PARACHUTE_SERVO_3 9 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000
+#define PARACHUTE_SERVO_1 24 // wind counterclockwise in:2000   center:1493 wind out: 1100
+#define PARACHUTE_SERVO_2 25 // wind clockwise in: 1100   center:1493 wind out: 2000
+#define PARACHUTE_SERVO_3 8 // wind counterclockwise in:2000   center:1493 wind out: 1100
+#define PARACHUTE_SERVO_4 7 // wind clockwise in:1100  center:1493 wind out: 2000
 
 #define SERVO_CLOCK_WIND 1100
 #define SERVO_CLOCK_UNWIND 1800
@@ -87,6 +87,3 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 #define C_D 0.7; // Coefficient of drag
 #define W_P GRAV * MASS;
 #define H_CP 2; // [m] Distance from center of mass to center of pressure
-
-
-

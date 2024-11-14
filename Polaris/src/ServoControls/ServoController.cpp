@@ -1,4 +1,5 @@
 #include "ServoController.h"
+#include "FlightParams.hpp"
 
 // const float pulleyDiameter = 4.374;
 // const float stringLength = 100.;
@@ -18,7 +19,7 @@ ServoController::ServoController(int pin, bool clockwise, float p, float pulleyD
 
 ServoController::ServoController(int pin){
     this->servo.attach(pin); //check if this is the correct syntax 
-    if(pin == 33){
+    if(pin == CAMERA_SERVO){
         this->servo.writeMicroseconds(988);
     }
     else{

@@ -53,7 +53,7 @@ State *Stowed::nextState_impl()
     if (currentTime > MAX_PRELAUNCH) // Time is the same so just used Prelaunch param
     {
         Serial.println("Entering Freefall!");
-        return new Freefall(sensors, servos, attitudeStateEstimator);
+        return new Freefall(sensors, this->attitudeStateEstimator, xbee, servos, openMV);
     }
 
 #endif

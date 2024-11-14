@@ -5,7 +5,7 @@
 
 Freefall::Freefall(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(sensors, attitudeStateEstimator, xbee, servos, openMV){}
 void Freefall::initialize_impl() {
-	stateStartTime = currentTime; 
+	stateStartTime = currentTime;
 }
 void Freefall::loop_impl() {
 		stateTime = currentTime - stateStartTime; 
