@@ -1,10 +1,30 @@
 #pragma once
 #include "FlightParams.hpp"
 #include <ServoControls/ServoController.h>
-#include <libs/Flash/Flash.h>
 #include <BasicLinearAlgebra.h>
+
+#include <Arduino.h>
+#include <cstdint>
+#include <cmath>
 // #define DEBUG_MODE 
-#define LOOP_RATE 40
+#define LOOP_RATE 100
+
+#ifndef NO_SDCARD
+#include <SD.h>
+#endif
+
+#ifndef NO_XBEE
+#include "TelemetryBoard/XBeeProSX.h"
+#endif
+
+#ifndef NO_SDCARD
+extern bool sdCardInitialized;
+extern File dataFile;
+#endif
+
+#ifndef NO_SERVO
+#include "Servo.h"
+#endif
 
 class Utility
 {
@@ -55,6 +75,7 @@ public:
         float magY = 0.0f;
         float magZ = 0.0f;
         float pressure = 0.0f;
+        float temperature = 0.0f;
 
         // Calculated Values
         float altitude = 0.0f;
@@ -80,6 +101,7 @@ public:
         uint8_t satellites = 0;
         boolean gpsLock = false;
 
+        uint32_t loopCount = 0;
         uint32_t timestamp = 0;
 
         //Payload Specific 
@@ -108,59 +130,6 @@ public:
     }; 
     #pragma pack(pop); 
 
-
-    static void logData(FlashChip *flash, TelemPacket telemPacket) //Need to fix to be Polaris Variables 
-    {
-        String structString = String(telemPacket.accelX) + "," +
-                              String(telemPacket.accelY) + "," +
-                              String(telemPacket.accelZ) + "," +
-                              String(telemPacket.gyroX) + "," +
-                              String(telemPacket.gyroY) + "," +
-                              String(telemPacket.gyroZ) + "," +
-                              String(telemPacket.magX) + "," +
-                              String(telemPacket.magY) + "," +
-                              String(telemPacket.magZ) + "," +
-                              String(telemPacket.pressure) + "," +
-                              String(telemPacket.altitude) + "," +
-                              String(telemPacket.w) + "," +
-                              String(telemPacket.i) + "," +
-                              String(telemPacket.j) + "," +
-                              String(telemPacket.k) + "," +
-                              String(telemPacket.posX) + "," +
-                              String(telemPacket.posY) + "," +
-                              String(telemPacket.posZ) + "," + 
-                              String(telemPacket.velX) + "," +
-                              String(telemPacket.velY) + "," +
-                              String(telemPacket.velZ) + "," + 
-                              String(telemPacket.gpsLat) + "," +
-                              String(telemPacket.gpsLong) + "," +
-                              String(telemPacket.gpsAltMSL) + "," +
-                              String(telemPacket.gpsAltAGL) + "," +
-                              String(telemPacket.gpsLock) + "," +
-                              String(telemPacket.satellites) + "," +
-                              String(telemPacket.timestamp) + "," +
-                              String(telemPacket.cx) + "," +
-                              String(telemPacket.cy) + "," +
-                              String(telemPacket.targetGpsLat) + "," +
-                              String(telemPacket.targetGpsLong) + "," +
-                              String(telemPacket.desiredServoPos1) + "," +
-                              String(telemPacket.actualServoPos1) + "," +
-                              String(telemPacket.desiredServoPos2) + "," +
-                              String(telemPacket.actualServoPos2) + "," +
-                              String(telemPacket.desiredServoPos3) + "," +
-                              String(telemPacket.actualServoPos3) + "," +
-                              String(telemPacket.desiredServoPos4) + "," +
-                              String(telemPacket.actualServoPos4) + "," +
-                              String(telemPacket.trajA) + "," +
-                              String(telemPacket.trajB) + "," +
-                              String(telemPacket.trajC) + "," +
-                              String(telemPacket.trajD); 
-                              
-        flash->writeStruct(structString);
-        //Serial.println(structString.length()); 
-        //Serial.println(structString); 
-    }
-
     static BLA::Matrix<3> crossProduct(const BLA::Matrix<3>& vec1, const BLA::Matrix<3>& vec2) {
         BLA::Matrix<3> result;
         result(0) = vec1(1) * vec2(2) - vec1(2) * vec2(1);
@@ -176,4 +145,11 @@ public:
     constexpr static float b_earth = 6356752.3142;    // [m] Semi-Minor axis of Earth
     constexpr static float e_earth = 0.0818191908426; // Eccentricity of Earth
     constexpr static float r_earth = 6378137; // [m] Radius of Earth
+
+    // Standard Atmospheric Model Constants
+    constexpr static float rho_sl = 1.225; // [kg/m^3] Density at Sea Level
+    constexpr static float P_sl = 101325; // [Pa] Pressure at Sea Level
+    constexpr static float T_sl = 288.16; // [K] Temperature at Sea Level
+    constexpr static float a_1 = -6.5e-3; // [K/m] Temperature Gradient
+    constexpr static float R = 287; // [J/kgK] Universal Gas Constan
 };

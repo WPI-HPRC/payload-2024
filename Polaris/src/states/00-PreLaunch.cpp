@@ -1,10 +1,10 @@
 #include "00-PreLaunch.h"
-#include "State.h"
 #include "01-Stowed.h"
+#include "State.h"
 #include "FlightParams.hpp"
 #include "utility.hpp"
 
-PreLaunch::PreLaunch(FlashChip *flash, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(flash, attitudeStateEstimator, xbee, servos, openMV){}
+PreLaunch::PreLaunch(Sensorboard *sensorBoard, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) :  State(sensorBoard, attitudeStateEstimator, xbee, servos, openMV){}
 
 void PreLaunch::initialize_impl() {
 	stateStartTime = currentTime; 
@@ -108,7 +108,7 @@ State *PreLaunch::nextState_impl()
     if (stateTime > MAX_PRELAUNCH) //Stay in Pre-Launch for 5 seconds 
     {
         Serial.println("Entering Stowed!"); 
-        Stowed(flash, attitudeStateEstimator, xbee, servos, openMV);
+        Stowed(sensors, attitudeStateEstimator, xbee, servos, openMV);
     }
 
     #endif 
@@ -116,7 +116,7 @@ State *PreLaunch::nextState_impl()
 	if (launched) 
 	{
 		Serial.println("Entering Stowed!"); 
-		return new Stowed(flash, attitudeStateEstimator, xbee, servos, openMV); 
+		return new Stowed(sensors, attitudeStateEstimator, xbee, servos, openMV); 
 	}
 	return nullptr;
 }

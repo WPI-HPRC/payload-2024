@@ -1,14 +1,18 @@
+#include <Controls/EKF/EKF.h>
+#include "FlightParams.hpp"
+#include "SpiDriver/SdSpiDriver.h"
 #include <Arduino.h>
 #include <Metro.h>
 
 #include <SPI.h>
 #include <Wire.h>
 
-#include <states/State.h>
+#include <SD.h>
+
 #include <states/00-PreLaunch.h>
-#include "libs/Flash/Flash.h"
+#include <states/State.h>
+
 #include "utility.hpp"
-#include <Controls/EKF/EKF.h>
 #include <OpenMV/camera.h>
 #include <ServoControls/ServoController.h>
 #include <servos.h>
@@ -20,91 +24,149 @@
 
 SensorFrame sensorFrame;
 
-FlashChip *flash = new FlashChip();
-AttitudeStateEstimator *attitudeStateEstimator = nullptr; 
-XbeeProSX *xbee = new XbeeProSX(45); // CS GPIO17
-struct Servos servos; 
-OpenMV *openMV = new OpenMV(); 
-
 unsigned long previousTime = 0;
 unsigned long currentTime = 0;
-uint32_t counter = 0;
-
-Metro timer = Metro(1000/ LOOP_RATE);
-
-State * state;
 
 Sensorboard sensorBoard;
+AttitudeStateEstimator *attitudeStateEstimator = new AttitudeStateEstimator();
 
-void setup() {
-	Serial.begin(115200);
+//Payload Specific Stuff :)
+struct Servos servos;
+OpenMV *openMV = new OpenMV();
 
-	while(!Serial);
-	Wire.begin();
-	Wire.setClock(400000);
-
-	Serial.println("[Polaris] Initializing Sensor Board");
-	if(sensorBoard.setup()) {
-		Serial.println("[Polaris] Sensor Setup Complete!");
-	} else {
-		Serial.println("[Polaris] Sensor Setup Failed!");
-		while(1) {};
-	}
+State *state;
 
 
-	SPI.begin();
-    // SPI.beginTransaction(SPISettings(19000000, MSBFIRST, SPI_MODE0));
-	xbee->begin();
-	
-	servos = {
-		.paraServo_1 = new ServoController(PARACHUTE_SERVO_1), //double check direction 
-		.paraServo_2 = new ServoController(PARACHUTE_SERVO_2),
-		.paraServo_3 = new ServoController(PARACHUTE_SERVO_3),		
-		.paraServo_4 = new ServoController(PARACHUTE_SERVO_4),	
-		.cameraServo = new ServoController(CAMERA_SERVO),
-	}; 
+#ifndef NO_SDCARD
+bool sdCardInitialized = false;
+File dataFile;
+#endif
 
-	flash->init();
-	int startAddress = 0;
-	startAddress = flash->rememberAddress();
-	Serial.println("Starting Flash Chip At Address: " + String(startAddress));
+#ifndef NO_XBEE
+XbeeProSX *xbee = new XbeeProSX(30); // CS GPIO 17, use 30?!!!! - Kai 10/29/2024
+#endif
 
-	pinMode(IR_PIN, INPUT);
-	pinMode(PARACHUTE_SERVO_1_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_2_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_3_IN, INPUT); 
-	pinMode(PARACHUTE_SERVO_4_IN, INPUT); 
+void setup()
+{
+    Serial.begin(9600);
 
+#ifdef WAIT_FOR_SERIAL
+    while (!Serial)
+    {
+        yield()
+    }
+#endif
 
-	state = new PreLaunch(flash, attitudeStateEstimator, xbee, &servos, openMV);
-	state->initialize();
+    Wire.begin();
+    Wire.setClock(400000);
 
-	currentTime = millis();
-	previousTime = millis();
+    SPI.begin();
+
+#ifndef NO_SDCARD
+    // XXX: If using 5v only SD breakout board, make sure the first line is uncommented and the second line commented
+    if (SD.sdfs.begin(31, SPI_SIXTEENTH_SPEED))
+    { // REQUIRED for the non 3.3v tolerant SD breakout boards to work
+        int fileIdx = 0;
+        while (1)
+        {
+            char filename[100];
+            sprintf(filename, "flightData%d.bin", fileIdx++);
+            Serial.printf("Trying file `%s`\n", filename);
+            if (!SD.exists(filename))
+            {
+                dataFile = SD.open(filename, O_WRONLY | O_CREAT);
+                break;
+            }
+        }
+        sdCardInitialized = true;
+    }
+    else
+    {
+        Serial.println("SD Init failed");
+    }
+#endif
+
+    Serial.println("[Polaris] Initializing Sensor Board");
+    if (sensorBoard.setup())
+    {
+        Serial.println("[Polaris] Sensor Setup Complete!");
+    }
+    else
+    {
+        Serial.println("[Polaris] Sensor Setup Failed!");
+    }
+    pinMode(6, OUTPUT);
+    digitalWrite(6, HIGH);
+
+    servos = {
+        .paraServo_1 = new ServoController(PARACHUTE_SERVO_1), // double check direction
+        .paraServo_2 = new ServoController(PARACHUTE_SERVO_2),
+        .paraServo_3 = new ServoController(PARACHUTE_SERVO_3),
+        .paraServo_4 = new ServoController(PARACHUTE_SERVO_4),
+        .cameraServo = new ServoController(CAMERA_SERVO),
+    };
+
+    pinMode(IR_PIN, INPUT);
+    pinMode(PARACHUTE_SERVO_1_IN, INPUT);
+    pinMode(PARACHUTE_SERVO_2_IN, INPUT);
+    pinMode(PARACHUTE_SERVO_3_IN, INPUT);
+    pinMode(PARACHUTE_SERVO_4_IN, INPUT);
+
+    state = (State *)new PreLaunch(&sensorBoard, attitudeStateEstimator, xbee, &servos, openMV);
+
+    state->initialize();
+
+    currentTime = millis();
+    previousTime = millis();
+
+    #ifndef NO_XBEE
+    xbee->start();
+    #endif
 };
 
-void readSensors() {
-	sensorBoard.readInertialSensors();
-	memcpy(&sensorFrame, &sensorBoard.Inertial_Baro_frame, sizeof(sensorBoard.Inertial_Baro_frame));
+void readSensors()
+{
+    sensorBoard.readInertialSensors();
+    memcpy(&sensorFrame, &sensorBoard.Inertial_Baro_frame, sizeof(sensorBoard.Inertial_Baro_frame));
 };
 
-void loop() {
-	if(timer.check() == 1) {
-		readSensors();
+bool val = false;
+long lastBlink = 0;
 
-		memcpy(&state->sensorData, &sensorFrame, sizeof(sensorFrame));
+void loop()
+{
+    currentTime = millis();
+    if (currentTime - lastBlink >= 1000)
+    {
+        lastBlink = currentTime;
+        val = !val;
+        if (sdCardInitialized)
+        {
+            digitalWrite(6, HIGH);
+        }
+        else
+        {
+            digitalWrite(6, val);
+        }
+    }
 
-		String timestamp = (String) millis();
-	
-		state->loop();
+    if (currentTime - previousTime >= (1000 / LOOP_RATE))
+    {
+        previousTime = currentTime;
+        state->loop();
+    }
 
-		// Check for state transition each loop
-		State *nextState = state->nextState();
+    // Check for state transition each loop
+    State *nextState = state->nextState();
 
-		if(nextState != nullptr) {
-			Serial.print("State Change Detected: ");
-			state = nextState;
-			state->initialize();
-		};
-	};
+    if (nextState != nullptr)
+    {
+        Serial.print("State Change Detected: ");
+        Serial.print(state->getId());
+        Serial.print(" -> ");
+        delete state;
+        state = nextState;
+        Serial.println(state->getId());
+        state->initialize();
+    };
 };
