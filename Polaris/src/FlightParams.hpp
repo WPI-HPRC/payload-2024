@@ -1,6 +1,5 @@
 #pragma once 
 // These constants define transitions between states and the conditions for those transitions
-
 // magneticDip const used for EKF, unsure if it needs to be changed Oct 7 2024
 constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Inclination of launch site
 // PreLaunch -------------------------
@@ -18,17 +17,17 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 #define LANDING_VELOCITY 5.0
 
 // Stowed, measured in meters
-#define PAYLOAD_DEPLOY_HEIGHT 365 //Payload is considered deployed when falling below this height
+#define PAYLOAD_DEPLOY_HEIGHT 335 //Payload is considered deployed when falling below this height, 1099 feet
 
 // Hold Right, in meters? - Kai 10/24/2024
 #define MIN_ALT 61 //Lowest altitude before Land_prep, PLEASE CONFIRM 
 
 //Payload Specific- will organize tonight 
 
-#define PARACHUTE_SERVO_1 24 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_2 25 // wind clockwise in: 1100   center:1493 wind out: 2000
-#define PARACHUTE_SERVO_3 8 // wind counterclockwise in:2000   center:1493 wind out: 1100
-#define PARACHUTE_SERVO_4 7 // wind clockwise in:1100  center:1493 wind out: 2000
+#define PARACHUTE_SERVO_1 24 // wind counterclockwise in:2000   center:1493 wind out: 1100 RIGHT FRONT
+#define PARACHUTE_SERVO_2 7 // wind clockwise in: 1100   center:1493 wind out: 2000 RIGHT BACK
+#define PARACHUTE_SERVO_3 25 // wind counterclockwise in:2000   center:1493 wind out: 1100 LEFT BACK
+#define PARACHUTE_SERVO_4 8 // wind clockwise in:1100  center:1493 wind out: 2000 LEFT FRONT
 
 #define SERVO_CLOCK_WIND 1100
 #define SERVO_CLOCK_UNWIND 1800
@@ -44,10 +43,10 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 #define PARACHUTE_SERVO_3_IN 16 //Not working 
 #define PARACHUTE_SERVO_4_IN 17
 
-#define PARACHUTE_SERVO_1_DIR false //Check these 
+#define PARACHUTE_SERVO_1_DIR true //Check these 
 #define PARACHUTE_SERVO_2_DIR true
 #define PARACHUTE_SERVO_3_DIR false
-#define PARACHUTE_SERVO_4_DIR true
+#define PARACHUTE_SERVO_4_DIR false
 
 #define SERVO_GAIN 0.5
 
@@ -56,7 +55,7 @@ constexpr static float magneticDip = 13.8 * (180/3.1415); // [rad] Magnetic Incl
 
 #define CAMERA_SERVO 33 //Also check this 
 #define CAM_OUT 2012
-#define CAM_RETRACT 988
+#define CAM_RETRACT 0
 
 #define IR_PIN 28
 

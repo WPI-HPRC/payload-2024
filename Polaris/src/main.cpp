@@ -33,6 +33,7 @@ OpenMV *openMV = new OpenMV();
 
 State *state;
 
+float initialAltitude = 0;
 
 #ifndef NO_SDCARD
 bool sdCardInitialized = false;

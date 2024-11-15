@@ -33,14 +33,14 @@ void Stowed::loop_impl()
 
     if (passedDeployHeight)
     {
-        if (telemPacket.altitude < PAYLOAD_DEPLOY_HEIGHT)
+        if (telemPacket.altitude - initialAltitude < PAYLOAD_DEPLOY_HEIGHT)
         {
             released = releasedDebouncer.checkOut(averageVelocity < 0);
         }
     }
     else
     {
-        passedDeployHeight = passedDeployHeightDebouncer.checkOut(telemPacket.altitude > PAYLOAD_DEPLOY_HEIGHT);
+        passedDeployHeight = passedDeployHeightDebouncer.checkOut(telemPacket.altitude - initialAltitude > PAYLOAD_DEPLOY_HEIGHT);
     }
 }
 

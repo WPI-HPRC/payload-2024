@@ -17,7 +17,7 @@ void HoldRight::loop_impl() {
 }
 
 State *HoldRight::nextState_impl() {
-	if (stateTime > MAX_HOLD_TIME || telemPacket.altitude < MIN_ALT) //Ported from IREC-Dev
+	if (stateTime > MAX_HOLD_TIME || telemPacket.altitude - initialAltitude < MIN_ALT) //Ported from IREC-Dev
 	{	
 		//unwind servos
         // Looks like nothing was implemented later :(, still WIP in my mind

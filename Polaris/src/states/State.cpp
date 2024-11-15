@@ -44,6 +44,7 @@ void State::loop() {
     this->telemPacket.pressure = this->sensors->Inertial_Baro_frame.Pressure;
     this->telemPacket.temperature = this->sensors->Inertial_Baro_frame.Temperature;
     this->telemPacket.altitude = Utility::pressureToAltitude(this->telemPacket.pressure);
+    this->telemPacket.initialAltitude = initialAltitude;
 
     this->telemPacket.gpsLat = this->sensors->Inertial_Baro_frame.gpsLat;
     this->telemPacket.gpsLong = this->sensors->Inertial_Baro_frame.gpsLong;

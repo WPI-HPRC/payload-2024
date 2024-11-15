@@ -34,15 +34,14 @@ void PreLaunch::loop_impl() {
 
     // Calibrate initial altitude
 	// currently not referenced anywhere as of 10/4/2024
-    if (loopCount == 20) {
-        float sum = 0;
-        for (size_t i = 0; i < altitudeBuffLen; i++) {
-            sum += altitudeBuff[i];
-        }
-        float initialAltitude = sum / altitudeBuffLen;
+    if (initialAltitude == 0)
+    {
+        initialAltitude = telemPacket.altitude;
     }
 
-	launched = launchDebouncer.checkOut(abs(avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
+    accelReadingBuffer[accelBuffIdx++] = telemPacket.accelZ;
+    accelBuffIdx %= sizeof(accelReadingBuffer) / sizeof(float);
+    launched = launchDebouncer.checkOut(avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
 }
 
 

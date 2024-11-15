@@ -26,6 +26,7 @@ extern File dataFile;
 #include "Servo.h"
 #endif
 
+extern float initialAltitude;
 class Utility
 {
 public:
@@ -81,6 +82,7 @@ public:
 
         // Calculated Values
         float altitude = 0.0f;
+        float initialAltitude = 0.0f;
 
         // EKF Results
         float w = 0.0f; // Quaternion State

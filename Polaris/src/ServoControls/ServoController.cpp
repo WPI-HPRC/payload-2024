@@ -5,27 +5,26 @@
 // const float stringLength = 100.;
 // const float pGain = 5.;
 
-ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength, int inputPin) {
-    this->servo = servo; 
-    this->clockwise = clockwise;
-    this->servo.attach(pin);
-    this->p = p;
-    this->pulleyDiameter = pulleyDiameter; //p is P-gain 
-    this->stringLength = stringLength;
-    this->inputPin = inputPin; 
-    // Set servo to be still
-    this->servo.write(90.);
-}
+// ServoController::ServoController(int pin, bool clockwise, float p, float pulleyDiameter, float stringLength, int inputPin) {
+//     this->servo = servo; 
+//     this->clockwise = clockwise;
+//     this->servo.attach(pin);
+//     this->p = p;
+//     this->pulleyDiameter = pulleyDiameter; //p is P-gain 
+//     this->stringLength = stringLength;
+//     this->inputPin = inputPin; 
+//     // Set servo to be still
+//     this->servo.write(90.);
+// }
 
 ServoController::ServoController(int pin){
     this->servo.attach(pin); //check if this is the correct syntax 
     if(pin == CAMERA_SERVO){
-        this->servo.writeMicroseconds(988);
+        this->servo.write(0);
     }
     else{
         this->servo.writeMicroseconds(1493);
     }
-    
 }
 
 void ServoController::setServo(float value){

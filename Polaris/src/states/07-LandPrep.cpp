@@ -24,7 +24,7 @@ void LandPrep::loop_impl()
         servos->paraServo_2->writeServo(SERVO_CENTER); // Check Servo values
     }
 
-    servos->cameraServo->writeServo(CAM_RETRACT);
+    servos->cameraServo->setServo(CAM_RETRACT);
 
     // calculate vertical velocity
     float verticalVelocity = (telemPacket.altitude - lastAltitude) / (deltaTime / 1000.0);
