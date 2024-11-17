@@ -41,7 +41,7 @@ void PreLaunch::loop_impl() {
 
     accelReadingBuffer[accelBuffIdx++] = telemPacket.accelZ;
     accelBuffIdx %= sizeof(accelReadingBuffer) / sizeof(float);
-    launched = launchDebouncer.checkOut(avgAccelZ() > LAUNCH_ACCEL_THRESHOLD);
+    launched = launchDebouncer.checkOut(abs(avgAccelZ()) > LAUNCH_ACCEL_THRESHOLD);
 }
 
 
