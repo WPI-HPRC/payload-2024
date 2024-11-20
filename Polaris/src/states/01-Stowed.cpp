@@ -2,7 +2,6 @@
 #include "State.h"
 #include "FlightParams.hpp"
 #include "02-Freefall.h"
-#include "Abort.h"
 
 Stowed::Stowed(Sensorboard *sensors, AttitudeStateEstimator *attitudeStateEstimator, XbeeProSX *xbee, struct Servos *servos, OpenMV *openMV) : State(sensors, attitudeStateEstimator, xbee, servos, openMV) {}
 
@@ -61,10 +60,6 @@ State *Stowed::nextState_impl()
     if (released)
     {
         return new Freefall(this->sensors, this->attitudeStateEstimator, this->xbee, this->servos, this->openMV);
-    }
-    else if (currentTime > MAX_STOW_TIME)
-    {
-        return new Abort(sensors, attitudeStateEstimator, xbee, servos, openMV);
     }
     return nullptr;
 }
