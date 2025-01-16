@@ -1,6 +1,6 @@
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
     #pragma pack(push,1)
     struct TelemPacket {
