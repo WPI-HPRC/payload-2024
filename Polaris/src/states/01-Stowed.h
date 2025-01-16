@@ -18,5 +18,7 @@ private:
     bool released = false;
     Debouncer releasedDebouncer = Debouncer(10); // Will be quick, change if needed
     bool passedDeployHeight = false;
+    bool passedDeployHeightAgain = false;
     Debouncer passedDeployHeightDebouncer = Debouncer(10);
+    Debouncer passedDeployHeightAgainDebouncer = Debouncer(10);
 };
