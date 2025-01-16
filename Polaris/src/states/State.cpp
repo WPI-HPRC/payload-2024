@@ -84,27 +84,23 @@ void State::loop() {
     
     //Controls 
     telemPacket.desiredServoPos1 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos1 = this->servos->paraServo_1->readServo(); //IDK if this works...
+    telemPacket.actualServoPos1 = analogRead(16); //This should be white wire
     telemPacket.desiredServoPos2 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos2 = this->servos->paraServo_2->readServo();
+    telemPacket.actualServoPos2 = analogRead(17); //This should be yellow first next to white
     telemPacket.desiredServoPos3 = MAX_SERVO_POS; 
-    telemPacket.actualServoPos3 = this->servos->paraServo_3->readServo();
+    telemPacket.actualServoPos3 = analogRead(20); //This should be yellow second next to white
     telemPacket.desiredServoPos4 = MAX_SERVO_POS;  
-    telemPacket.actualServoPos4 = this->servos->paraServo_4->readServo(); 
+    telemPacket.actualServoPos4 = analogRead(21); //This should be yellow third next to white
 
-    static const BLA::Matrix<3, 3> softIronCal = {
-        1.120602,
-        -0.003242,
-        0.005510,
-        -0.003242,
-        1.143276,
-        0.013794,
-        0.005510,
-        0.013794,
-        1.104641,
-    };
+    //Soft Iron and Hard Iron Calibrations copied from Rocket Code
 
-    static const BLA::Matrix<3> hardIronCal = {54062.849827, 5545.343210, 89181.770655};
+    static const BLA::Matrix<3,3> softIronCal = {
+      0.9528,   -0.0462,    0.0153,
+     -0.0462,    1.0266,    0.0041,
+      0.0153,    0.0041,    1.0248
+  };
+
+  static const BLA::Matrix<3> hardIronCal = {0.4172, -0.2165, 0.2624};
 
     BLA::Matrix<3> magVector = {telemPacket.magX, telemPacket.magY, telemPacket.magZ};
 
